@@ -34,25 +34,25 @@
 -->
 
 </head>
-<body class="login-wrap text-center">
-  <main class="login-html text-center align-self-center"> <!--"form-signin"-->
+<body class="login-wrap">   <!--text-center-->
+  <main class="login-html"> <!--"form-signin"--> <!--text-center align-self-center-->
     <div class="container">
 <!--        <div class="login-form">-->
             <form role="form" action="/members/login" th:object="${loginForm}" method="post">
               <div class="sign-in-htm">
-                  <div class="group">
+                  <div class="form-group">
                       <label th:for="email" class="form-label mt-4">이메일</label>
                       <input type="text" th:field="*{email}" class="form-control"
                              th:errorclass="field-error" id="email" name="email" placeholder="이메일을 입력하세요">
-                      <div class = "field-error" th:errors="*{email}"></div>
+                      <div class = "field-error" style="color:red;" th:errors="*{email}"></div>
                   </div>
-                  <div class="group">
+                  <div class="form-group">
                       <label th:for="pwd" class="form-label mt-4 ">비밀번호</label>
                       <input type="text" th:field="*{pwd}" class="form-control"
                              th:errorclass="field-error" id="password" name="password" placeholder="비밀번호를 입력하세요">
-                      <div class = "field-error" th:errors="*{pwd}"></div>
+                      <div class = "field-error" style="color:red;" th:errors="*{pwd}"></div>
                   </div>
-                  <div class="group">
+                  <div class="form-group">
                       <input type="submit" class = "btn btn-info button" value="확인"></input>
                   </div>
                   <div class="foot-lnk">

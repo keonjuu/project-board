@@ -38,10 +38,10 @@
   <form th:object="${boards}" method="post">
     <div class="form-group">
         <label th:for="boardNo">게시글 번호</label>
-        <span th:text=="${board.boardNo}"  class="form-control"> </span>
+        <span th:text=="${board.boardNo}"  class="form-control-plaintext"> </span>
     </div>
     <div class="form-group">
-      <label th:for="title">제목</label>
+      <label class="form-label" th:for="title">제목</label>
         <input type="text" th:field="${board.title}"  class="form-control" readonly />
 <!--      <span th:text="${board.title}" class="form-control" >제목 없음 </span>-->
     </div>
@@ -52,15 +52,15 @@
     </div>
     <div class="form-group">
         <label th:for="content">작성자</label>
-        <span th:text="${board.regId}" class="form-control" > 비어있음 </span>
+        <span th:text="${board.regId}" class="form-control-plaintext" > 비어있음 </span>
     </div>
     <div class="form-group">
         <label th:for="content">작성일</label>
-        <span th:text="${board.regTime}" class="form-control" > 비어있음 </span>
+        <span th:text="${board.regTime}" class="form-control-plaintext" > 비어있음 </span>
     </div>
     <div class="form-group">
         <label th:for="modId">최종수정자</label>
-        <span th:text="${board.modId}" class="form-control" > 비어있음 </span>
+        <span th:text="${board.modId}" class="form-control-plaintext" > 비어있음 </span>
     </div>
     <div class="form-group">
         <label th:for="modTime">최종수정일</label>
