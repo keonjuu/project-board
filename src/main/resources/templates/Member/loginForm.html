@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+    <!--  <link rel="stylesheet" href="/css/bootstrap.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">-->
+<!--  <link rel="stylesheet" href="/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">-->
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+<!--  <link href="/css/signin.css" rel="stylesheet">-->
+<!--  <link href="/css/sample_login.css" rel="stylesheet">-->
+<!--    <link href="/css/jumbotron-narrow.css" rel="stylesheet">-->
+<!--
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+-->
+
+</head>
+<body class="login-wrap text-center">
+  <main class="login-html text-center align-self-center"> <!--"form-signin"-->
+    <div class="container">
+<!--        <div class="login-form">-->
+            <form role="form" action="/members/login" th:object="${loginForm}" method="post">
+              <div class="sign-in-htm">
+                  <div class="group">
+                      <label th:for="email" class="form-label mt-4">이메일</label>
+                      <input type="text" th:field="*{email}" class="form-control"
+                             th:errorclass="field-error" id="email" name="email" placeholder="이메일을 입력하세요">
+                      <div class = "field-error" th:errors="*{email}"></div>
+                  </div>
+                  <div class="group">
+                      <label th:for="pwd" class="form-label mt-4 ">비밀번호</label>
+                      <input type="text" th:field="*{pwd}" class="form-control"
+                             th:errorclass="field-error" id="password" name="password" placeholder="비밀번호를 입력하세요">
+                      <div class = "field-error" th:errors="*{pwd}"></div>
+                  </div>
+                  <div class="group">
+                      <input type="submit" class = "btn btn-info button" value="확인"></input>
+                  </div>
+                  <div class="foot-lnk">
+                      <a href="/members/new" >회원이 아니신가요?</a>
+                  </div>
+              </div>
+            </form>
+        </div>
+
+    </div> <!-- /container -->
+  </main>
+</body>
+</html>

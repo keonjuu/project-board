@@ -1,0 +1,33 @@
+#login{
+    position: relative;
+    /*right: 50px;*/
+}
+
+
+#mainTableDiv{
+    position: relative;
+    top: 30px;
+}
+
+/*.button{
+    border:none;
+    padding:15px 20px;
+    border-radius:25px;
+    background:rgba(255,255,255,.1);
+}*/
+.group {
+    top: 30px;
+    position: relative;
+    left: 95%;
+}
+
+.group .button {
+    background: #1161ee;
+    font-size: 15px;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 25px;
+    /*width: 100%;*/
+    color: #FFFFFF;
+    display: block;
+}

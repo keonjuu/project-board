@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>게시판</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/board.css">
+</head>
+<body>
+<div class="container">
+
+</div>
+<nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">게시판</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">Home
+            <span class="visually-hidden">(current)</span>
+          </a>
+        </li>
+<!--        <li class="nav-item">
+          <a class="nav-link" href="#">Features</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Pricing</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">About</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="#">Something else here</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Separated link</a>
+          </div>
+        </li>-->
+      </ul>
+      <ul class="navbar-nav me-auto" id = "login">
+        <li class="nav-item">
+          <a class="btn btn-primary" href="/members/login">로그인
+            <span class="visually-hidden">(current)</span>
+          </a>  <!--class="nav-link active"-->
+        </li>
+      </ul>
+<!--      <form class="d-flex">
+        <input class="form-control me-sm-2" type="search" placeholder="Search">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+      </form>-->
+    </div>
+  </div>
+</nav>
+<div class="container">
+  <!--
+  <div class="group">
+    <a class="btn btn-success"  href="/boards/new" role="button">새글 작성</a>
+  </div>
+</div>
+<div class="container" id = "mainTableDiv">
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>번호</th>
+      <th>게시글</th>
+      <th>작성자</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${boardlist}">
+      <td th:text="${item.boardNo}"></td>
+      <td> <a th:text="${item.title}" th:href="@{/Board/{boardNo}/view (boardNo=${item.boardNo})}"></a></td>
+      <td th:text="${item.regId}"></td>
+&lt;!&ndash;      <td th:text="${item.stockQuantity}"></td>&ndash;&gt;
+&lt;!&ndash;      <td>
+        <a href="#" th:href="@{/Board/{boardNo}/edit (boardNo=${item.boardNo})}"
+           class="btn btn-primary" role="button">수정</a>
+      </td>&ndash;&gt;
+    </tr>
+    </tbody>
+  </table>-->
+</div>
+
+</body>
+</html>

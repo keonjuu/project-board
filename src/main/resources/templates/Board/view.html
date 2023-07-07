@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--<head th:replace="fragments/header :: header" />-->
+<head>
+  <title>게시글 상세 페이지</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>-->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/board.css">
+</head>
+<body>
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    function edit(){
+        $("input[name='title']").attr("readonly", false);
+        $("input[name='content']").attr("readonly", false);
+        // 저장 버튼 활성화
+        if($("#saveButton").css("display") == "none"){
+            $('#saveButton').show();
+            // $('#cancelButton').show();
+            $('#editButton').hide();
+        }
+    }
+     function cancel(){
+        location.href="/";
+    }
+</script>
+
+<div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+<div class="container">
+<!--    <div th:replace="fragments/bodyHeader :: bodyHeader"/>-->
+<!--    th:action="@{/Board/{boardNo}/view (boardNo=${board.boardNo}) }"-->
+  <form th:object="${boards}" method="post">
+    <div class="form-group">
+        <label th:for="boardNo">게시글 번호</label>
+        <span th:text=="${board.boardNo}"  class="form-control"> </span>
+    </div>
+    <div class="form-group">
+      <label th:for="title">제목</label>
+        <input type="text" th:field="${board.title}"  class="form-control" readonly />
+<!--      <span th:text="${board.title}" class="form-control" >제목 없음 </span>-->
+    </div>
+    <div class="form-group">
+      <label th:for="content">내용</label>
+        <input type="text" th:field="${board.content}"  class="form-control" readonly />
+        <!--      <span th:text="${board.content}" class="form-control" > 내용 없음 </span>-->
+    </div>
+    <div class="form-group">
+        <label th:for="content">작성자</label>
+        <span th:text="${board.regId}" class="form-control" > 비어있음 </span>
+    </div>
+    <div class="form-group">
+        <label th:for="content">작성일</label>
+        <span th:text="${board.regTime}" class="form-control" > 비어있음 </span>
+    </div>
+    <div class="form-group">
+        <label th:for="modId">최종수정자</label>
+        <span th:text="${board.modId}" class="form-control" > 비어있음 </span>
+    </div>
+    <div class="form-group">
+        <label th:for="modTime">최종수정일</label>
+        <span th:text="${board.modTime}" class="form-control" > 비어있음 </span>
+    </div>
+    <button type="button" class="btn btn-success" id="editButton" th:onclick="edit()">수정</button>
+<!--    th:href="@{/Board/{boardNo}/edit (boardNo=${board.boardNo})}"-->
+    <button type="submit" class="btn btn-success" id="saveButton" style="display:none;">저장</button>
+    <button type="button" class="btn btn-danger" id="cancelButton" th:onclick="cancel()">취소</button>
+  </form>
+  <br/>
+</div> <!-- /container -->
+
+</body>
+</html>

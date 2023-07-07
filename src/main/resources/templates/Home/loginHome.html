@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>게시판</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/board.css">
+</head>
+<body>
+<div class="container">
+
+</div>
+<div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+<div class="container">
+  <div class="group">
+    <a class="btn btn-success"  href="/boards/new" role="button">새글 작성</a>
+  </div>
+</div>
+<div class="container" id = "mainTableDiv">
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>번호</th>
+      <th>게시글</th>
+      <th>작성자</th>
+      <!--      <th>재고수량</th>-->
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${boardlist}">
+      <td th:text="${item.boardNo}"></td>
+<!--      <td th:text="${item.title}"></td>-->
+      <td> <a th:text="${item.title}" th:href="@{/Board/{boardNo}/view (boardNo=${item.boardNo})}"></a></td>
+      <td th:text="${item.regId}"></td>
+<!--
+      <td>
+        <a href="#" th:href="@{/Board/{boardNo}/edit (boardNo=${item.boardNo})}"
+           class="btn btn-primary" role="button">수정</a>
+      </td>
+-->
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

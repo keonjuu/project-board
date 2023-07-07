@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div class="header" th:fragment="bodyHeader">
+  <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">게시판</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="/">Home
+              <span class="visually-hidden">(current)</span>
+            </a>
+          </li>
+        </ul>
+        <ul class="navbar-nav me-auto" id = "login">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">user:
+<!--              <span th:text="${member.userName}">사용자명</span>-->
+              <span th:text="${session.loginMember.userName}">사용자명</span>
+            </a>
+          </li>
+        </ul>
+        <ul class="navbar-nav me-auto" id = "login">
+          <li class="nav-item">
+            <form role="form" action="/logout"  method="post" class="nav-link active">
+              <button class="btn btn-primary" type="submit">로그아웃</button>
+            </form>
+            <!--          </a>-->
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+</div>
