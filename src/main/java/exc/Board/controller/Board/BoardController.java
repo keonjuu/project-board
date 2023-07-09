@@ -8,10 +8,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -37,7 +39,14 @@ public class BoardController {
     }
 
     @PostMapping("boards/new")
-    public String register(@ModelAttribute("boards") BoardForm form, HttpServletRequest request){
+    public String register(@Valid @ModelAttribute("boards") BoardForm form, BindingResult bindingResult, HttpServletRequest request){
+
+
+//        log.info("errors = {}", bindingResult);
+        if (bindingResult.hasErrors()){
+            return "Board/registerBoard";
+        }
+
          // form 정보 board db 에 저장
         Board board = new Board();
         board.setTitle(form.getTitle());
@@ -51,6 +60,7 @@ public class BoardController {
         board.setRegTime(LocalDateTime.now());
         board.setModTime(LocalDateTime.now());
         board.setModId(loginMember.getEmail());
+
 
 //        Member loginMember = (Member)session.getAttribute(SessionConst.LOGIN_MEMBER); // 타입캐스팅필요
 

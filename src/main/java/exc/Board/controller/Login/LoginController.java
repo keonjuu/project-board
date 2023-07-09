@@ -40,7 +40,7 @@ public class LoginController {
             bindingResult.rejectValue("pwd","pwd","비밀번호를 반드시 입력해야 합니다.");
         }
         if(bindingResult.hasErrors()){
-            log.info("errors = {}" ,bindingResult.toString());
+//            log.info("errors = {}" ,bindingResult.toString());
             // bindingResult 를 다시 model 에 안담아도 돼! 자동으로 view 에 넘겨줘
             return "Member/loginForm";
         }
@@ -78,10 +78,11 @@ public class LoginController {
 
         // form 에서 전달받은 email와 password 로 로그인 시도
         Member loginMember = loginService.login(form.getEmail(), form.getPwd());
-        //
-        System.out.println("loginMember = " + loginMember);
+        //System.out.println("loginMember = " + loginMember);
+
         if(loginMember == null){
-            bindingResult.reject("loginFail", "아이디(이메일) 또는 비밀번호가 맞지 않습니다.");
+            bindingResult.reject("loginFail","아이디(이메일) 또는 비밀번호가 맞지 않습니다.");
+//            log.info("bindingResult errors = {}", bindingResult);
             return "Member/loginForm";
         }
 

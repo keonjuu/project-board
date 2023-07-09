@@ -12,36 +12,46 @@
   <!-- Custom styles for this template -->
   <link rel="stylesheet" href="/css/bootstrap.min.css">
 
-<!--  <link href="/css/signin.css" rel="stylesheet">-->
-<!--  <link href="/css/sample_login.css" rel="stylesheet">-->
+  <style>
+    .container {
+    max-width: 560px;
+    }
+    .field-error {
+    border-color: #dc3545;
+    color: #dc3545;
+    }
+    </style>
 </head>
-<body class="login-wrap text-center">
-  <main class="login-html text-center align-self-center"> <!--"form-signin"-->
+<body class="login-wrap">
+  <main class="login-html"> <!--"form-signin"--> <!--text-center align-self-center-->
+    <div class="container text-center align-self-center" style="margin-top: 5%;">
+      <h3>회원가입</h3>
+    </div>
     <div class="container">
-      <p>회원가입</p>
+<!--      <p>회원가입</p>-->
       <div class="form-group">
             <form role="form" action="/members/new" th:object="${memberForm}" method="post">
               <div class="sign-up-htm">
                 <div class="form-group">
-                  <label th:for="name" class="label">이름</label>
+                  <label th:for="name" class="form-label mt-4">이름</label>
                   <input type="text" th:field="*{name}" class="form-control"
                          th:errorclass="field-error" id="name" name="name" placeholder="이름을 입력하세요">
                     <div class = "field-error" th:errors="*{name}"></div>
                 </div>
                 <div class="form-group">
-                  <label th:for="email" class="label">이메일</label>
+                  <label th:for="email" class="form-label mt-4">이메일</label>
                   <input type="text" th:field="*{email}" class="form-control"
                          th:errorclass="field-error" id="userEmail" name="userEmail" placeholder="이메일을 입력하세요">
                     <div class = "field-error" th:errors="*{email}"></div>
                 </div>
                 <div class="form-group">
-                  <label th:for="pwd" class="label">비밀번호</label>
+                  <label th:for="pwd" class="form-label mt-4">비밀번호</label>
                   <input type="text" th:field="*{pwd}" class="form-control"
                          th:errorclass="field-error" id="password" name="password" placeholder="비밀번호를 입력하세요">
                     <div class = "field-error" th:errors="*{pwd}"></div>
                 </div>
                 <div class="form-group">
-                  <input type="submit" class = "button" value="등록"></input>
+                  <input type="submit" class = "btn btn-info button" value="등록"></input>
                 </div>
               </div>
             </form>

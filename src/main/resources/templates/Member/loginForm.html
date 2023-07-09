@@ -15,6 +15,26 @@
 <!--  <link href="/css/signin.css" rel="stylesheet">-->
 <!--  <link href="/css/sample_login.css" rel="stylesheet">-->
 <!--    <link href="/css/jumbotron-narrow.css" rel="stylesheet">-->
+    <style>
+    .container {
+        max-width: 560px;
+    }
+    .field-error {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+    .form-group input:focus {
+        border: 0.15rem solid var(--bs-info);
+    }
+    .form-group-button{
+        display: flex;
+        flex-wrap: wrap;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
+        margin-top:1rem;
+    }
+    </style>
 <!--
   <style>
     .bd-placeholder-img {
@@ -36,6 +56,9 @@
 </head>
 <body class="login-wrap">   <!--text-center-->
   <main class="login-html"> <!--"form-signin"--> <!--text-center align-self-center-->
+      <div class="container text-center align-self-center" style="margin-top: 5%;">
+          <h3>로그인</h3>
+      </div>
     <div class="container">
 <!--        <div class="login-form">-->
             <form role="form" action="/members/login" th:object="${loginForm}" method="post">
@@ -52,8 +75,12 @@
                              th:errorclass="field-error" id="password" name="password" placeholder="비밀번호를 입력하세요">
                       <div class = "field-error" style="color:red;" th:errors="*{pwd}"></div>
                   </div>
-                  <div class="form-group">
-                      <input type="submit" class = "btn btn-info button" value="확인"></input>
+                  <div class="form-group-button">
+                      <input type="submit" class = "btn btn-info button" style="align-self:center;" value="확인"></input>
+                      <!-- 글로벌 에러 처리 부분 -->
+                      <div th:if="${#fields.hasGlobalErrors()}">
+                          <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
+                      </div>
                   </div>
                   <div class="foot-lnk">
                       <a href="/members/new" >회원이 아니신가요?</a>
