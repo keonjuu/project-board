@@ -41,9 +41,14 @@ public class BoardController {
     @PostMapping("boards/new")
     public String register(@Valid @ModelAttribute("boards") BoardForm form, BindingResult bindingResult, HttpServletRequest request){
 
+        if(form.getContent().length()<10) {
+            bindingResult.rejectValue("content", "content","최소 10자 이상 입력해야 합니다. 현재 글자수="+ form.getContent().length() );
+        }
 
-//        log.info("errors = {}", bindingResult);
         if (bindingResult.hasErrors()){
+            log.info("errors = {}", bindingResult);
+            log.error("form.getContent().length()= {}", form.getContent().length());
+
             return "Board/registerBoard";
         }
 
@@ -108,6 +113,24 @@ public class BoardController {
         */
         return "<script>alert('수정 사항이 저장되었습니다.');location.href='/';</script>";
     }
+
+
+    //3. 삭제
+    @ResponseBody
+    @PostMapping("/Board/{boardNo}/delete")
+    public String deleteBoard(@PathVariable("boardNo") Long boardNo, Model model){
+
+        // 게시글번호로 db조회 -> 영속상태 만들기
+        Board board = boardService.findOne(boardNo);
+        System.out.println("board.toString() = " + board.toString());
+
+        board.setDelYn("Y");
+        boardService.save(board);
+        log.error("board.getDelYn() ={}" , board.getDelYn());
+        return "<script>alert('삭제되었습니다.');location.href='/';</script>";
+
+    }
+
 
 
 }

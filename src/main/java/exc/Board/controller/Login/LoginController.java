@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -63,7 +64,8 @@ public class LoginController {
     }
 
     @PostMapping("members/login")
-    public String login(@ModelAttribute("loginForm") @Valid loginForm form, BindingResult bindingResult, HttpServletRequest request){
+    public String login(@ModelAttribute("loginForm") @Valid loginForm form, BindingResult bindingResult,
+                        @RequestParam(defaultValue = "/") String redirectURL, HttpServletRequest request){
         if(form.getEmail().isEmpty()){
             bindingResult.rejectValue("email","email","이메일을 반드시 입력해야 합니다.");
         }
@@ -92,7 +94,8 @@ public class LoginController {
         // 세션에 로그인 회원 정보 보관
         session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
 
-        return "redirect:/";
+        return "redirect:" + redirectURL;
+//        return "redirect:/";
     }
 
 

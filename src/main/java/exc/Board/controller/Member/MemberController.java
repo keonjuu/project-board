@@ -1,7 +1,7 @@
 package exc.Board.controller.Member;
 
 import exc.Board.domain.member.Member;
-import exc.Board.domain.member.MemberGroup;
+import exc.Board.domain.member.MemberType;
 import exc.Board.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +51,7 @@ public class MemberController {
         member.setEmail(form.getEmail());
         member.setPassword(form.getPwd());
         member.setUserName(form.getName());
-        member.setMemberGroup(MemberGroup.USER);
+        member.setMemberType(MemberType.USER);
 
         //
         memberService.join(member);

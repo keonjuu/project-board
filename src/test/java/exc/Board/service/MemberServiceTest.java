@@ -1,7 +1,7 @@
 package exc.Board.service;
 
 import exc.Board.domain.member.Member;
-import exc.Board.domain.member.MemberGroup;
+import exc.Board.domain.member.MemberType;
 import exc.Board.repository.MemberRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +27,7 @@ public class MemberServiceTest {
         Member member = new Member();
         member.setUserName("hello100");
         member.setEmail("hello100@innotree.com");
-        member.setMemberGroup(MemberGroup.USER);
+        member.setMemberType(MemberType.USER);
         member.setPassword("hoooo");
 
         System.out.println("member = " + member);

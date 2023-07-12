@@ -20,7 +20,7 @@ public class BoardRepository {
 
     //2. findAll - paging처리 필요
     public List<Board> findAll(){
-        return em.createQuery("select b from Board b", Board.class)
+        return em.createQuery("select b from Board b where b.delYn='N'", Board.class)
 //                .setFirstResult(0)
 //                .setMaxResults(10)
                 .getResultList();
@@ -34,6 +34,7 @@ public class BoardRepository {
         return board;
 
     }
+
     /*    public List<Board> findAllByUserName(String name){
             return em.createQuery("select b from Board b join Member m where m.userName =:userName", Board.class)
                     .setParameter("userName", name)

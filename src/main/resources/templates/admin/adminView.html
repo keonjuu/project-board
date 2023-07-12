@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--<head th:replace="fragments/header :: header" />-->
+<head>
+    <title>게시글 admin</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>-->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/member.css">
+
+    <style>
+        .form-group input:focus, .form-group textarea:focus {
+            border: 0.15rem solid var(--bs-info);
+        }
+        /*input[type=text]*/
+        input[type=text], textarea[type=text]{
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: none;
+            background-color: #ecf0f1;
+            /*color: white;*/
+        }
+    </style>
+</head>
+<body>
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    function edit(){
+        $("input[name='title']").attr("readonly", false);
+        $("textarea[name='content']").attr("readonly", false);
+
+        // 저장 버튼 활성화
+        if($("#saveButton").css("display") == "none"){
+            $('#saveButton').show();
+            // $('#cancelButton').show();
+            $('#editButton').hide();
+        }
+    }
+    function cancel(){
+        location.href="/";
+    }
+    
+</script>
+
+<div th:replace="fragments/bodyHeader :: bodyHeader"></div>
+<div class="container" style="padding-top: 30px">
+    <!--    <div th:replace="fragments/bodyHeader :: bodyHeader"/>-->
+    <!--    th:action="@{/member/{memberNo}/view (memberNo=${member.memberNo}) }"-->
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>가입상태</th>
+            <th>최종접속일</th>
+            <!--      <th>재고수량</th>-->
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="member : ${memberList}">
+            <td th:text="${member.userName}"></td>
+            <td th:text="${member.email}"></td>
+            <td th:text="${member?.status}"></td>
+            <td th:text="${member?.lastDatetime}"></td>
+            <!--      <td th:text="${member.title}"></td>-->
+            <!--<td> <a th:text="${member.email}" th:href="@{/member/{memberNo}/view (memberNo=${member.memberNo})}"></a></td>-->
+            <!--<td th:text="${member.regId}"></td>-->
+        </tr>
+        </tbody>
+    </table>
+<!--        <button type="button" class="btn btn-success col-auto" id="editButton" th:onclick="edit()">수정</button>
+        <button type="button" class="btn btn-danger col-auto" id="deleteButton" th:onclick="'javascript:deletemember('+${member.memberNo}+')'">삭제</button>
+        &lt;!&ndash;    th:href="@{/member/{memberNo}/edit (memberNo=${member.memberNo})}"&ndash;&gt;
+        <button type="submit" class="btn btn-success col-auto" id="saveButton" style="display:none;">저장</button>
+        <button type="button" class="btn btn-warning col-auto" id="cancelButton" th:onclick="cancel()">취소</button>-->
+    <br/>
+</div> <!-- /container -->
+
+</body>
+</html>

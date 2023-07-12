@@ -15,7 +15,7 @@ public class BoardForm {
     @NotBlank
     private String title;
 
-    @Size(min=10, max = 1000)
+    @Size
     private String content;
 //    private String modId;
     private LocalDateTime modTime;

@@ -25,6 +25,8 @@ public class Board {
     private BoardCategory boardCategory = normal;
 
     private String title;
+
+    @Column(columnDefinition="TEXT")
     private String content;
 
     @Column(columnDefinition="DATETIME(0) default CURRENT_TIMESTAMP")
@@ -37,6 +39,10 @@ public class Board {
 
     private String modId;
 
+    @Column(columnDefinition = "varchar(1) default 'N'")
+    private String delYn = "N";
+
+
     @Override
     public String toString() {
         return "Board{" +
@@ -48,8 +54,10 @@ public class Board {
                 ", regId='" + regId + '\'' +
                 ", modTime=" + modTime +
                 ", modId='" + modId + '\'' +
+                ", delYn='" + delYn + '\'' +
                 '}';
     }
+
 
 
     /*

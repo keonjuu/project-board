@@ -19,7 +19,7 @@
           <li class="nav-item">
             <a class="nav-link active" href="#">user:
 <!--              <span th:text="${member.userName}">사용자명</span>-->
-              <span th:text="${session.loginMember.userName}">사용자명</span>
+              <span th:text="${session.loginMember?.userName}">사용자명</span>
             </a>
           </li>
         </ul>

@@ -1,12 +1,10 @@
 package exc.Board.domain.member;
 
-import exc.Board.domain.Board;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -38,7 +36,13 @@ public class Member {
     private List<Board> boardList = new ArrayList<>();;*/
 
     @Enumerated(EnumType.STRING)
-    private MemberGroup memberGroup ;
+    private MemberType memberType=MemberType.USER;
+
+    @Enumerated(EnumType.STRING)
+    private MemberStatus status = MemberStatus.PENDING;
+
+    @Column(columnDefinition="DATETIME(0) default CURRENT_TIMESTAMP")
+    private LocalDateTime lastDatetime;
 
     @Override
     public String toString() {
@@ -47,7 +51,8 @@ public class Member {
                 ", email='" + email + '\'' +
                 ", userName='" + userName + '\'' +
                 ", password='" + password + '\'' +
-                ", memberGroup=" + memberGroup +
+                ", status='" + status + '\'' +
+                ", memberType=" + memberType +
                 '}';
     }
 }
