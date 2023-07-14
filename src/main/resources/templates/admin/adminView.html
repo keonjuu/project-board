@@ -10,7 +10,6 @@
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>-->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/member.css">
 
     <style>
         .form-group input:focus, .form-group textarea:focus {
@@ -31,44 +30,76 @@
 <body>
 <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
-    function edit(){
-        $("input[name='title']").attr("readonly", false);
-        $("textarea[name='content']").attr("readonly", false);
+/*    $(function(){
+        $('#saveBtn').hide();
+    });*/
+
+/*    $(document).ready(function (){
+        $('#selectJoinnYn').on('click', function(){
+            /!*console.log($(this).text());*!/
+            $('#saveBtn').show();
+        });
+    })*/
+/*    function edit(){
 
         // 저장 버튼 활성화
         if($("#saveButton").css("display") == "none"){
             $('#saveButton').show();
             // $('#cancelButton').show();
-            $('#editButton').hide();
         }
-    }
-    function cancel(){
-        location.href="/";
+    }*/
+    function save(id){
+        var selectedVal = $("select[name=selectJoinnYn]").val();
+
+        location.href="/admin/save/" +id + "/"+ selectedVal ;
+        console.log("location.href" + location.href);
     }
     
 </script>
 
 <div th:replace="fragments/bodyHeader :: bodyHeader"></div>
+
 <div class="container" style="padding-top: 30px">
+    <button type="submit" class="btn btn-success col-auto" id="saveButton" style="display:none;">저장</button>
+
     <!--    <div th:replace="fragments/bodyHeader :: bodyHeader"/>-->
     <!--    th:action="@{/member/{memberNo}/view (memberNo=${member.memberNo}) }"-->
-    <table class="table table-striped">
+    <table style="width: 100%" class="table table-striped">
         <thead>
         <tr>
+            <th>유저번호</th>
             <th>이름</th>
             <th>이메일</th>
             <th>가입상태</th>
             <th>최종접속일</th>
-            <!--      <th>재고수량</th>-->
+            <th>가입승인여부</th>
+            <th></th>
             <th></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="member : ${memberList}">
-            <td th:text="${member.userName}"></td>
-            <td th:text="${member.email}"></td>
-            <td th:text="${member?.status}"></td>
-            <td th:text="${member?.lastDatetime}"></td>
+            <td name="id" th:text="${member.id}"></td>
+            <td name="userName" th:text="${member.userName}"></td>
+            <td name="email" th:text="${member.email}"></td>
+            <td name="status" th:text="${member?.status}"></td>
+            <td name="lastDatetime" th:text="${member?.lastDatetime}"></td>
+            <td>
+                <select class="form-select" name = "selectJoinnYn" id = "selectJoinnYn">
+                    <option th:selected="${member?.status.name().equals('PENDING')}" th:value="none"> 선택 </option>
+                    <option th:selected="${member?.status.name().equals('ADMISSION')}" th:value="Y">Y</option>
+                    <option th:selected="${member?.status.name().equals('REJECT')}" th:value="N">N</option>
+                </select>
+            </td>
+            <td >
+                <a id = "saveBtn" href="#" th:href="'javascript:save('+${member.id}+')'"
+                   class="btn btn-info">저장</a>
+<!--                <a id = "editBtn" style="display:none;" href="#" th:href="@{/admin/save/{id}/{selectedYn} (id=${member.id}) }"
+                   class="btn btn-warning">수정</a>-->
+                <!--                <a href="#" th:href="'javascript:save('+${member.id}+')'"-->
+<!--                th:href="@{/admin/save/{id}/{selectedYn} (id=${member.id}) }"-->
+            </td>
+            <td></td>
             <!--      <td th:text="${member.title}"></td>-->
             <!--<td> <a th:text="${member.email}" th:href="@{/member/{memberNo}/view (memberNo=${member.memberNo})}"></a></td>-->
             <!--<td th:text="${member.regId}"></td>-->

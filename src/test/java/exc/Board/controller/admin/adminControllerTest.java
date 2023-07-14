@@ -24,6 +24,7 @@ import static org.junit.Assert.*;
 public class adminControllerTest {
     @Autowired AdminService adminService;
     @Autowired MemberRepository memberRepository;
+    @Autowired MemberService memberService;
 
     Member adminMember;
     Member findMember;
@@ -41,13 +42,22 @@ public class adminControllerTest {
     }*/
     @Test
     @Transactional
-//    @Commit
+    @Commit
     public void 승인하기(){
+        String JoinYn = "Y";
+
+        if(JoinYn.equals("Y")){
+            System.out.println("equals!!!!!!!!!!!!");
+        }
+
+        if(JoinYn =="Y"){
+            System.out.println("=============================== ");
+        }
         findMember = memberRepository.find(1L);
-        findMember.setStatus(MemberStatus.ADMISSION);
+        findMember.setStatus(MemberStatus.REJECT);
 
         System.out.println("setStatus findMember = " + findMember);
-
+//        memberService.save(findMember);
         adminService.JoinYn(findMember);
 
         // 다시 꺼낸 값이랑 비교

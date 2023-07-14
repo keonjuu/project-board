@@ -2,16 +2,14 @@ package exc.Board.controller.Login;
 
 import exc.Board.controller.SessionConst;
 import exc.Board.domain.member.Member;
+import exc.Board.domain.member.MemberStatus;
 import exc.Board.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -63,6 +61,8 @@ public class LoginController {
         return "redirect:/";
     }
 
+
+    @ResponseBody
     @PostMapping("members/login")
     public String login(@ModelAttribute("loginForm") @Valid loginForm form, BindingResult bindingResult,
                         @RequestParam(defaultValue = "/") String redirectURL, HttpServletRequest request){
@@ -87,6 +87,12 @@ public class LoginController {
 //            log.info("bindingResult errors = {}", bindingResult);
             return "Member/loginForm";
         }
+        // 가입 승인 체크
+        String message = "";
+        if(!loginMember.getStatus().equals(MemberStatus.ADMISSION)){
+//            message = "<script>alert('가입이 승인되지 않았습니다.');location.href='members/login';</scrpt>";
+            return "<script>alert('가입이 승인되지 않았습니다.');location.href='/';</script>";
+        }
 
         // 로그인 성공 처리
         // 세션이 있으면 세션 반환, 없으면 신규 세션을 생성  default: request.getSession(true)
@@ -94,6 +100,7 @@ public class LoginController {
         // 세션에 로그인 회원 정보 보관
         session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
 
+        log.error("redirectURL = {}", redirectURL);
         return "redirect:" + redirectURL;
 //        return "redirect:/";
     }
