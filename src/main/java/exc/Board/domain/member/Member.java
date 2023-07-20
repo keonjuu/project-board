@@ -36,7 +36,7 @@ public class Member {
     private List<Board> boardList = new ArrayList<>();;*/
 
     @Enumerated(EnumType.STRING)
-    private MemberType memberType=MemberType.USER;
+    private Role role = Role.USER;
 
     @Enumerated(EnumType.STRING)
     private MemberStatus status = MemberStatus.PENDING;
@@ -52,7 +52,8 @@ public class Member {
                 ", userName='" + userName + '\'' +
                 ", password='" + password + '\'' +
                 ", status='" + status + '\'' +
-                ", memberType=" + memberType +
+                ", lastDatetime='" + lastDatetime + '\'' +
+                ", role=" + role +
                 '}';
     }
 }

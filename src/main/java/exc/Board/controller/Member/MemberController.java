@@ -1,7 +1,7 @@
 package exc.Board.controller.Member;
 
 import exc.Board.domain.member.Member;
-import exc.Board.domain.member.MemberType;
+import exc.Board.domain.member.Role;
 import exc.Board.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +51,7 @@ public class MemberController {
         member.setEmail(form.getEmail());
         member.setPassword(form.getPwd());
         member.setUserName(form.getName());
-        member.setMemberType(MemberType.USER);
+        member.setRole(Role.USER);
 
         //
         memberService.join(member);
@@ -59,11 +59,5 @@ public class MemberController {
         return "redirect:/";
     }
 
-
-
-/*    @GetMapping("/")
-    public String home(){
-        return "Board/mainBoard";
-    }*/
 
 }

@@ -1,7 +1,7 @@
 package exc.Board.repository;
 
 import exc.Board.domain.member.Member;
-import exc.Board.domain.member.MemberType;
+import exc.Board.domain.member.Role;
 import exc.Board.service.MemberService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +50,7 @@ public class MemberRepositoryTest {
         Member member = new Member();
         member.setUserName("건주");
         member.setEmail("keon37@innotree.com");
-        member.setMemberType(MemberType.USER);
+        member.setRole(Role.USER);
 
         //DateEntity dataEntity = new DateEntity(adminMember.getId().toString(),LocalDateTime.now(), adminMember.getId().toString(),LocalDateTime.now() );
 //        member.setDateEntity(dataEntity);
@@ -75,7 +75,7 @@ public class MemberRepositoryTest {
     void 전체조회(){
         List<Member> memberList = memberRepository.findAll();
         for (Member member : memberList) {
-            System.out.println("userId= " + member.getId() + ", userName = " + member.getUserName() + ", group = " + member.getMemberType() );
+            System.out.println("userId= " + member.getId() + ", userName = " + member.getUserName() + ", group = " + member.getRole() );
         }
     }
     @Test

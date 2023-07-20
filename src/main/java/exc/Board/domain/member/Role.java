@@ -1,6 +1,6 @@
 package exc.Board.domain.member;
 
 
-public enum MemberType {
+public enum Role {
     USER, ADMIN
 }
