@@ -106,11 +106,6 @@ public class BoardController {
         // 객체로 받은 값을 db에 새로 저장
         boardService.save(board);
 
-      /*  // 메시지 전달
-        model.addAttribute("message", "수정 사항이 저장되었습니다.");
-        model.addAttribute("redirectUrl", "/");
-        return "Board/message";
-        */
         return "<script>alert('수정 사항이 저장되었습니다.');location.href='/';</script>";
     }
 

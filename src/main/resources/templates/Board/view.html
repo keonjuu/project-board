@@ -13,6 +13,14 @@
     <link rel="stylesheet" href="/css/board.css">
 
     <style>
+        button{
+            display:inline-block;
+            margin-inline-end: 5px;
+        }
+        .form-group textarea{
+            min-height: 200px;
+        }
+
         .form-group input:focus, .form-group textarea:focus {
             border: 0.15rem solid var(--bs-info);
         }
@@ -35,9 +43,10 @@
         $("input[name='title']").attr("readonly", false);
         $("textarea[name='content']").attr("readonly", false);
 
-        // 저장 버튼 활성화
-        if($("#saveButton").css("display") == "none"){
+        // 저장&삭제 버튼 활성화
+        if($("#saveButton").css("display") == "none" & $("#deleteButton").css("display") == "none"){
             $('#saveButton').show();
+            $('#deleteButton').show();
             // $('#cancelButton').show();
             $('#editButton').hide();
         }
@@ -67,13 +76,13 @@
 </script>
 
 <div th:replace="fragments/bodyHeader :: bodyHeader"></div>
-<div class="container" style="padding-top: 30px">
+<div class="container" style="padding-top: 30px; width: 70%">
     <!--    <div th:replace="fragments/bodyHeader :: bodyHeader"/>-->
     <!--    th:action="@{/Board/{boardNo}/view (boardNo=${board.boardNo}) }"-->
     <form th:object="${boards}" method="post" class = "row g-3">
         <div class="form-group col-12">
             <label th:for="boardNo">게시글 번호</label>
-            <span th:text="${board.boardNo}"  class="form-control-plaintext"> </span>
+            <span th:text="${board.boardNo}" class="form-control-plaintext" th:style="${'display:inline; margin-inline-start:5px'}"> </span>
         </div>
         <div class="form-group col-6">
             <label th:for="content">작성자</label>
@@ -101,11 +110,13 @@
                 <textarea type="text" th:field="${board.content}"  class="form-control" readonly></textarea>
             <!--      <span th:text="${board.content}" class="form-control" > 내용 없음 </span>-->
         </div>
-        <button type="button" class="btn btn-success col-auto" id="editButton" th:onclick="edit()">수정</button>
-        <button type="button" class="btn btn-danger col-auto" id="deleteButton" th:onclick="'javascript:deleteBoard('+${board.boardNo}+')'">삭제</button>
-        <!--    th:href="@{/Board/{boardNo}/edit (boardNo=${board.boardNo})}"-->
-        <button type="submit" class="btn btn-success col-auto" id="saveButton" style="display:none;">저장</button>
-        <button type="button" class="btn btn-warning col-auto" id="cancelButton" th:onclick="cancel()">취소</button>
+        <div th:style="${'text-align: center'}">
+            <button type="button" class="btn btn-success col-auto" id="editButton" th:onclick="edit()"  th:style="${session.loginMember?.email == board.regId? 'display:inline-block' : 'display:none'}" >수정</button>
+            <button type="submit" class="btn btn-success col-auto" id="saveButton" style="display:none;">저장</button>
+            <button type="button" class="btn btn-danger col-auto" id="deleteButton" style="display:none;" th:onclick="'javascript:deleteBoard('+${board.boardNo}+')'" >삭제</button>
+            <!--    th:href="@{/Board/{boardNo}/edit (boardNo=${board.boardNo})}"-->
+            <button type="button" class="btn btn-warning col-auto" id="cancelButton" th:onclick="cancel()">목록</button>
+        </div>
     </form>
     <br/>
 </div> <!-- /container -->
