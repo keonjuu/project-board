@@ -1,6 +1,7 @@
 package exc.Board.controller;
 
 import exc.Board.domain.Board;
+import exc.Board.domain.BoardCategory;
 import exc.Board.domain.member.Member;
 import exc.Board.repository.MemberRepository;
 import exc.Board.service.BoardService;
@@ -10,11 +11,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -55,26 +59,19 @@ public class HomeController {
 
     }
 
+    @GetMapping("/{category}")
+    public String noticeHome(@PathVariable("category") BoardCategory category, Model model){
 
-//    @GetMapping("/")
-    public String loginHome1(HttpServletRequest request, Model model, String userEmail, String password){
+        // 게시판
+        List<Board> boardList = boardService.findAll()
+                .stream()
+                .filter(c -> c.getBoardCategory().equals(category))
+                .sorted(Comparator.comparing(Board::getBoardNo).reversed())
+                .collect(Collectors.toList());
 
-        userEmail = "keonjuu@innotree.com";
-        //System.out.println("쿠키 userEmail = " + userEmail);
-
-        if(userEmail == null){
-            return "Home/home";
-        }
-            // 로그인
-            Optional<Member> loginMember = memberRepository.findByEmail(userEmail);
-//        System.out.println("loginMember = " + loginMember.get().getUserName());
-
-        if(loginMember == null){
-            return "Home/home";
-        }
-        model.addAttribute("userName", loginMember.get().getUserName());
+        model.addAttribute("boardlist", boardList);
 
         return "Home/loginHome";
-
     }
+
 }

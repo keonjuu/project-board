@@ -11,9 +11,16 @@
 </head>
 <body>
 <div class="container">
-
 </div>
+
 <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+<div class="container" th:style="${'text-align:center; padding-top:30px; width:70%'}">
+  <a href="/" class="btn btn-default fw-bolder">전체</a>
+  <a href="/notice" class="btn btn-default fw-bolder">공지사항</a>
+  <a href="/free" class="btn btn-default fw-bolder">자유게시판</a> <!--fs-2-->
+  <a href="/qna" class="btn btn-default fw-bolder">Q&A</a>
+</div>
 
 <div class="container" style="padding-top: 30px; width: 70%">
   <div class="group">

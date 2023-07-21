@@ -70,6 +70,7 @@
             <th>유저번호</th>
             <th>이름</th>
             <th>이메일</th>
+            <th>권한</th>
             <th>가입상태</th>
             <th>최종접속일</th>
             <th>가입승인여부</th>
@@ -82,6 +83,7 @@
             <td name="id" th:text="${member.id}"></td>
             <td name="userName" th:text="${member.userName}"></td>
             <td name="email" th:text="${member.email}"></td>
+            <td name="lastDatetime" th:text="${member?.role}"></td>
             <td name="status" th:text="${member?.status}"></td>
             <td name="lastDatetime" th:text="${member?.lastDatetime}"></td>
             <td>

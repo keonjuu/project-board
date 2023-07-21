@@ -80,13 +80,21 @@
     <!--    <div th:replace="fragments/bodyHeader :: bodyHeader"/>-->
     <!--    th:action="@{/Board/{boardNo}/view (boardNo=${board.boardNo}) }"-->
     <form th:object="${boards}" method="post" class = "row g-3">
+            <div class="form-group col-12">
+                <h3>
+            <!--            <label th:for="boardCategory">카테고리</label>-->
+            <span th:if="${board.boardCategory.name().equals('free')}" class="form-control-plaintext" th:style="${'display:inline;'}"> 자유게시판</span>
+            <span th:if="${board.boardCategory.name().equals('notice')}" class="form-control-plaintext" th:style="${'display:inline;'}">공지사항</span>
+            <span th:if="${board.boardCategory.name().equals('qna')}" class="form-control-plaintext" th:style="${'display:inline;'}">Q&A</span>
+                </h3>
+            </div>
         <div class="form-group col-12">
             <label th:for="boardNo">게시글 번호</label>
-            <span th:text="${board.boardNo}" class="form-control-plaintext" th:style="${'display:inline; margin-inline-start:5px'}"> </span>
+            <span th:text="${board.boardNo}" class="form-control-plaintext" th:style="${'display:inline; margin-inline-start:5px'}"> </span>   <!--th:style="${'display:inline; margin-inline-start:5px'}"-->
         </div>
         <div class="form-group col-6">
             <label th:for="content">작성자</label>
-            <span th:text="${board.regId}" class="form-control-plaintext" > 비어있음 </span>
+            <span th:text="${board.regId}" class="form-control-plaintext"  > 비어있음 </span>
         </div>
         <div class="form-group col-6">
             <label th:for="content">작성일</label>

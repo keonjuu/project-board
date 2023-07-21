@@ -3,6 +3,7 @@ package exc.Board;
 import exc.Board.controller.filter.LoginCheckFilter;
 import exc.Board.controller.interceptor.LogInterceptor;
 import exc.Board.controller.interceptor.LoginCheckInterceptor;
+import exc.Board.controller.interceptor.RoleInterceptor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -21,8 +22,13 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/css/**", "/*.ico", "/error");
 
         registry.addInterceptor(new LoginCheckInterceptor())
-                .order(1)
+                .order(2)
                 .addPathPatterns("/**")
+                .excludePathPatterns("/", "/members/new", "/login", "/logout", "/css/**", "/*./ico", "/error");
+
+        registry.addInterceptor(new RoleInterceptor())
+                .order(3)
+                .addPathPatterns("/admin/**")
                 .excludePathPatterns("/", "/members/new", "/login", "/logout", "/css/**", "/*./ico", "/error");
     }
 

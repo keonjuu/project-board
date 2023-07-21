@@ -17,9 +17,12 @@
         </ul>
         <ul class="navbar-nav" id = "login">
           <li class="nav-item">
-            <a class="nav-link active" href="#">user:
+            <a class="nav-link active" href="#">
+              <span th:if="${session.loginMember?.role.name().equals('ADMIN')}">관리자 : </span>
+              <span th:if="${session.loginMember?.role.name().equals('USER')}">사용자 : </span>
 <!--              <span th:text="${member.userName}">사용자명</span>-->
               <span th:text="${session.loginMember?.userName}">사용자명</span>
+              <span th:if = "${not #strings.isEmpty(session.loginMember?.userName)}"> 님 </span>
             </a>
           </li>
         </ul>

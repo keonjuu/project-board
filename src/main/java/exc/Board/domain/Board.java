@@ -22,7 +22,7 @@ public class Board {
     private Long boardNo;
 
     @Enumerated(EnumType.STRING)
-    private BoardCategory boardCategory = normal;
+    private BoardCategory boardCategory = free;
 
     private String title;
 

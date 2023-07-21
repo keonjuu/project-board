@@ -52,10 +52,12 @@ public class BoardController {
             return "Board/registerBoard";
         }
 
+        log.info("form = {}" , form);
          // form 정보 board db 에 저장
         Board board = new Board();
         board.setTitle(form.getTitle());
         board.setContent(form.getContent());
+        board.setBoardCategory(form.getCategory());
 
         // regId, ModId 는 세션정보로 사용
         HttpSession session = request.getSession(false);
@@ -65,7 +67,6 @@ public class BoardController {
         board.setRegTime(LocalDateTime.now());
         board.setModTime(LocalDateTime.now());
         board.setModId(loginMember.getEmail());
-
 
 //        Member loginMember = (Member)session.getAttribute(SessionConst.LOGIN_MEMBER); // 타입캐스팅필요
 
@@ -125,7 +126,5 @@ public class BoardController {
         return "<script>alert('삭제되었습니다.');location.href='/';</script>";
 
     }
-
-
 
 }

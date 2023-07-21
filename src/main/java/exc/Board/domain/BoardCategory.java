@@ -1,5 +1,5 @@
 package exc.Board.domain;
 
 public enum BoardCategory {
-    notice, normal
+    notice, free, qna
 }
