@@ -8,7 +8,25 @@
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/board.css">
 </head>
+<style>
+  html,body{
+    height:100%;
+  }
+  .wrap{
+    min-height: 100%;
+    position:relative;
+  }
+  footer{
+    position: absolute;
+    height: 5rem;
+    background: #2b3035;
+    width: 100%;
+    text-align:center;
+    bottom: 0px;
+  }
+</style>
 <body>
+<div class = "wrap">
 <div class="container">
 
 </div>
@@ -59,36 +77,8 @@
     </div>
   </div>
 </nav>
-<div class="container">
-  <!--
-  <div class="group">
-    <a class="btn btn-success"  href="/boards/new" role="button">새글 작성</a>
-  </div>
-</div>
-<div class="container" id = "mainTableDiv">
-  <table class="table table-striped">
-    <thead>
-    <tr>
-      <th>번호</th>
-      <th>게시글</th>
-      <th>작성자</th>
-      <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="item : ${boardlist}">
-      <td th:text="${item.boardNo}"></td>
-      <td> <a th:text="${item.title}" th:href="@{/Board/{boardNo}/view (boardNo=${item.boardNo})}"></a></td>
-      <td th:text="${item.regId}"></td>
-&lt;!&ndash;      <td th:text="${item.stockQuantity}"></td>&ndash;&gt;
-&lt;!&ndash;      <td>
-        <a href="#" th:href="@{/Board/{boardNo}/edit (boardNo=${item.boardNo})}"
-           class="btn btn-primary" role="button">수정</a>
-      </td>&ndash;&gt;
-    </tr>
-    </tbody>
-  </table>-->
-</div>
 
+<div th:replace="fragments/footer :: footer"/>
+</div>
 </body>
 </html>

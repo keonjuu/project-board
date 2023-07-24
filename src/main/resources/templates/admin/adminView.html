@@ -25,29 +25,28 @@
             background-color: #ecf0f1;
             /*color: white;*/
         }
+    html,body{
+              height:100%;
+          }
+        .wrap{
+            min-height: 100%;
+            position:relative;
+        }
+        footer{
+            position: absolute;
+            height: 5rem;
+            background: #2b3035;
+            width: 100%;
+            text-align:center;
+            bottom: 0px;
+        }
     </style>
 </head>
 <body>
+<div class = "wrap">
 <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
-/*    $(function(){
-        $('#saveBtn').hide();
-    });*/
 
-/*    $(document).ready(function (){
-        $('#selectJoinnYn').on('click', function(){
-            /!*console.log($(this).text());*!/
-            $('#saveBtn').show();
-        });
-    })*/
-/*    function edit(){
-
-        // 저장 버튼 활성화
-        if($("#saveButton").css("display") == "none"){
-            $('#saveButton').show();
-            // $('#cancelButton').show();
-        }
-    }*/
     function save(id){
         var selectedVal = $("select[name=selectJoinnYn]").val();
 
@@ -62,8 +61,6 @@
 <div class="container" style="padding-top: 30px; width: 70%">
     <button type="submit" class="btn btn-success col-auto" id="saveButton" style="display:none;">저장</button>
 
-    <!--    <div th:replace="fragments/bodyHeader :: bodyHeader"/>-->
-    <!--    th:action="@{/member/{memberNo}/view (memberNo=${member.memberNo}) }"-->
     <table style="width: 100%" class="table table-striped">
         <thead>
         <tr>
@@ -96,25 +93,17 @@
             <td >
                 <a id = "saveBtn" href="#" th:href="'javascript:save('+${member.id}+')'"
                    class="btn btn-info">저장</a>
-<!--                <a id = "editBtn" style="display:none;" href="#" th:href="@{/admin/save/{id}/{selectedYn} (id=${member.id}) }"
-                   class="btn btn-warning">수정</a>-->
-                <!--                <a href="#" th:href="'javascript:save('+${member.id}+')'"-->
-<!--                th:href="@{/admin/save/{id}/{selectedYn} (id=${member.id}) }"-->
             </td>
             <td></td>
-            <!--      <td th:text="${member.title}"></td>-->
-            <!--<td> <a th:text="${member.email}" th:href="@{/member/{memberNo}/view (memberNo=${member.memberNo})}"></a></td>-->
-            <!--<td th:text="${member.regId}"></td>-->
+
         </tr>
         </tbody>
     </table>
-<!--        <button type="button" class="btn btn-success col-auto" id="editButton" th:onclick="edit()">수정</button>
-        <button type="button" class="btn btn-danger col-auto" id="deleteButton" th:onclick="'javascript:deletemember('+${member.memberNo}+')'">삭제</button>
-        &lt;!&ndash;    th:href="@{/member/{memberNo}/edit (memberNo=${member.memberNo})}"&ndash;&gt;
-        <button type="submit" class="btn btn-success col-auto" id="saveButton" style="display:none;">저장</button>
-        <button type="button" class="btn btn-warning col-auto" id="cancelButton" th:onclick="cancel()">취소</button>-->
+
     <br/>
 </div> <!-- /container -->
 
+    <div th:replace="fragments/footer :: footer"/>
+</div>
 </body>
 </html>

@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class LoginService {
     private final MemberRepository memberRepository;
 
@@ -24,5 +25,10 @@ public class LoginService {
         return memberRepository.findByEmail(email)
                 .filter(m -> m.getPassword().equals(password))
                 .orElse(null);
+    }
+
+    @Transactional
+    public void save(Member member){
+        memberRepository.save(member);
     }
 }

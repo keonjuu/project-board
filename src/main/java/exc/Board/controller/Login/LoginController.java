@@ -63,6 +63,7 @@ public class LoginController {
 
         //로그인 접속시간 저장
         loginMember.setLastDatetime(LocalDateTime.now());
+        loginService.save(loginMember);
 
         // 로그인 성공 처리
         // 세션이 있으면 세션 반환, 없으면 신규 세션을 생성  default: request.getSession(true)

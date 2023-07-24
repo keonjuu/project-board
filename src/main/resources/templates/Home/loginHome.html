@@ -8,8 +8,27 @@
 
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/board.css">
+<style>
+  html,body{
+    height:100%;
+  }
+  .wrap{
+    min-height: 100%;
+    position:relative;
+  }
+  footer{
+    position: absolute;
+    height: 5rem;
+    background: #2b3035;
+    width: 100%;
+    text-align:center;
+    bottom: 0px;
+  }
+</style>
 </head>
 <body>
+<div class = "wrap">
+
 <div class="container">
 </div>
 
@@ -27,7 +46,7 @@
     <a class="btn btn-success"  href="/boards/new" role="button">새글 작성</a>
   </div>
 </div>
-<div class="container" id = "mainTableDiv" style="padding-top: 30px; width: 70%">
+<div class="container" id = "mainTableDiv" style="padding-top: 30px; width: 70%; bottom: auto; padding-bottom: 7em; position: initial;">
   <table class="table table-striped">
     <colgroup>
       <col style="width: 20%">
@@ -59,6 +78,8 @@
     </tbody>
   </table>
 </div>
+<div th:replace="fragments/footer :: footer"/>
 
+</div>
 </body>
 </html>
