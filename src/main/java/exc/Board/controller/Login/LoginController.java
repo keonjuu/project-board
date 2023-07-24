@@ -56,13 +56,9 @@ public class LoginController {
         }
 
        // 가입 승인 체크
-        //String message = "";
         if(!loginMember.getStatus().equals(MemberStatus.ADMISSION)){
-//            message = "<script>alert('가입이 승인되지 않았습니다.');location.href='/login';</scrpt>";
-//            return "<script>alert('가입이 승인되지 않았습니다.');location.href='/';</script>";
-
             MessageForm message = new MessageForm("가입이 승인되지 않았습니다.", "/");
-            return ShowMessageAndRedirect(message,model);
+            return alertandRedirect(message,model);
         }
 
         //로그인 접속시간 저장
@@ -88,7 +84,7 @@ public class LoginController {
 
     // 사용자에게 메시지를 전달하고, 페이지를 리다이렉트 한다.
     @GetMapping("/loginMessage")
-    public String ShowMessageAndRedirect(MessageForm message, Model model){
+    public String alertandRedirect(MessageForm message, Model model){
         Model msgModel = model.addAttribute("message", message);
 
         System.out.println("### message = " + message.getMsg() + " ## "+ message.getHref());
