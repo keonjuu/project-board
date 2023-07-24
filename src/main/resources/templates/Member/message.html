@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<!--  <th:block th:if="${#strings.length(message.msg)!= 0}">-->
+    <script th:inline="javascript">
+      alert([[${message.msg}]]);
+      location.href =[[${message.href}]];
+    </script>
+
+<!--  </th:block>-->
+<!--  <th:block th:if="${#strings.length(message.href) != 0}">-->
+<!--    <script th:inline="javascript">-->
+<!--      location.href =[[${message.href}]];-->
+<!--    </script>-->
+<!--  </th:block>-->
+
+</head>
+<body>
+</body>
+</html>

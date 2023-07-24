@@ -1,6 +1,7 @@
 package exc.Board.controller.Login;
 
 import exc.Board.controller.SessionConst;
+import exc.Board.domain.Message.MessageForm;
 import exc.Board.domain.member.Member;
 import exc.Board.domain.member.MemberStatus;
 import exc.Board.service.LoginService;
@@ -10,16 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Enumeration;
 
 @Slf4j
 @Controller
@@ -36,7 +32,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute("loginForm") loginForm form, BindingResult bindingResult
+    public String login(@Valid @ModelAttribute("loginForm") loginForm form,  BindingResult bindingResult
 //                        , @RequestParam(defaultValue = "/") String redirectURL
                         , HttpServletRequest request
                         , Model model){
@@ -59,12 +55,18 @@ public class LoginController {
             return "Member/loginForm";
         }
 
-        // 가입 승인 체크
-        String message = "";
+       // 가입 승인 체크
+        //String message = "";
         if(!loginMember.getStatus().equals(MemberStatus.ADMISSION)){
 //            message = "<script>alert('가입이 승인되지 않았습니다.');location.href='/login';</scrpt>";
-            return "<script>alert('가입이 승인되지 않았습니다.');location.href='/';</script>";
+//            return "<script>alert('가입이 승인되지 않았습니다.');location.href='/';</script>";
+
+            MessageForm message = new MessageForm("가입이 승인되지 않았습니다.", "/");
+            return ShowMessageAndRedirect(message,model);
         }
+
+        //로그인 접속시간 저장
+        loginMember.setLastDatetime(LocalDateTime.now());
 
         // 로그인 성공 처리
         // 세션이 있으면 세션 반환, 없으면 신규 세션을 생성  default: request.getSession(true)
@@ -77,11 +79,21 @@ public class LoginController {
 
 //        log.info("urlPath = {}" , urlPath);
 
-        //로그인 접속시간 저장
-        loginMember.setLastDatetime(LocalDateTime.now());
+        log.info("login 시 loginMember = {}" , loginMember);
 
         return "redirect:" + redirectURL;
 //        return "redirect:/";
+    }
+
+
+    // 사용자에게 메시지를 전달하고, 페이지를 리다이렉트 한다.
+    @GetMapping("/loginMessage")
+    public String ShowMessageAndRedirect(MessageForm message, Model model){
+        Model msgModel = model.addAttribute("message", message);
+
+        System.out.println("### message = " + message.getMsg() + " ## "+ message.getHref());
+
+        return "Member/message";
     }
 
     //로그아웃
