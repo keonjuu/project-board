@@ -12,6 +12,19 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 
     <style>
+       .pagination {
+            --bs-pagination-disabled-bg:#18bc9c;'
+        }
+/*
+        .page-link{
+            background-color: var(--bs-info);
+
+        }
+        .active>.page-link{
+            background-color:#2c3e50;
+        }
+        */
+
         .form-group input:focus, .form-group textarea:focus {
             border: 0.15rem solid var(--bs-info);
         }
@@ -45,11 +58,12 @@
 <body>
 <div class = "wrap">
 <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
-<script>
+<script th:inline="javascript">
 
     function save(id){
-        var selectedVal = $("select[name=selectJoinnYn]").val();
-
+        var selectedVal = $('#selectJoinYn_'+id.toString()).val();
+        // var selectedVal = $("select[name=selectJoinYn]").val();
+        //var selectedVal = $("#selectJoinYn option:selected").val();
         location.href="/admin/save/" +id + "/"+ selectedVal ;
         console.log("location.href" + location.href);
     }
@@ -84,8 +98,8 @@
             <td name="status" th:text="${member?.status}"></td>
             <td name="lastDatetime" th:text="${member?.lastDatetime}"></td>
             <td>
-                <select class="form-select" name = "selectJoinnYn" id = "selectJoinnYn">
-                    <option th:selected="${member?.status.name().equals('PENDING')}" th:value="none"> 선택 </option>
+                <select class="form-select" name = "selectJoinYn" th:id="selectJoinYn_+${member.id}"  th:value="${member?.status}">
+                    <option th:selected="${member?.status.name().equals('PENDING')}" th:value="none" > 선택 </option>
                     <option th:selected="${member?.status.name().equals('ADMISSION')}" th:value="Y">Y</option>
                     <option th:selected="${member?.status.name().equals('REJECT')}" th:value="N">N</option>
                 </select>
@@ -99,7 +113,40 @@
         </tr>
         </tbody>
     </table>
+    <nav style="text-align: center;">
+        <ul class="pagination justify-content-center" th:with="start=${T(java.lang.Math).floor(memberList.number/10) * 10 + 1},
+            last=${start + 9 < memberList.totalPages ? start + 9 : memberList.totalPages}">
+            <li >
+                <a class="page-link" th:href="@{/admin(page=1)}" aria-label="First">
+                    <span aria-hidden="true">First</span>
+                </a>
+            </li>
 
+            <li th:class="${memberList.first} ? 'disabled'">
+                <a class="page-link" th:href="@{/admin(page=${memberList.number})}" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&lt;&lt;</span>
+                    <!--                        <span class="sr-only">Previous</span>-->
+                </a>
+            </li>
+
+            <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == memberList.number + 1} ? 'active'">
+                <a class="page-link"th:text="${page}" th:href="@{/admin(page=${page})}"></a>
+            </li>
+
+            <li th:class="${memberList.last}? 'disabled'">
+                <a class="page-link" th:href="@{/admin(page=${memberList.number + 2}) }" href="#" aria-label="Next">
+                    <span aria-hidden="true">&gt;&gt;</span>
+                    <!--                        <span class="sr-only">Next</span>-->
+                </a>
+            </li>
+
+            <li>
+                <a class="page-link" th:href="@{/admin(page=${memberList.totalPages})}" aria-label="Last">
+                    <span aria-hidden="true">Last</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
     <br/>
 </div> <!-- /container -->
 

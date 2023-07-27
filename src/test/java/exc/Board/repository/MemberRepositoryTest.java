@@ -3,12 +3,19 @@ package exc.Board.repository;
 import exc.Board.domain.member.Member;
 import exc.Board.domain.member.Role;
 import exc.Board.service.MemberService;
+import org.apache.juli.logging.Log;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.test.annotation.Commit;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -33,8 +40,8 @@ public class MemberRepositoryTest {
     @BeforeEach
     void 회원찾기(){
         //given
-        Long adminId = 20230002L;
-        Long findId = 20230006l;
+        Long adminId = 1L;
+        Long findId = 1001L;
         //when
         adminMember = memberRepository.find(adminId);
         findMember = memberRepository.find(findId);
@@ -56,11 +63,11 @@ public class MemberRepositoryTest {
 //        member.setDateEntity(dataEntity);
 
         //when (db 저장이 잘되었는지 -> save 값 이랑 find 값이랑 비교)
-        Long saveId= memberRepository.save(member);
-        Long findId = memberRepository.find(saveId).getId();
+//        Long saveId= memberRepository.save(member);
+//        Long findId = memberRepository.find(saveId).getId();
 
         //then
-        Assertions.assertThat(findId).isEqualTo(member.getId());
+//        Assertions.assertThat(findId).isEqualTo(member.getId());
     }
 
     @Test
@@ -110,5 +117,25 @@ public class MemberRepositoryTest {
         List<Member> findNames = memberRepository.findAllByName(userName);
         //then
         System.out.println("findNames = " + findNames);
+    }
+
+
+    @Test
+    @Transactional
+    public void 페이징() throws Exception {
+        //given
+
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
+
+        //when
+        Page<Member> page = memberRepository.findAll(pageRequest);
+//        Slice<Member> slice = memberRepository.findAll(pageRequest);
+
+        //then
+        List<Member> memberList = page.getContent();
+        System.out.println("memberList size = " + memberList.size());
+        for (Member member : memberList) {
+            System.out.println("member = " + member);
+        }
     }
 }

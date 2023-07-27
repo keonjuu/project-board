@@ -44,6 +44,13 @@ public class Member {
     @Column(columnDefinition="DATETIME(0) default CURRENT_TIMESTAMP")
     private LocalDateTime lastDatetime;
 
+    public Member(String userName) {
+        this.userName = userName;
+    }
+
+    public Member() {
+    }
+
     @Override
     public String toString() {
         return "Member{" +
