@@ -6,6 +6,8 @@ import exc.Board.domain.member.Member;
 import exc.Board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,14 +25,6 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
-
-//    @GetMapping("/")
-    public String mainBoard(Model model){
-        List<Board> boardList = boardService.findAll();
-//        System.out.println("boardList = " + boardList);
-        model.addAttribute("boardlist", boardList);
-        return "home";
-    }
 
     @GetMapping("boards/new")
     public String createBoardForm(Model model){

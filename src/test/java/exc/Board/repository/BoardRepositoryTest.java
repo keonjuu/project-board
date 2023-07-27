@@ -2,11 +2,16 @@ package exc.Board.repository;
 
 import exc.Board.domain.Board;
 import exc.Board.domain.BoardCategory;
+import exc.Board.domain.member.Member;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +34,7 @@ public class BoardRepositoryTest {
         //given
         Board board = new Board();
         board.setTitle("안녕하세요~~");
-        board.setContent("회원가입 후 두번째 게시글입니다.");
+        board.setContent("회원가입 후 열두번째 공지글입니다.");
         board.setBoardCategory(BoardCategory.notice);
         board.setRegId("kkk@naver.com");
         board.setModId("kkk@naver.com");
@@ -65,7 +70,7 @@ public class BoardRepositoryTest {
         board.setBoardNo(2L);
 */
         //given
-        Board board = boardRepository.findOne(2L);
+        Board board = boardRepository.findByBoardNo(2L);
         //then
         Assertions.assertThat(board.getBoardNo()).isEqualTo(2L);
         Assertions.assertThat(board.getRegId()).isEqualTo("keon37");
@@ -87,4 +92,47 @@ public class BoardRepositoryTest {
         Assertions.assertThat(boardList.get(0).getBoardCategory()).isEqualTo(BoardCategory.qna);
 
     }
+
+    @Test
+    @Transactional
+    public void 게시글_전체조회_페이징() throws Exception {
+        //given
+
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
+
+        //when
+        Page<Board> page = boardRepository.findAll(pageRequest);
+//        Slice<Member> slice = memberRepository.findAll(pageRequest);
+
+        //then
+        List<Board> boardList = page.getContent();
+        System.out.println("boardList size = " + boardList.size());
+        for (Board board : boardList) {
+            System.out.println("board = " + board);
+        }
+    }
+
+    @Test
+    public void 게시글_카테고리조회_페이징(){
+
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
+        Page<Board> page = boardRepository.findCategory(BoardCategory.notice,pageRequest);
+
+        System.out.println("page.getContent = " + page.getContent());
+        System.out.println("boardList = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.notice)).collect(Collectors.toList()));
+/*        List<Board> boardList = boardRepository.findAll(pageRequest).stream()
+                .filter(c -> c.getBoardCategory().equals(BoardCategory.notice)).collect(Collectors.toList());
+
+
+//        System.out.println("boardList = " + boardList);
+        Page<Board> boards = new PageImpl<>(boardList);
+        System.out.println("boards = " + boards);
+/*
+        // then
+        Assertions.assertThat(boardList.size()).isEqualTo(2);
+        Assertions.assertThat(boardList.get(0).getBoardCategory()).isEqualTo(BoardCategory.qna);
+*/
+
+    }
+
 }

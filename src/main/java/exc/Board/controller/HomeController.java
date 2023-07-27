@@ -7,6 +7,8 @@ import exc.Board.repository.MemberRepository;
 import exc.Board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -34,12 +36,7 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String loginHome(HttpServletRequest request, Model model){
-
-        // 게시판
-        List<Board> boardList = boardService.findAll();
-        //System.out.println("boardList = " + boardList);
-        model.addAttribute("boardlist", boardList);
+    public String loginHome(HttpServletRequest request, Model model, Pageable pageable){
 
         //세션 관리자에 저장된 회원정보 조회
         HttpSession session = request.getSession(false);
@@ -55,21 +52,24 @@ public class HomeController {
             return "Home/home";
         }
         model.addAttribute("member", loginMember);
+
+        // 게시판 데이터 가져오기
+        //List<Board> boardList = boardService.findAll();
+        Page<Board> boardList = boardService.findAll(pageable);
+        //System.out.println("boardList = " + boardList);
+        model.addAttribute("boardlist", boardList);
         return "Home/loginHome";
 
     }
-
     @GetMapping("/{category}")
-    public String noticeHome(@PathVariable("category") BoardCategory category, Model model){
+    public String categoryHome(@PathVariable("category") BoardCategory category, Model model, Pageable pageable){
 
         // 게시판
-        List<Board> boardList = boardService.findAll()
-                .stream()
-                .filter(c -> c.getBoardCategory().equals(category))
-                .sorted(Comparator.comparing(Board::getBoardNo).reversed())
-                .collect(Collectors.toList());
+        Page<Board> boardList = boardService.findCategory(category,pageable);
+//        System.out.println("boardList = " + boardList.getContent().stream().filter(board -> board.equals(BoardCategory.notice)).toString());
 
         model.addAttribute("boardlist", boardList);
+        model.addAttribute("boardCat", category);
 
         return "Home/loginHome";
     }

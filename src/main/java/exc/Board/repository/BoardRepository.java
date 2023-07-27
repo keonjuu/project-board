@@ -1,45 +1,40 @@
 package exc.Board.repository;
 
 import exc.Board.domain.Board;
-import lombok.RequiredArgsConstructor;
+import exc.Board.domain.BoardCategory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
 @Repository
-@RequiredArgsConstructor
-public class BoardRepository {
+//@RequiredArgsConstructor
+public interface BoardRepository extends JpaRepository<Board,Long> {
 
-    private final EntityManager em;
+//    private final EntityManager em;
 
     //1. save
+/*
     public void save(Board board){
         em.persist(board);
     }
+*/
 
     //2. findAll - paging처리 필요
-    public List<Board> findAll(){
-        return em.createQuery("select b from Board b where b.delYn='N'", Board.class)
-//                .setFirstResult(0)
-//                .setMaxResults(10)
-                .getResultList();
-    }
+    @Query("select b from Board b where b.delYn='N'")
+    Page<Board> findAll(Pageable pageable);
+//    List<Board> findAll();
+
+
 
     //3. find 게시글 번호 상세조회
-    public Board findOne(Long boardNo){
-        Board board = em.createQuery("select b from Board b where b.boardNo=:boardNo", Board.class)
-                .setParameter("boardNo", boardNo)
-                .getSingleResult();
-        return board;
+    Board findByBoardNo(Long boardNo);
 
-    }
-
-    /*    public List<Board> findAllByUserName(String name){
-            return em.createQuery("select b from Board b join Member m where m.userName =:userName", Board.class)
-                    .setParameter("userName", name)
-                    .getResultList();
-        }*/
+    // 4.  find 카테고리별 조회 -> 페이징 처리 필요
+    @Query("select b from Board b where b.delYn='N' and b.boardCategory=:boardCategory")
+    Page<Board> findCategory(@Param("boardCategory") BoardCategory category, Pageable pageable);
 
 
 }
