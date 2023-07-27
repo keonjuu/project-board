@@ -22,7 +22,7 @@
               <span th:text="${session.loginMember?.userName}">사용자명</span>
               <span th:if = "${not #strings.isEmpty(session.loginMember?.userName)}"> 님 </span>
             </a>
-            <a class="nav-link active" href="#" th:unless="${session.loginMember?.role.name().equals('ADMIN')}">
+            <a class="nav-link active" href="#" th:unless="${session.loginMember?.role.name().equals('ADMIN')}" th:href="@{/member/{userNo}(userNo=${session.loginMember?.id})}">
               <span th:if="${session.loginMember?.role.name().equals('USER')}">사용자 : </span>
               <span th:text="${session.loginMember?.userName}">사용자명</span>
               <span th:if = "${not #strings.isEmpty(session.loginMember?.userName)}"> 님 </span>

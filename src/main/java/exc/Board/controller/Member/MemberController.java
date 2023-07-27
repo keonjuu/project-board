@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
@@ -19,6 +20,15 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+
+    // user 조회
+    @GetMapping("/member/{userNo}")
+    public String memberInfo(@PathVariable("userNo") Long id, Model model){
+        //
+        Member findMember = memberService.findById(id);
+        model.addAttribute("member", findMember);
+        return "Member/memberView";
+    }
 
     @GetMapping("members/new")
     public String createMemberFrom(Model model) {

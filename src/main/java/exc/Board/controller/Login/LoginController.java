@@ -83,7 +83,7 @@ public class LoginController {
     }
 
 
-    // 사용자에게 메시지를 전달하고, 페이지를 리다이렉트 한다.
+    // 사용자에게 메시지를 전달하고, 페이지 리다이렉트
     @GetMapping("/loginMessage")
     public String alertandRedirect(MessageForm message, Model model){
         Model msgModel = model.addAttribute("message", message);

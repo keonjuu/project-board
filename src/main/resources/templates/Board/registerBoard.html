@@ -47,11 +47,11 @@
 <div class="container" style="padding-top: 30px; width: 70%">
 <!--  <div th:replace="fragments/bodyHeader :: bodyHeader"/>-->
 
-  <form th:action="@{/boards/new}" th:object="${boards}" method="post" class="needs-validation">
+  <form th:action="@{/boards/new}" th:object="${boards}" method="post" class="needs-validation fw-bolder">
     <div class="form-group">
       <div>카테고리</div>
       <div class="form-check form-check-inline">
-        <input type="radio" value="notice" th:field="*{category}" th:disabled="${session.loginMember?.role.name().equals('USER')}"
+        <input type="radio" value="notice" th:field="*{category}" th:th:disabled="${session.loginMember?.role.name().equals('USER')}"
                th:errorclass="field-error" class="form-check-input" id="noticeCat" name="noticeCat"/>
         <label th:for="noticeCat" class="form-check-label">공지사항</label>
       </div>

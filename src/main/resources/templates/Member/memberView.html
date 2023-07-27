@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--<head th:replace="fragments/header :: header" />-->
+<head>
+    <title>게시글 admin</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/board.css">
+
+    <style>
+        .form-group input:focus, .form-group textarea:focus {
+            border: 0.15rem solid var(--bs-info);
+        }
+        /*input[type=text]*/
+        input[type=text], textarea[type=text]{
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: none;
+            background-color: #ecf0f1;
+            /*color: white;*/
+        }
+    html,body{
+              height:100%;
+          }
+        .wrap{
+            min-height: 100%;
+            position:relative;
+        }
+        footer{
+            position: absolute;
+            height: 5rem;
+            background: #2b3035;
+            width: 100%;
+            text-align:center;
+            bottom: 0px;
+        }
+    </style>
+</head>
+<body>
+<div class = "wrap">
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<script th:inline="javascript">
+/*    function save(id){
+        var selectedVal = $('#selectJoinYn_'+id.toString()).val();
+        location.href="/admin/save/" +id + "/"+ selectedVal ;
+        console.log("location.href" + location.href);
+    }*/
+    
+</script>
+
+    <div th:replace="fragments/bodyHeader :: bodyHeader"></div>
+
+
+    <div class="container" style="padding-top: 30px; width: 70%">
+        <form th:object="${member}" method="get" class = "fw-bolder">
+            <div class="form-group row">
+                <label th:for="userNo" class="col-sm-2 col-form-label">번호</label>
+                <div class="col-sm-10">
+                    <input type="text" th:field="*{id}" class="form-control" id="inputEmail3" placeholder="userNo">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label th:for="userName" class="col-sm-2 col-form-label">이름</label>
+                <div class="col-sm-10">
+                    <input type="text" th:field="*{userName}" class="form-control" id="userName" placeholder="userName">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label th:for="email" class="col-sm-2 col-form-label">Email</label>
+                <div class="col-sm-10">
+                    <input type="text"  th:field="*{email}" class="form-control" id="email" placeholder="Email">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label th:for="role" class="col-sm-2 col-form-label">권한</label>
+                <div class="col-sm-10">
+                    <input type="text" th:field="*{role}" class="form-control" id="role" placeholder="권한">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label th:for="status" class="col-sm-2 col-form-label">가입상태</label>
+                <div class="col-sm-10">
+                    <input type="text" th:field="*{status}" class="form-control" id="status" placeholder="가입상태">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label th:for="lastDatetime" class="col-sm-2 col-form-label">최종접속일</label>
+                <div class="col-sm-10">
+                    <input type="text" th:field="*{lastDatetime}" class="form-control" id="lastDatetime" placeholder="최종접속일">
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div th:replace="fragments/footer :: footer"/></div>
+</body>
+</html>
