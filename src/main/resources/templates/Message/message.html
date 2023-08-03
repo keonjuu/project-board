@@ -10,18 +10,11 @@
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
 
-<!--  <th:block th:if="${#strings.length(message.msg)!= 0}">-->
     <script th:inline="javascript">
       alert([[${message.msg}]]);
       location.href =[[${message.href}]];
     </script>
 
-<!--  </th:block>-->
-<!--  <th:block th:if="${#strings.length(message.href) != 0}">-->
-<!--    <script th:inline="javascript">-->
-<!--      location.href =[[${message.href}]];-->
-<!--    </script>-->
-<!--  </th:block>-->
 
 </head>
 <body>

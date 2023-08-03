@@ -94,7 +94,10 @@
                     <input type="text" th:field="*{lastDatetime}" class="form-control" id="lastDatetime" placeholder="최종접속일">
                 </div>
             </div>
-
+            <div th:style="${'text-align: center'}">
+<!--                <button type="button" class="btn btn-danger col-auto" id="deleteButton" style="display:none;" th:onclick="'javascript:deleteBoard('+${board.boardNo}+')'" >삭제</button>-->
+                <button type="button" class="btn btn-warning col-auto" id="cancelButton" th:onclick="|location.href='@{/}'|">목록</button>
+            </div>
         </form>
     </div>
 
