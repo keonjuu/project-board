@@ -23,7 +23,7 @@ public class MemberService {
     @Transactional
     public Long join(Member member) {
 
-        isDuplicatedEmail(member); // 이메일 중복 체크 추가하기
+        //isDuplicatedEmail(member); // 이메일 중복 체크 추가하기
         memberRepository.save(member);
         return member.getId(); //
     }
@@ -31,6 +31,16 @@ public class MemberService {
     public void isValidEmail(){
     }
 */
+//    @Transactional
+    public boolean validDuplicatedEmail(String email) {
+        System.out.println("validDuplicatedEmail.email = " + email);
+        if(memberRepository.findByEmail(email).isPresent()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
     @Transactional
     public void isDuplicatedEmail(Member member) {
@@ -54,7 +64,7 @@ public class MemberService {
     public Page<Member> findAll(Pageable pageable){
 
         int pageNumber = pageable.getPageNumber()==0 ? 0 : pageable.getPageNumber()-1;
-        pageable = PageRequest.of(pageNumber, 5, Sort.by(Sort.Direction.DESC, "id"));
+        pageable = PageRequest.of(pageNumber, 5, Sort.by(Sort.Direction.ASC, "id"));
 
         Page<Member> pageMember = memberRepository.findAll(pageable);
 

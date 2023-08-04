@@ -40,4 +40,11 @@ public class MemberServiceTest {
         assertThat(member.getUserName()).isEqualTo(findMember.getUserName()); // 이름 검증
 
     }
+
+    @Test
+    public void 이메일체크(){
+        String email = "kkk@naver.com";
+        boolean result = memberService.validDuplicatedEmail(email);
+        System.out.println("중복? = " + result);
+    }
 }

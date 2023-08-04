@@ -5,6 +5,7 @@ import exc.Board.domain.member.Role;
 import exc.Board.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 
 @Slf4j
 @Controller
@@ -46,9 +48,15 @@ public class MemberController {
             bindingResult.rejectValue("email","email","이메일을 반드시 입력해야 합니다.");
 //            bindingResult.addError(new FieldError("form","email","이메일을 반드시 입력해야 합니다."));
         }
+
         if(form.getPwd().isEmpty()){
             bindingResult.rejectValue("pwd","pwd","비밀번호를 반드시 입력해야 합니다.");
 //            bindingResult.addError(new FieldError("form","email","비밀번호를 반드시 입력해야 합니다."));
+        }
+        if(memberService.validDuplicatedEmail(form.getEmail())){
+            log.info("result? = {}" , memberService.validDuplicatedEmail(form.getEmail()));
+            log.info("email errors = {}" ,bindingResult.toString());
+            bindingResult.rejectValue("email","email","이미 사용중인 이메일입니다.");
         }
         if(bindingResult.hasErrors()){
             log.info("errors = {}" ,bindingResult.toString());
@@ -56,15 +64,14 @@ public class MemberController {
             return "Member/createMemberForm";
         }
 
-        // form 정보 Member 객체 생성해서 service 에 전달
-        Member member = new Member();
-        member.setEmail(form.getEmail());
-        member.setPassword(form.getPwd());
-        member.setUserName(form.getName());
-        member.setRole(Role.USER);
+            // form 정보 Member 객체 생성해서 service 에 전달
+            Member member = new Member();
+            member.setEmail(form.getEmail());
+            member.setPassword(form.getPwd());
+            member.setUserName(form.getName());
+            member.setRole(Role.USER);
 
-        //
-        memberService.join(member);
+            memberService.join(member);
 
         return "redirect:/";
     }
