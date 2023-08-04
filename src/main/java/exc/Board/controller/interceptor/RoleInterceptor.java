@@ -20,19 +20,21 @@ public class RoleInterceptor implements HandlerInterceptor {
 
         if(loginMember.getRole().equals(Role.USER)){
             log.info("USER! 관리자 인증 요청 실패");
-            response.sendRedirect("/");
+            response.setContentType("text/html; charset=utf-8");
+            response.getWriter().println("<script>alert('해당 페이지 접근 권한이 없습니다.');location.href='/';</script>");
+//            response.sendRedirect("/");
             return false;
 //            return false;
         }
         return true;
     }
 
-    @Override
+/*    @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         if(ex != null){
 //            throw new RuntimeException("No access! 관리자 권한이 필요합니다.");
             log.error("No access! 관리자 권한이 필요합니다.");
 //            return false;
         }
-    }
+    }*/
 }
