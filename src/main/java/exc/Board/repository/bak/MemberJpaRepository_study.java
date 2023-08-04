@@ -1,4 +1,4 @@
-package exc.Board.repository;
+package exc.Board.repository.bak;
 
 import exc.Board.domain.member.Member;
 import org.springframework.data.domain.Pageable;

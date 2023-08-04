@@ -1,4 +1,4 @@
-package exc.Board.repository;
+package exc.Board.repository.bak;
 
 import exc.Board.domain.Board;
 import exc.Board.domain.BoardCategory;
