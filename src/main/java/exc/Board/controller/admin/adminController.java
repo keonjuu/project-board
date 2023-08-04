@@ -37,13 +37,13 @@ public class adminController {
     public String mainAdmin(@PageableDefault Pageable pageable, Model model){
         // 관리자만
         Page<Member> memberList = memberService.findAll(pageable);
-        System.out.println("memberList = " + memberList);
         model.addAttribute("memberList", memberList);
+/*        System.out.println("memberList = " + memberList);
         model.addAttribute("pageNo", memberList.getNumber());
         model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
         model.addAttribute("next", pageable.next().getPageNumber());
         model.addAttribute("hasNext", memberList.hasNext());
-        model.addAttribute("hasPrev", memberList.hasPrevious());
+        model.addAttribute("hasPrev", memberList.hasPrevious());*/
         return "/admin/adminView";
     }
 
@@ -63,10 +63,6 @@ public class adminController {
             findMember.setStatus(MemberStatus.REJECT);}
 
         adminService.JoinYn(findMember);
-
-
-/*        redirectAttributes.addAttribute("saveid", findMember.getId());
-        redirectAttributes.addAttribute("status", findMember.getStatus());*/
 
         return "redirect:/admin";
     }
