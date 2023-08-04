@@ -1,6 +1,7 @@
 package exc.Board.service;
 
 
+import exc.Board.controller.Board.SearchForm;
 import exc.Board.domain.Board;
 import exc.Board.domain.BoardCategory;
 import exc.Board.repository.BoardRepository;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Comparator;
 import java.util.List;
@@ -22,31 +24,73 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+
     //1. 저장
     @Transactional
-    public void save(Board board){
-         boardRepository.save(board);
+    public void save(Board board) {
+        boardRepository.save(board);
     }
 
     //2.게시판 전체 조회
-    public Page<Board> findAll(Pageable pageable){
-        int pageNumber = pageable.getPageNumber()==0 ? 0 : pageable.getPageNumber()-1;
+    public Page<Board> findAll(Pageable pageable) {
+        int pageNumber = pageable.getPageNumber() == 0 ? 0 : pageable.getPageNumber() - 1;
         pageable = PageRequest.of(pageNumber, 5, Sort.by(Sort.Direction.DESC, "id"));
 
         return boardRepository.findAll(pageable);
     }
 
     //3. 게시판 상세 조회
-    public Board findOne(Long boardNo){return boardRepository.findByBoardNo(boardNo);}
+    public Board findOne(Long boardNo) {
+        return boardRepository.findByBoardNo(boardNo);
+    }
 
 
     //4. 게시판 카테고리 조회
-    public Page<Board> findCategory(BoardCategory category, Pageable pageable){
+    public Page<Board> findCategory(BoardCategory category, Pageable pageable) {
 
-        int pageNumber = pageable.getPageNumber()==0 ? 0 : pageable.getPageNumber()-1;
+        int pageNumber = pageable.getPageNumber() == 0 ? 0 : pageable.getPageNumber() - 1;
         pageable = PageRequest.of(pageNumber, 5, Sort.by(Sort.Direction.DESC, "id"));
 
-        return boardRepository.findCategory(category,pageable);
+        return boardRepository.findCategory(category, pageable);
     }
+
+
+    //5. 게시판 조회
+    public Page<Board> searchBoard(String searchType, String keyword, Pageable pageable) {
+
+//        Page<Board> regIdPage = null;
+        int pageNumber = pageable.getPageNumber() == 0 ? 0 : pageable.getPageNumber() - 1;
+        pageable = PageRequest.of(pageNumber, 5, Sort.by(Sort.Direction.DESC, "boardNo"));
+
+/*        System.out.println("searchType = " + searchType);
+        System.out.println("keyword = " + keyword);*/
+
+        if(searchType.equals("regId")){
+            return boardRepository.findByRegIdContaining(keyword, pageable);
+        }
+        if(searchType.equals("title")){
+            return boardRepository.findByTitleContaining(keyword, pageable);
+        }
+        if(searchType.equals("content")){
+            return boardRepository.findByContentContaining(keyword, pageable);
+        }
+
+        //System.out.println("pageable = " + pageable.toString());
+        return null;
+    }
+
+
+/*
+        if (searchType == "title") {
+            return boardRepository.findByTitleContaining(keyword, pageable);
+        }
+        else if (searchType == "content") {
+            return boardRepository.findByContentContaining(keyword, pageable);
+       /* } else {
+//            result = boardRepository.findTitleOrContentContaining(category, keyword, pageable);
+//            result = boardRepository.findTitleOrContentContaining(category, keyword, pageable);
+
+            return result;
+        }*/
 
 }

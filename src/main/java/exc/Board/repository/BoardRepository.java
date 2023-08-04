@@ -36,5 +36,17 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
     @Query("select b from Board b where b.delYn='N' and b.boardCategory=:boardCategory")
     Page<Board> findCategory(@Param("boardCategory") BoardCategory category, Pageable pageable);
 
+    // 5. 검색 기능
+    Page<Board> findByTitleContaining(String keyword, Pageable pageable);
+    Page<Board> findByContentContaining(String keyword, Pageable pageable);
+    @Query("select b from Board b where b.delYn='N' and b.regId like %:keyword%")
+    Page<Board> findByRegIdContaining(@Param("keyword") String keyword, Pageable pageable);
 
+
+    Page<Board> findByBoardCategoryAndDelYnEqualsAndTitleContaining(BoardCategory category,String delYn,String keyword, Pageable pageable);
+    Page<Board> findByBoardCategoryAndDelYnEqualsAndContentContaining(BoardCategory category,String delYn, String keyword, Pageable pageable);
+
+    @Query("select b from Board b where b.boardCategory=:boardCategory and b.delYn='N' and (b.title like %:keyword% or b.content like %:keyword%)")
+    Page<Board> findTitleOrContentContaining(@Param("boardCategory") BoardCategory category, @Param("keyword") String keyword, Pageable pageable);
+//    findByBoardCategoryAndDelYnEqualsOrTitleContainingOrContentContaining
 }

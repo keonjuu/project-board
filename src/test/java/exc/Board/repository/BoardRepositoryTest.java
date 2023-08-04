@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Commit;
@@ -135,4 +136,71 @@ public class BoardRepositoryTest {
 
     }
 
+    @Test
+    public void 글쓴이검색(){
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
+        String keword = "keonjuu";
+        Page<Board> page = boardRepository.findByRegIdContaining(keword, pageRequest);
+        System.out.println("page.getContent = " + page.getContent());
+        System.out.println("boardList = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.qna)).collect(Collectors.toList()));
+
+    }
+
+
+    @Test
+    public void 타이틀검색(){
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "boardNo"));
+
+        String keword = "언제쯤";
+        Page<Board> page = boardRepository.findByTitleContaining(keword, pageRequest);
+        System.out.println("page.getContent = " + page.getContent());
+        System.out.println("boardList = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.qna)).collect(Collectors.toList()));
+
+    }
+
+    @Test
+    public void 콘텐츠검색(){
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "boardNo"));
+        String keword = "언제쯤";
+        Page<Board> page = boardRepository.findByContentContaining(keword, pageRequest);
+        System.out.println("page.getContent = " + page.getContent());
+        System.out.println("boardList = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.qna)).collect(Collectors.toList()));
+
+    }
+
+
+
+    @Test
+    public void 카테고리별_타이틀검색(){
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "boardNo"));
+        String keword = "언제쯤";
+        Page<Board> page = boardRepository.findByBoardCategoryAndDelYnEqualsAndTitleContaining(BoardCategory.qna,"N", keword ,pageRequest);
+        System.out.println("page.getContent = " + page.getContent());
+        System.out.println("boardList = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.qna)).collect(Collectors.toList()));
+
+    }
+    @Test
+    public void 카테고리별_내용검색(){
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "boardNo"));
+        String keword = "언제쯤";
+        Page<Board> page = boardRepository.findByBoardCategoryAndDelYnEqualsAndContentContaining(BoardCategory.qna, "N",keword ,pageRequest);
+        System.out.println("page.getContent = " + page.getContent());
+        System.out.println("boardList = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.qna)).collect(Collectors.toList()));
+
+    }
+
+    @Test
+    public void 카테고리별_타이틀내용검색(){
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "boardNo"));
+        String keword = "재택";
+        Page<Board> qnaPage = boardRepository.findTitleOrContentContaining(BoardCategory.qna, keword, pageRequest);
+        Page<Board> noticePage = boardRepository.findTitleOrContentContaining(BoardCategory.notice, keword, pageRequest);
+        Page<Board> freePage = boardRepository.findTitleOrContentContaining(BoardCategory.free, keword, pageRequest);
+        System.out.println("qnaPage.getContent = " + qnaPage.getContent());
+        System.out.println("noticePage.getContent = " + noticePage.getContent());
+        System.out.println("freePage.getContent = " + freePage.getContent());
+
+//        System.out.println("boardList = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.notice)).collect(Collectors.toList()));
+
+    }
 }

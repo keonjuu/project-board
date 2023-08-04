@@ -18,6 +18,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -85,29 +86,19 @@ public class HomeController {
         return "Home/loginHome";
     }
 
-/*
-//    @ResponseBody
-//    @GetMapping("/Board/search")
-    public String categoryHome2(
-                                @PageableDefault(page = 0, size = 10, sort = "boardNo", direction = Sort.Direction.DESC) Pageable pageable
-                                ,Model model,
-                                @RequestParam("searchKeyword") String keyword,
-                                @RequestParam("searchType") String searchType
-//                                @RequestParam(value = "category", required = false) BoardCategory category,
-                                ){
+//    @PageableDefault(page = 0, size = 10, sort = "boardNo", direction = Sort.Direction.DESC) Pageable pageable
+    @GetMapping("/Board/search")
+    public String searchKeyword(@RequestParam("searchType") String searchType
+                                ,  @RequestParam("searchKeyword") String keyword
+                                , Model model, Pageable pageable){
 
-        BoardCategory category;
-        category = (BoardCategory) model.getAttribute("category");
+        System.out.println("searchType = " + searchType + ", keyword = " + keyword);
 
-        Page<Board> boardList = boardService.searchBoard(searchType, keyword, pageable);
+        Page<Board> boardlist = boardService.searchBoard(searchType, keyword, pageable);
+//        System.out.println("Board/search boardList = " + boardlist.getContent());
+        model.addAttribute("boardlist", boardlist);
 
-        model.addAttribute("boardList", boardList);
-        model.addAttribute("boardCat", category);
-
-//        String list = boardList.toList().toString();
-//        return list;
-        return "Home/loginHome";
+        return "/Home/loginHome";
     }
-*/
 
 }
