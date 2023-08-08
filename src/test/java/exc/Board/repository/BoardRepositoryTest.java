@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 public class BoardRepositoryTest {
 
     @Autowired BoardRepository boardRepository;
+    @Autowired MemberRepository memberRepository;
 
     @Test
     @Transactional
@@ -37,7 +38,8 @@ public class BoardRepositoryTest {
         board.setTitle("안녕하세요~~");
         board.setContent("회원가입 후 열두번째 공지글입니다.");
         board.setBoardCategory(BoardCategory.notice);
-        board.setRegId("kkk@naver.com");
+        board.setMember(new Member("kkk@naver.com"));
+//        board.setRegId("kkk@naver.com");
         board.setModId("kkk@naver.com");
         board.setRegTime(LocalDateTime.now());
         board.setModTime(LocalDateTime.now());
@@ -74,7 +76,7 @@ public class BoardRepositoryTest {
         Board board = boardRepository.findByBoardNo(2L);
         //then
         Assertions.assertThat(board.getBoardNo()).isEqualTo(2L);
-        Assertions.assertThat(board.getRegId()).isEqualTo("keon37");
+//        Assertions.assertThat(board.getRegId()).isEqualTo("keon37");
 
     }
 
@@ -203,4 +205,26 @@ public class BoardRepositoryTest {
 //        System.out.println("boardList = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.notice)).collect(Collectors.toList()));
 
     }
+
+    @Test
+    public void 페이징사용자글목록조회() {
+
+        //when
+        Long findId = 20230006L;
+        Member findMember = memberRepository.find(findId);
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "modTime"));
+        Page<Board> userPage = boardRepository.findAllByUserNo(findMember.getId(), pageRequest);
+
+        //then
+        List<Board> boardList = userPage.getContent();
+        System.out.println("page.getContent() = " + userPage.getContent());
+        System.out.println("page.getSize() = " + userPage.getSize());  // 페이지 크기
+        System.out.println("page.getTotalElements = " + userPage.getTotalElements()); // 전체 count
+        System.out.println("boardList size = " + boardList.size());
+/*        for (Board board : boardList) {
+            System.out.println("board = " + board);
+        }*/
+
+    }
+
 }

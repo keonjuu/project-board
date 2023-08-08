@@ -2,15 +2,17 @@ package exc.Board.repository;
 
 import exc.Board.domain.Board;
 import exc.Board.domain.BoardCategory;
+import exc.Board.domain.member.Member;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 @Repository
-//@RequiredArgsConstructor
 public interface BoardRepository extends JpaRepository<Board,Long> {
 
 //    private final EntityManager em;
@@ -36,10 +38,11 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
     @Query("select b from Board b where b.delYn='N' and b.boardCategory=:boardCategory")
     Page<Board> findCategory(@Param("boardCategory") BoardCategory category, Pageable pageable);
 
+
     // 5. 검색 기능
     Page<Board> findByTitleContaining(String keyword, Pageable pageable);
     Page<Board> findByContentContaining(String keyword, Pageable pageable);
-    @Query("select b from Board b where b.delYn='N' and b.regId like %:keyword%")
+    @Query("select b from Board b where b.delYn='N' and b.member.email like %:keyword%")
     Page<Board> findByRegIdContaining(@Param("keyword") String keyword, Pageable pageable);
 
 
@@ -48,5 +51,10 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
 
     @Query("select b from Board b where b.boardCategory=:boardCategory and b.delYn='N' and (b.title like %:keyword% or b.content like %:keyword%)")
     Page<Board> findTitleOrContentContaining(@Param("boardCategory") BoardCategory category, @Param("keyword") String keyword, Pageable pageable);
-//    findByBoardCategoryAndDelYnEqualsOrTitleContainingOrContentContaining
+
+    // 6. 사용자별 게시글 (fetch join vs join )
+    @Query("select b from Board b inner join Member m on b.member.email = m.email where m.id =:id")
+    Page<Board> findAllByUserNo(@Param("id") Long id, Pageable pageable);
+
+
 }
