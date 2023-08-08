@@ -3,8 +3,6 @@ package exc.Board.domain;
 import exc.Board.domain.member.Member;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
@@ -32,7 +30,23 @@ public class Board {
     @Column(columnDefinition="DATETIME(0) default CURRENT_TIMESTAMP")
     private LocalDateTime regTime;
 
-    private String regId;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "regId", referencedColumnName = "email")
+    private Member member;
+//    private String regId;
+
+    /*연관관계 매서드*/
+    public void setMember(Member member){
+        // 기존 member 관계 제거
+        if (this.member !=null) {
+            this.member.getBoardList().remove(this);
+        }
+        this.member = member;
+        member.getBoardList().add(this);
+
+
+//        System.out.println("board.setMember(loginMember) = " + member);
+    }
 
     @Column(columnDefinition="DATETIME(0) default CURRENT_TIMESTAMP")
     private LocalDateTime modTime;
@@ -51,43 +65,12 @@ public class Board {
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", regTime=" + regTime +
-                ", regId='" + regId + '\'' +
                 ", modTime=" + modTime +
                 ", modId='" + modId + '\'' +
                 ", delYn='" + delYn + '\'' +
                 '}';
     }
-
-
-
-    /*
-        @Embedded
-        private DateEntity dateEntity;
-    */
-/*
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "reg_Id")
-    private Member member;
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "mod_Id")
-    private Member member;
-
-
-    // 연관관계 편의 메서드 정의하기
-    public void setMembers(Member member){
-        // 기존 Member관계 제거
-        if (this.member !=null){
-            this.member.getBoardList().remove(this);
-        }
-        this.member = member;
-        member.getBoardList().add(this);
-    }
-*/
-
-/*
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "register_Id")
-*/
-
 }
+
+
+

@@ -1,10 +1,14 @@
 package exc.Board.domain.member;
 
+import exc.Board.domain.Board;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -14,7 +18,7 @@ import java.time.LocalDateTime;
         sequenceName = "member_seq",
         allocationSize = 1
 )
-public class Member {
+public class Member extends Board implements Serializable {
 
     @Id /*@GeneratedValue(generator = "sequence-generator")*/
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_GENERATOR")
@@ -32,8 +36,8 @@ public class Member {
     private DateEntity dateEntity;
 */
 
-/*    @OneToMany(mappedBy = "member")
-    private List<Board> boardList = new ArrayList<>();;*/
+    @OneToMany(mappedBy = "member")
+    private List<Board> boardList = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
@@ -44,11 +48,11 @@ public class Member {
     @Column(columnDefinition="DATETIME(0) default CURRENT_TIMESTAMP")
     private LocalDateTime lastDatetime;
 
-    public Member(String userName) {
-        this.userName = userName;
+    public Member() {
     }
 
-    public Member() {
+    public Member(String email) {
+        this.email = email;
     }
 
     @Override
@@ -60,6 +64,7 @@ public class Member {
                 ", password='" + password + '\'' +
                 ", status='" + status + '\'' +
                 ", lastDatetime='" + lastDatetime + '\'' +
+//                ", board='" + getBoardList().toString() + '\'' +
                 ", role=" + role +
                 '}';
     }
