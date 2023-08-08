@@ -94,7 +94,7 @@
         </div>
         <div class="form-group col-6">
             <label th:for="content">작성자</label>
-            <span th:text="${board.regId}" class="form-control-plaintext"  > 비어있음 </span>
+            <span th:text="${board.member.email}" class="form-control-plaintext"  > 비어있음 </span>
         </div>
         <div class="form-group col-6">
             <label th:for="content">작성일</label>
@@ -119,7 +119,7 @@
             <!--      <span th:text="${board.content}" class="form-control" > 내용 없음 </span>-->
         </div>
         <div th:style="${'text-align: center'}">
-            <button type="button" class="btn btn-success col-auto" id="editButton" th:onclick="edit()"  th:style="${session.loginMember?.email == board.regId? 'display:inline-block' : 'display:none'}" >수정</button>
+            <button type="button" class="btn btn-success col-auto" id="editButton" th:onclick="edit()"  th:style="${session.loginMember?.email == board.member.email? 'display:inline-block' : 'display:none'}" >수정</button>
             <button type="submit" class="btn btn-success col-auto" id="saveButton" style="display:none;">저장</button>
             <button type="button" class="btn btn-danger col-auto" id="deleteButton" style="display:none;" th:onclick="'javascript:deleteBoard('+${board.boardNo}+')'" >삭제</button>
             <!--    th:href="@{/Board/{boardNo}/edit (boardNo=${board.boardNo})}"-->

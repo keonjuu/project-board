@@ -79,7 +79,7 @@
     <tr th:each="item : ${boardlist}">
       <td th:text="${item.boardNo}"></td>
       <td> <a th:text="${item.title}" th:href="@{/Board/{boardNo}/view (boardNo=${item.boardNo})}"></a></td>
-      <td th:text="${item.regId}"></td>
+      <td th:text="${item.member.email}"></td>
     </tr>
     </tbody>
   </table>
