@@ -56,11 +56,15 @@ public class LoginController {
         }
 
        // 가입 승인 체크
-        if(!loginMember.getStatus().equals(MemberStatus.ADMISSION)){
-            MessageForm message = new MessageForm("가입이 승인되지 않았습니다.", "/");
+        if(loginMember.getStatus().equals(MemberStatus.PENDING)){
+            MessageForm message = new MessageForm("회원가입이 승인되지 않았습니다. 관리자에게 문의!", "/");
             model.addAttribute("message", message);
             return "Message/message";
-//            return alertandRedirect(message,model);
+
+        } else if (loginMember.getStatus().equals(MemberStatus.REJECT)) {
+            MessageForm message = new MessageForm("관리자에 의해 회원가입이 거부되었습니다.", "/");
+            model.addAttribute("message", message);
+            return "Message/message";
         }
 
         //로그인 접속시간 저장
@@ -84,13 +88,6 @@ public class LoginController {
 //        return "redirect:/";
     }
 
-
-    // 사용자에게 메시지를 전달하고, 페이지 리다이렉트
-/*    @GetMapping("/loginMessage")
-    public String alertandRedirect(MessageForm message, Model model){
-        model.addAttribute("message", message);
-        return "Message/message";
-    }*/
 
     //로그아웃
     @PostMapping("/logout")
