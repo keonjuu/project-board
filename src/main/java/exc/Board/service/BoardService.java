@@ -1,7 +1,6 @@
 package exc.Board.service;
 
 
-import exc.Board.controller.Board.SearchForm;
 import exc.Board.domain.Board;
 import exc.Board.domain.BoardCategory;
 import exc.Board.repository.BoardRepository;
@@ -12,11 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
