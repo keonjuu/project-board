@@ -18,7 +18,7 @@ import java.util.List;
         sequenceName = "member_seq",
         allocationSize = 1
 )
-public class Member extends Board implements Serializable {
+public class Member implements Serializable {
 
     @Id /*@GeneratedValue(generator = "sequence-generator")*/
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_GENERATOR")
