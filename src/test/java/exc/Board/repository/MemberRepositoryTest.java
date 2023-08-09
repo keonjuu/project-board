@@ -1,5 +1,6 @@
 package exc.Board.repository;
 
+import exc.Board.domain.Board;
 import exc.Board.domain.member.Member;
 import exc.Board.domain.member.Role;
 import exc.Board.service.MemberService;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.test.annotation.Commit;
@@ -22,12 +24,15 @@ import javax.persistence.EntityManager;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 //@RunWith(SpringRunner.class)
 @SpringBootTest
+@Transactional(readOnly = true)
 public class MemberRepositoryTest {
 
     @Autowired MemberService memberService;
@@ -40,8 +45,8 @@ public class MemberRepositoryTest {
     @BeforeEach
     void 회원찾기(){
         //given
-        Long adminId = 1L;
-        Long findId = 1001L;
+        Long adminId = 20230005L;
+        Long findId = 20230006L;
         //when
         adminMember = memberRepository.find(adminId);
         findMember = memberRepository.find(findId);
@@ -57,17 +62,11 @@ public class MemberRepositoryTest {
         Member member = new Member();
         member.setUserName("건주");
         member.setEmail("keon37@innotree.com");
+        member.setPassword("kkk");
         member.setRole(Role.USER);
 
-        //DateEntity dataEntity = new DateEntity(adminMember.getId().toString(),LocalDateTime.now(), adminMember.getId().toString(),LocalDateTime.now() );
-//        member.setDateEntity(dataEntity);
+        memberRepository.save(member);
 
-        //when (db 저장이 잘되었는지 -> save 값 이랑 find 값이랑 비교)
-//        Long saveId= memberRepository.save(member);
-//        Long findId = memberRepository.find(saveId).getId();
-
-        //then
-//        Assertions.assertThat(findId).isEqualTo(member.getId());
     }
 
     @Test
@@ -138,4 +137,27 @@ public class MemberRepositoryTest {
             System.out.println("member = " + member);
         }
     }
+
+
+    @Test
+    public void 사용자글목록조회(){
+        // when
+        List<Board> boardList = findMember.getBoardList();
+        for (Board board : boardList) {
+            System.out.println(board);
+        }
+        // then
+        Assertions.assertThat(boardList.size()).isEqualTo(4);
+    }
+
+
+/*    @Test
+    public void 페이징사용자글목록조회() {
+        //when
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
+//        Page<Member> page = memberRepository.findALLWithBoardList(findMember.getId(), pageRequest);
+
+    }*/
+
+
 }

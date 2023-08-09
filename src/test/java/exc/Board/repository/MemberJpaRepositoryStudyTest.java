@@ -1,6 +1,7 @@
 package exc.Board.repository;
 
 import exc.Board.domain.member.Member;
+import exc.Board.repository.bak.MemberJpaRepository_study;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
