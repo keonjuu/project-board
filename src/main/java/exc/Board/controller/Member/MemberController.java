@@ -1,11 +1,13 @@
 package exc.Board.controller.Member;
 
+import exc.Board.domain.Board;
 import exc.Board.domain.member.Member;
 import exc.Board.domain.member.Role;
 import exc.Board.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
 
 @Slf4j
 @Controller
@@ -23,14 +24,28 @@ import javax.validation.constraints.Email;
 public class MemberController {
     private final MemberService memberService;
 
-    // user 조회
+    // user 사용자정보 조회
     @GetMapping("/member/{userNo}")
-    public String memberInfo(@PathVariable("userNo") Long id, Model model){
+    public String memberInfo(@PathVariable("userNo") Long id, Model model, Pageable pageable){
         //
         Member findMember = memberService.findById(id);
         model.addAttribute("member", findMember);
+//        long totalElementsNumber = memberService.findAllWithBoard(id, pageable).getTotalElements();
+//        model.addAttribute("totalElementsNumber", totalElementsNumber);
         return "Member/memberView";
     }
+
+    // user별 작성글 목록 조회
+    @GetMapping("/member/{userNo}/board")
+    public String memberBoardInfo(@PathVariable("userNo") Long id, Model model, Pageable pageable){
+
+        Page<Board> memberBoard = memberService.findAllWithBoard(id, pageable);
+        System.out.println("memberBoard = " + memberBoard);
+
+        model.addAttribute("boardlist", memberBoard);
+        return "Member/memberBoardList";
+    }
+
 
     @GetMapping("members/new")
     public String createMemberFrom(Model model) {
@@ -70,7 +85,6 @@ public class MemberController {
             member.setPassword(form.getPwd());
             member.setUserName(form.getName());
             member.setRole(Role.USER);
-
             memberService.join(member);
 
         return "redirect:/";

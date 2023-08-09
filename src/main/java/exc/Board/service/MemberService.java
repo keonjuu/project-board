@@ -1,6 +1,8 @@
 package exc.Board.service;
 
+import exc.Board.domain.Board;
 import exc.Board.domain.member.Member;
+import exc.Board.repository.BoardRepository;
 import exc.Board.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final BoardRepository boardRepository;
 
     // 회원가입
     @Transactional
@@ -86,5 +89,16 @@ public class MemberService {
 
     public Member findById(Long id) {
         return memberRepository.find(id);
+    }
+
+
+    // user별 리스트 조회
+    public Page<Board> findAllWithBoard(Long id, Pageable pageable){
+
+        int pageNumber = pageable.getPageNumber()==0 ? 0 : pageable.getPageNumber()-1;
+        pageable = PageRequest.of(pageNumber, 5, Sort.by(Sort.Direction.DESC, "modTime"));
+
+        return boardRepository.findAllByUserNo(id, pageable);
+
     }
 }

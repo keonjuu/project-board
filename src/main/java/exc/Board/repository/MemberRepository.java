@@ -1,7 +1,6 @@
 package exc.Board.repository;
 
 import exc.Board.domain.member.Member;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,13 +9,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Id;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
+    //@EntityGraph(attributePaths = {"boardList"}, type= EntityGraph.EntityGraphType.LOAD)
+
+    /*// lazy 로딩된 일대 다 엔티티 불러오기 (fetch join vs join )
+    @Query("select m from Member m join m.boardList b where m.id = :id")
+    Page<Member> findALLWithBoardList(@Param("id") Long userId, Pageable pageable);*/
+
 
 //    Long save(Member member);
 

@@ -83,33 +83,34 @@
             <th>이메일</th>
             <th>권한</th>
             <th>가입상태</th>
-            <th>최종접속일</th>
-            <th>가입승인여부</th>
+            <th>최종 접속일</th>
+            <th>가입승인 여부</th>
             <th></th>
             <th></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="member : ${memberList}">
-            <td name="id" th:text="${member.id}"></td>
+            <td><a id="id" href="#" th:text="${member.id}" th:href="@{/member/{userNo}/(userNo=${member.id})}">상세</a></td>
             <td name="userName" th:text="${member.userName}"></td>
             <td name="email" th:text="${member.email}"></td>
             <td name="lastDatetime" th:text="${member?.role}"></td>
             <td name="status" th:text="${member?.status}"></td>
             <td name="lastDatetime" th:text="${member?.lastDatetime}"></td>
             <td>
-                <select class="form-select" name = "selectJoinYn" th:id="selectJoinYn_+${member.id}"  th:value="${member?.status}">
+                <select class="form-select" name = "selectJoinYn" th:id="selectJoinYn_+${member.id}"  th:value="${member?.status}" th:style="${'display:inline-block;width:auto;'}">
                     <option th:selected="${member?.status.name().equals('PENDING')}" th:value="none" > 선택 </option>
                     <option th:selected="${member?.status.name().equals('ADMISSION')}" th:value="Y">Y</option>
                     <option th:selected="${member?.status.name().equals('REJECT')}" th:value="N">N</option>
                 </select>
-            </td>
-            <td >
                 <a id = "saveBtn" href="#" th:href="'javascript:save('+${member.id}+')'"
-                   class="btn btn-info">저장</a>
+                   class="btn btn-info">저장
+                </a>
             </td>
-            <td></td>
-
+<!--            <td>
+                <a id = "infoBtn" href="#" th:href="@{/member/{userNo}/(userNo=*{member.id})}"
+                   class="btn btn-success">상세</a>
+            </td>-->
         </tr>
         </tbody>
     </table>
