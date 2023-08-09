@@ -1,6 +1,6 @@
 package exc.Board.controller.Member;
 
-import exc.Board.domain.Board;
+import exc.Board.domain.board.Board;
 import exc.Board.domain.member.Member;
 import exc.Board.domain.member.Role;
 import exc.Board.service.MemberService;

@@ -1,8 +1,8 @@
 package exc.Board.controller;
 
 import exc.Board.controller.Login.loginForm;
-import exc.Board.domain.Board;
-import exc.Board.domain.BoardCategory;
+import exc.Board.domain.board.Board;
+import exc.Board.domain.board.BoardCategory;
 import exc.Board.domain.member.Member;
 import exc.Board.service.BoardService;
 import lombok.RequiredArgsConstructor;

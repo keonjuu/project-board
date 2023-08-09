@@ -1,6 +1,6 @@
 package exc.Board.service;
 
-import exc.Board.domain.Board;
+import exc.Board.domain.board.Board;
 import exc.Board.domain.member.Member;
 import exc.Board.repository.BoardRepository;
 import exc.Board.repository.MemberRepository;
@@ -12,7 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service

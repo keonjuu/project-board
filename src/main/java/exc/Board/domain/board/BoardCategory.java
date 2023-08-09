@@ -1,4 +1,4 @@
-package exc.Board.domain;
+package exc.Board.domain.board;
 
 public enum BoardCategory {
     notice, free, qna

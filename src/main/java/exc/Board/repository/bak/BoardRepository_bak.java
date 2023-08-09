@@ -1,7 +1,7 @@
 package exc.Board.repository.bak;
 
-import exc.Board.domain.Board;
-import exc.Board.domain.BoardCategory;
+import exc.Board.domain.board.Board;
+import exc.Board.domain.board.BoardCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

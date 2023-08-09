@@ -1,8 +1,8 @@
 package exc.Board.service;
 
 
-import exc.Board.domain.Board;
-import exc.Board.domain.BoardCategory;
+import exc.Board.domain.board.Board;
+import exc.Board.domain.board.BoardCategory;
 import exc.Board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

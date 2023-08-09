@@ -1,7 +1,7 @@
 package exc.Board.repository;
 
-import exc.Board.domain.Board;
-import exc.Board.domain.BoardCategory;
+import exc.Board.domain.board.Board;
+import exc.Board.domain.board.BoardCategory;
 import exc.Board.domain.member.Member;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -9,8 +9,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Commit;

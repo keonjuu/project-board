@@ -1,7 +1,6 @@
 package exc.Board.service;
 
-import exc.Board.domain.Board;
-import exc.Board.domain.BoardCategory;
+import exc.Board.domain.board.Board;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import static exc.Board.domain.BoardCategory.notice;
-import static exc.Board.domain.BoardCategory.qna;
-import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

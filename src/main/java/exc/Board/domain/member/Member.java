@@ -1,6 +1,6 @@
 package exc.Board.domain.member;
 
-import exc.Board.domain.Board;
+import exc.Board.domain.board.Board;
 import lombok.Getter;
 import lombok.Setter;
 

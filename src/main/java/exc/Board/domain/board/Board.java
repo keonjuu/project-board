@@ -1,4 +1,4 @@
-package exc.Board.domain;
+package exc.Board.domain.board;
 
 import exc.Board.domain.member.Member;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 import java.time.LocalDateTime;
 
-import static exc.Board.domain.BoardCategory.*;
+import static exc.Board.domain.board.BoardCategory.*;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity

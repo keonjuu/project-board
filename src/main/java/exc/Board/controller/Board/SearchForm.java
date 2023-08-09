@@ -1,13 +1,7 @@
 package exc.Board.controller.Board;
 
-import exc.Board.domain.BoardCategory;
+import exc.Board.domain.board.BoardCategory;
 import lombok.Getter;
-
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import java.time.LocalDateTime;
-
-import static exc.Board.domain.BoardCategory.free;
 
 @Getter
 public class SearchForm {

@@ -1,6 +1,6 @@
 package exc.Board.controller.Board;
 
-import exc.Board.domain.BoardCategory;
+import exc.Board.domain.board.BoardCategory;
 import lombok.Getter;
 import lombok.Setter;
 
