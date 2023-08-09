@@ -56,9 +56,6 @@ public class BoardService {
         int pageNumber = pageable.getPageNumber() == 0 ? 0 : pageable.getPageNumber() - 1;
         pageable = PageRequest.of(pageNumber, 5, Sort.by(Sort.Direction.DESC, "boardNo"));
 
-/*        System.out.println("searchType = " + searchType);
-        System.out.println("keyword = " + keyword);*/
-
         if(searchType.equals("regId")){
             return boardRepository.findByRegIdContaining(keyword, pageable);
         }
@@ -68,23 +65,8 @@ public class BoardService {
         if(searchType.equals("content")){
             return boardRepository.findByContentContaining(keyword, pageable);
         }
-
         //System.out.println("pageable = " + pageable.toString());
         return null;
     }
-
-
-/*
-        if (searchType == "title") {
-            return boardRepository.findByTitleContaining(keyword, pageable);
-        }
-        else if (searchType == "content") {
-            return boardRepository.findByContentContaining(keyword, pageable);
-       /* } else {
-//            result = boardRepository.findTitleOrContentContaining(category, keyword, pageable);
-//            result = boardRepository.findTitleOrContentContaining(category, keyword, pageable);
-
-            return result;
-        }*/
 
 }
