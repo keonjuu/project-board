@@ -1,40 +1,26 @@
 package exc.Board.controller;
 
-import exc.Board.controller.Board.SearchForm;
 import exc.Board.controller.Login.loginForm;
 import exc.Board.domain.Board;
 import exc.Board.domain.BoardCategory;
 import exc.Board.domain.member.Member;
-import exc.Board.repository.BoardRepository;
-import exc.Board.repository.MemberRepository;
 import exc.Board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.constraints.Null;
-import java.io.PrintStream;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Controller
 @Slf4j
 @RequiredArgsConstructor
 public class HomeController {
 
-    private final MemberRepository memberRepository;
     private final BoardService boardService;
 
 //    @GetMapping("/")
