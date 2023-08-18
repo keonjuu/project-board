@@ -3,9 +3,7 @@ package exc.Board.controller.Board;
 import exc.Board.domain.board.Board;
 import exc.Board.domain.board.BoardCategory;
 import exc.Board.domain.member.Member;
-import lombok.Builder;
-import lombok.Data;
-import org.hibernate.event.spi.PostUpdateEventListener;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -14,7 +12,10 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder(toBuilder = true)
+@AllArgsConstructor
+@NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class BoardForm {
+
     private Long boardNo;
 
     @NotBlank
@@ -32,18 +33,18 @@ public class BoardForm {
 
     private Member member;
 
-    public BoardForm(){}
-
-    public BoardForm(Long boardNo, String title, String content,String regId,String modId, LocalDateTime modTime,LocalDateTime regTime, BoardCategory category, Member member) {
-        this.boardNo = boardNo;
-        this.title = title;
-        this.content = content;
-        this.regId = regId;
-        this.modId = modId;
-        this.modTime = modTime;
-        this.regTime = regTime;
-        this.category = category;
-        this.member = member;
+    public static BoardForm toDTO(Board boardEntity){
+        return BoardForm.builder()
+                .boardNo(boardEntity.getBoardNo())
+                .title(boardEntity.getTitle())
+                .content(boardEntity.getContent())
+                .modId(boardEntity.getModId())
+                .modTime(boardEntity.getModTime())
+                .regTime(boardEntity.getRegTime())
+                .regId(boardEntity.getMember().getEmail()) // Lazy 초기화 ??? -> N + 1 문제
+                .category(boardEntity.getBoardCategory())
+                .build();
     }
+
 
 }

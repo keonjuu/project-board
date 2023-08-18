@@ -1,7 +1,7 @@
 package exc.Board.controller;
 
-import exc.Board.controller.Login.loginForm;
-import exc.Board.domain.board.Board;
+import exc.Board.controller.Board.BoardForm;
+import exc.Board.controller.Login.LoginForm;
 import exc.Board.domain.board.BoardCategory;
 import exc.Board.domain.member.Member;
 import exc.Board.service.BoardService;
@@ -23,13 +23,8 @@ public class HomeController {
 
     private final BoardService boardService;
 
-//    @GetMapping("/")
-    public String home(){
-        return "Home/home";
-    }
-
     @GetMapping("/")
-    public String loginHome(@ModelAttribute("loginForm") loginForm form, HttpServletRequest request, Model model, Pageable pageable){
+    public String loginHome(@ModelAttribute("loginForm") LoginForm form, HttpServletRequest request, Model model, Pageable pageable){
 
         //세션 관리자에 저장된 회원정보 조회
         HttpSession session = request.getSession(false);
@@ -39,9 +34,9 @@ public class HomeController {
         }
 
         Member loginMember = (Member)session.getAttribute(SessionConst.LOGIN_MEMBER); // 타입캐스팅필요
-/*        System.out.println("loginMember = " + loginMember.toString());*/
+/*        log.info("loginMember = {}" , loginMember.toString());*/
 
-        //세션에 회원데이터가 없으면 home으로 반환
+        //세션에 회원데이터가 없으면 home 으로 반환
         if(loginMember == null){
 //            return "Home/home";
             return "Member/loginForm";
@@ -50,25 +45,26 @@ public class HomeController {
 
         // 게시판 데이터 가져오기
         //List<Board> boardList = boardService.findAll();
-        Page<Board> boardList = boardService.findAll(pageable);
-        //System.out.println("boardList = " + boardList);
-        model.addAttribute("boardlist", boardList);
+        Page<BoardForm> boardList = boardService.findAll(pageable);
+        //log.info("boardList = {}" , boardList.getContent());
+        model.addAttribute("boardList", boardList);
 
         return "Home/loginHome";
 
     }
     @GetMapping("/{category}")
+//    @ResponseBody
     public String categoryHome(@PathVariable("category") BoardCategory category, Model model, Pageable pageable){
 
         // 게시판
-        Page<Board> boardList = boardService.findCategory(category,pageable);
-//        System.out.println("boardList = " + boardList.getContent().stream().filter(board -> board.equals(BoardCategory.notice)).toString());
+        Page<BoardForm> boardList = boardService.findCategory(category,pageable);
+        log.info("boardList.getContent = {}", boardList.getContent());
+//       log.info("boardList = {}" , boardList.getContent().stream().filter(board -> board.equals(BoardCategory.values())).toString());
 
-        System.out.println("boardList = " + boardList.getContent());
-        System.out.println("boardList.getNumber = " + boardList.getNumber());
-        model.addAttribute("boardlist", boardList);
+        model.addAttribute("boardList", boardList);
         model.addAttribute("boardCat", category);
 
+//        return boardList.getContent().toString();
         return "Home/loginHome";
     }
 
@@ -78,11 +74,11 @@ public class HomeController {
                                 ,  @RequestParam("searchKeyword") String keyword
                                 , Model model, Pageable pageable){
 
-        System.out.println("searchType = " + searchType + ", keyword = " + keyword);
+        log.info("searchType= {}, keyword= {}", searchType, keyword);
 
-        Page<Board> boardlist = boardService.searchBoard(searchType, keyword, pageable);
-//        System.out.println("Board/search boardList = " + boardlist.getContent());
-        model.addAttribute("boardlist", boardlist);
+        Page<BoardForm> boardList = boardService.searchBoard(searchType, keyword, pageable);
+//        log.info("Board/search boardList = {}" , boardList.getContent());
+        model.addAttribute("boardList", boardList);
 
         return "/Home/loginHome";
     }

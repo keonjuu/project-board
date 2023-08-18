@@ -71,19 +71,6 @@ class Board {
     @Default private String delYn = "N";
 
 
-    public static BoardForm toDTO(Board boardEntity){
-        return BoardForm.builder()
-                .boardNo(boardEntity.getBoardNo())
-                .title(boardEntity.getTitle())
-                .content(boardEntity.getContent())
-                .modId(boardEntity.getModId())
-                .modTime(boardEntity.getModTime())
-                .regTime(boardEntity.getRegTime())
-                .member(boardEntity.getMember())
-                .category(boardEntity.getBoardCategory())
-                .build();
-    }
-
 }
 
 

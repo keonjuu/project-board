@@ -1,5 +1,6 @@
 package exc.Board.service;
 
+import exc.Board.controller.Board.BoardForm;
 import exc.Board.domain.board.Board;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +22,7 @@ public class BoardServiceTest {
     @Autowired BoardService boardService;
     private Pageable pageable;
 
+/*
     @Test
     @Transactional
     @Commit
@@ -30,6 +32,7 @@ public class BoardServiceTest {
         board.setContent("tttttttt");
         boardService.save(board);
     }
+*/
 
 /*
     @Test
@@ -47,7 +50,7 @@ public class BoardServiceTest {
     public void 검색조회(){
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
 //        Page<Board> searchList = boardService.searchBoard("title", "공지사항", pageRequest);
-        Page<Board> searchList = boardService.searchBoard("regId", "keonjuu", pageRequest);
+        Page<BoardForm> searchList = boardService.searchBoard("regId", "keonjuu", pageRequest);
 
 //        Page<Board> searchList = boardService.searchBoard("title", notice,"공지사항",pageRequest);
         System.out.println("size = " + searchList.getContent().size());

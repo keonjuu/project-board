@@ -44,23 +44,24 @@ public class BoardController {
         }
 
         log.info("form = {}" , form);
-         // form 정보 board db 에 저장
-        Board board = new Board();
-        board.setTitle(form.getTitle());
-        board.setContent(form.getContent());
-        board.setBoardCategory(form.getCategory());
 
         // regId, ModId 는 세션정보로 사용
         HttpSession session = request.getSession(false);
         Member loginMember = (Member) session.getAttribute("loginMember");
 
         Member findId = memberService.findById(loginMember.getId()); //
-        board.setMember(findId);
 
-        board.setRegTime(LocalDateTime.now());
-        board.setModTime(LocalDateTime.now());
-        board.setModId(loginMember.getEmail());
+        // form 정보 board db 에 저장
+        // dto -> Board entity
+        Board board = Board.builder()
+                .title(form.getTitle())
+                .content(form.getContent())
+                .boardCategory(form.getCategory())
+                .modId(findId.getEmail())
+                .member(findId) // 엔티티에 대한 의존을 완전 끊어야 한다...? 다 dto 로 바꿔야 해
+                .build();
 
+//        board.setMember(findId);
 //        Member loginMember = (Member)session.getAttribute(SessionConst.LOGIN_MEMBER); // 타입캐스팅필요
 
         System.err.println("저장시 board = " + board.toString());
@@ -72,10 +73,13 @@ public class BoardController {
     @GetMapping("/Board/{boardNo}/view")
     public String boardView(@PathVariable("boardNo") Long boardNo, Model model){
 
-        // 게시글번호로 db조회
+        // 게시글번호로 db 조회
         Board board = boardService.findOne(boardNo);
+        BoardForm form=BoardForm.toDTO(board);
+
+        log.info("BoardForm = {}", form);
         // model 에 담아서 전달
-        model.addAttribute("board", board);
+        model.addAttribute("board", form);
         return "Board/view";
     }
 
@@ -84,21 +88,22 @@ public class BoardController {
     @PostMapping("/Board/{boardNo}/view")
     public String boardEditView(@ModelAttribute("boards") BoardForm form, Model model) {
 
-        // 게시글번호로 db조회 -> 영속상태 만들기
+        log.info("info={}", form.getModId());
+
+        // 게시글번호로 db 조회 -> 영속상태 만들기
         Board board = boardService.findOne(form.getBoardNo());
-        //System.out.println("board.toString() = " + board.toString());
+        //log.info("board.toString() = {}" + board.toString());
 
         // 수정된 값을 화면에서 받아오기
-//        board = new Board();
-        board.setTitle(form.getTitle());
-        board.setContent(form.getContent());
-        board.setBoardNo(form.getBoardNo());
-        board.setModTime(LocalDateTime.now());
-
-        System.out.println("board.toString() = " + board.toString());
+        board = board.toBuilder()
+                        .title(form.getTitle())
+                        .content(form.getContent())
+                        .modId(form.getModId())
+                        .build();
 
         // 객체로 받은 값을 db에 새로 저장
         boardService.save(board);
+        log.info("board.toString() = {}" + board);
 
         return "<script>alert('수정 사항이 저장되었습니다.');location.href='/';</script>";
     }
@@ -107,15 +112,9 @@ public class BoardController {
     //3. 삭제
     @ResponseBody
     @PostMapping("/Board/{boardNo}/delete")
-    public String deleteBoard(@PathVariable("boardNo") Long boardNo, Model model){
+    public String deleteBoard(@PathVariable("boardNo") Long boardNo){
 
-        // 게시글번호로 db조회 -> 영속상태 만들기
-        Board board = boardService.findOne(boardNo);
-        System.out.println("board.toString() = " + board.toString());
-
-        board.setDelYn("Y");
-        boardService.save(board);
-        log.error("board.getDelYn() ={}" , board.getDelYn());
+        boardService.deleteById(boardNo);
         return "<script>alert('삭제되었습니다.');location.href='/';</script>";
 
     }
