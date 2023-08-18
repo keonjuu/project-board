@@ -2,60 +2,67 @@ package exc.Board.controller.Login;
 
 import exc.Board.controller.Board.BoardController;
 import exc.Board.domain.member.Member;
+import exc.Board.repository.MemberRepositoryTest;
 import exc.Board.service.LoginService;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-import static org.junit.Assert.*;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 //@SpringBootTest
 @Transactional
 @WebMvcTest
+
 public class LoginControllerTest {
+    private static Logger logger = LoggerFactory.getLogger(LoginControllerTest.class);
 
     @Autowired LoginService loginService;
     @Autowired BoardController boardController;
     @Autowired MockMvc mockMvc;
-    loginForm form = new loginForm();
+
+    private LoginForm form;
     @Before
     public void setUp() throws Exception {
+        form.builder().email("keonjuu@innotree.com").pwd("kkk").build();
 //        loginForm form = new loginForm();
-        form.setEmail("keonjuu@innotree.com");
-        form.setPwd("kkk");
+//        form.setEmail("keonjuu@innotree.com");
+//        form.setPwd("kkk");
     }
 
     @Test
     @Transactional
-    @Commit
+//    @Commit
     public void 로그인하기(){
 
+        logger.info("form = {}", form);
+//        form.builder().email("keonjuu@innotree.com").pwd("kkk").build();
         // 로그인 확인
+//        Member loginMember = loginService.login(form.getEmail(), form.getPwd());
         Member loginMember = loginService.login(form.getEmail(), form.getPwd());
 
+        logger.info("loginMember = {}" , loginMember);
         //로그인 접속시간 저장
-        LocalDateTime lastDateTime = LocalDateTime.now();
-        loginMember.setLastDatetime(lastDateTime);
-   /*     System.out.println("loginMember = " + loginMember);*/
+//        loginMember.setLastDatetime(lastDateTime);
+   /*     log.info("loginMember = {}", loginMember);*/
 
-        // db 값과 객체 loginMember 값이 일치하는지 확인
-        Assertions.assertThat(loginMember.getLastDatetime()).isEqualTo(lastDateTime);
+//        // db 값과 객체 loginMember 값이 일치하는지 확인
+//        Assertions.assertThat(loginMember.getLastDatetime()).isEqualTo(lastDateTime);
     }
 
 

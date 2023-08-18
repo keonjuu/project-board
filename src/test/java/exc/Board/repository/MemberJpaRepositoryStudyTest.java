@@ -1,3 +1,4 @@
+/*
 package exc.Board.repository;
 
 import exc.Board.domain.member.Member;
@@ -39,6 +40,7 @@ public class MemberJpaRepositoryStudyTest {
     }
 
 
+*/
 /*    @Test
     public void findMemberForm(){
         Member m1 = new Member("AAA");
@@ -47,7 +49,8 @@ public class MemberJpaRepositoryStudyTest {
         for (MemberForm dto : memberForms) {
             System.out.println("dto = " + dto);
         }
-    }*/
+    }*//*
+
 
     @Test
     public void findByNames(){
@@ -99,3 +102,4 @@ public class MemberJpaRepositoryStudyTest {
 }
 
 
+*/

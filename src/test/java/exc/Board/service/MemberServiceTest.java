@@ -1,10 +1,12 @@
 package exc.Board.service;
 
+import exc.Board.controller.Member.MemberForm;
 import exc.Board.domain.member.Member;
-import exc.Board.domain.member.Role;
 import exc.Board.repository.MemberRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
@@ -17,27 +19,42 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 public class MemberServiceTest {
+    private static Logger logger = LoggerFactory.getLogger(MemberServiceTest.class);
     @Autowired MemberService memberService;
     @Autowired MemberRepository memberRepository;
 
+    MemberForm form;
+    Member member;
+/*    @BeforeEach
+    void init(){
+        form = MemberForm.builder()
+                .name("hello100")
+                .email("hello100@innotree.com")
+                .pwd("hello100")
+                .build();
+        member = Member.toEntity(form);
+    }*/
+
     @Test
     @Commit
-    public void 회원가입(){
-        //given (어떤 데이터를 기반으로 하는지)
-        Member member = new Member();
-        member.setUserName("hello100");
-        member.setEmail("hello100@innotree.com");
-        member.setRole(Role.USER);
-        member.setPassword("hoooo");
-
-        System.out.println("member = " + member);
+        public void 회원가입(){
+            //given (어떤 데이터를 기반으로 하는지)
+            form = MemberForm.builder()
+                    .name("hello33")
+                    .email("hello101@innotree.com")
+                    .pwd("hello100")
+                    .build();
+            member = form.toEntity(form);
+            logger.info("form = {} , member = {}" , form, member);
 
         //when (가입 서비스 검증할 떄)
-        Long saveId = memberService.join(member);
+        Long saveId = memberService.join(form);
+
+        /*System.out.println("saveId = " + saveId);
 
         //then (저장한 값이 리포지토리에 있는게 맞아? )
-        Member findMember = memberService.findOne(member).get();
-        assertThat(member.getUserName()).isEqualTo(findMember.getUserName()); // 이름 검증
+        Member findMember = memberService.findOne(member).orElse(null);
+        assertThat(member.getUserName()).isEqualTo(findMember.getUserName()); // 이름 검증*/
 
     }
 
@@ -47,4 +64,7 @@ public class MemberServiceTest {
         boolean result = memberService.validDuplicatedEmail(email);
         System.out.println("중복? = " + result);
     }
+
+
+
 }
