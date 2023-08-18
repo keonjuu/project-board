@@ -1,58 +1,30 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <!-- Bootstrap CSS -->
-    <!--  <link rel="stylesheet" href="/css/bootstrap.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">-->
-<!--  <link rel="stylesheet" href="/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">-->
-
-    <!-- Custom styles for this template -->
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
-<!--  <link href="/css/signin.css" rel="stylesheet">-->
-<!--  <link href="/css/sample_login.css" rel="stylesheet">-->
-<!--    <link href="/css/jumbotron-narrow.css" rel="stylesheet">-->
     <style>
-    .container {
-        max-width: 560px;
-    }
-    .field-error {
-        border-color: #dc3545;
-        color: #dc3545;
-    }
-    .form-group input:focus {
-        border: 0.15rem solid var(--bs-info);
-    }
-    .form-group-button{
-        display: flex;
-        flex-wrap: wrap;
-        align-content: center;
-        align-items: center;
-        justify-content: center;
-        margin-top:1rem;
-    }
+        .container {
+            max-width: 560px;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        .form-group input:focus {
+            border: 0.15rem solid var(--bs-info);
+        }
+        .form-group-button{
+            display: flex;
+            flex-wrap: wrap;
+            align-content: center;
+            align-items: center;
+            justify-content: center;
+            margin-top:1rem;
+        }
     </style>
-<!--
-  <style>
-    .bd-placeholder-img {
-      font-size: 1.125rem;
-      text-anchor: middle;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      user-select: none;
-    }
-
-    @media (min-width: 768px) {
-      .bd-placeholder-img-lg {
-        font-size: 3.5rem;
-      }
-    }
-  </style>
--->
-
 </head>
 <body class="login-wrap">   <!--text-center-->
   <main class="login-html"> <!--"form-signin"--> <!--text-center align-self-center-->
@@ -70,13 +42,13 @@
                       <div class = "field-error" style="color:red;" th:errors="*{email}"></div>
                   </div>
                   <div class="form-group">
-                      <label th:for="pwd" class="form-label mt-4 ">비밀번호</label>
+                      <label th:for="password" class="form-label mt-4 ">비밀번호</label>
                       <input type="password" th:field="*{pwd}" class="form-control"
                              th:errorclass="field-error" id="password" name="password" placeholder="비밀번호를 입력하세요">
                       <div class = "field-error" style="color:red;" th:errors="*{pwd}"></div>
                   </div>
                   <div class="form-group-button">
-                      <input type="submit" class = "btn btn-info button" style="align-self:center;" value="확인"></input>
+                      <input type="submit" class = "btn btn-info button" style="align-self:center;" value="확인">
                       <!-- 글로벌 에러 처리 부분 -->
                       <div th:if="${#fields.hasGlobalErrors()}">
                           <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
@@ -88,8 +60,6 @@
               </div>
             </form>
         </div>
-
-    </div> <!-- /container -->
   </main>
 </body>
 </html>

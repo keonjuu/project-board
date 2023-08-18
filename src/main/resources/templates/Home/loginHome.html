@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--<html lang="en">-->
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
   <title>게시판</title>
   <meta charset="utf-8">
@@ -22,7 +22,7 @@
     background: #2b3035;
     width: 100%;
     text-align:center;
-    bottom: 0px;
+    bottom: 0;
   }
 </style>
 </head>
@@ -32,31 +32,32 @@
 <div class="container">
 </div>
 
-<div th:replace="fragments/bodyHeader :: bodyHeader"/>
+<div th:replace="fragments/bodyHeader :: bodyHeader"></div>
 
 <div class="container" th:style="${'text-align:center; padding-top:30px; width:70%'}">
-  <a href="/" class="btn btn-default fw-bolder">전체</a>
-  <a href="/notice" class="btn btn-default fw-bolder">공지사항</a>
-  <a href="/free" class="btn btn-default fw-bolder">자유게시판</a> <!--fs-2-->
-  <a href="/qna" class="btn btn-default fw-bolder">Q&A</a>
+  <a th:href="@{/}" class="btn btn-default fw-bolder">전체</a>
+  <a th:href="@{/NOTICE}" class="btn btn-default fw-bolder">공지사항</a>
+  <a th:href="@{/FREE}" class="btn btn-default fw-bolder">자유게시판</a> <!--fs-2-->
+  <a th:href="@{/QNA}" class="btn btn-default fw-bolder">Q&A</a>
 </div>
 
 
 <div class="container" style="padding-top: 30px; width: 70%">
   <div class="group">
-    <a class="btn btn-success"  href="/boards/new" role="button">새글 작성</a>
+    <a class="btn btn-success"  th:href="@{/boards/new}" role="button">새글 작성</a>
   </div>
 </div>
 
     <div  class="container" id = "mainTableDiv" style="padding-top: 30px; width: 70%; bottom: auto; position: initial;">
-      <form th:action="@{/Board/search}" th:class="searchForm" th:object="${searchForm}" method="get" class="form-inline" >  <!--th:action="@{/board/search}",-->
-        <select class="form-select"  name = "searchType" th:id="searchType" style="width: 20%; display: inline-block;">
-          <option th:value="title">제목</option>
-          <option th:value="content">내용</option>
-          <option th:value="regId">글쓴이</option>
-        </select>
-        <input type="text" name="searchKeyword" placeholder="검색어를 입력해주세요" style="width: 40%;">
-        <button style="width: 10%;" type="submit" class="btn btn-primary " >검색</button>
+      <form th:action="@{/Board/search}" th:class="searchForm" method="get" class="form-inline">
+              <select class="form-select" name="searchType" style="width: 20%; display: inline-block;"
+                      th:id="searchType">
+                <option th:value="title">제목</option>
+                <option th:value="content">내용</option>
+                <option th:value="regId">글쓴이</option>
+              </select>
+              <input type="text" name="searchKeyword" placeholder="검색어를 입력해주세요" style="width: 40%;">
+          <button style="width: 10%;" type="submit" class="btn btn-primary" >검색</button>
       </form>
     </div>
 
@@ -76,17 +77,17 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="item : ${boardlist}">
+    <tr th:each="item : ${boardList}">
       <td th:text="${item.boardNo}"></td>
       <td> <a th:text="${item.title}" th:href="@{/Board/{boardNo}/view (boardNo=${item.boardNo})}"></a></td>
-      <td th:text="${item.member.email}"></td>
+      <td th:text="${item.regId}"></td>
     </tr>
     </tbody>
   </table>
 
   <nav style="text-align: center;">
-    <ul class="pagination justify-content-center" th:with="start=${T(java.lang.Math).floor(boardlist.number/10) * 10 + 1},
-            last=${start + 9 < boardlist.totalPages ? start + 9 : boardlist.totalPages}">
+    <ul class="pagination justify-content-center" th:with="start=${T(java.lang.Math).floor(boardList.number/10) * 10 + 1},
+            last=${start + 9 < boardList.totalPages ? start + 9 : boardList.totalPages}">
       <li><span></span></li>
       <li>
             <a class="page-link" th:href="@{/{category}(category=${boardCat}, page=1)}" aria-label="First"
@@ -98,41 +99,41 @@
               <span aria-hidden="true">First</span>
             </a>
       </li>
-      <li th:class="${boardlist.first} ? 'disabled'">
-            <a class="page-link" th:href="@{/{category}(category=${boardCat}, page=${boardlist.number})}" href="#" aria-label="Previous"
+      <li th:class="${boardList.first} ? 'disabled'">
+            <a class="page-link" th:href="@{/{category}(category=${boardCat}, page=${boardList.number})}" href="#" aria-label="Previous"
                th:if="${#strings.isEmpty(param.searchType)}">
               <span aria-hidden="true">&lt;&lt;</span>
             </a>
-            <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat}, page=${boardlist.number}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" href="#" aria-label="Previous"
+            <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat}, page=${boardList.number}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" href="#" aria-label="Previous"
                th:if="${not #strings.isEmpty(param.searchType)}">
               <span aria-hidden="true">&lt;&lt;</span>
               <!--                        <span class="sr-only">Previous</span>-->
             </a>
       </li>
-      <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == boardlist.number + 1} ? 'active'">
+      <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == boardList.number + 1} ? 'active'">
             <a class="page-link" th:text="${page}" th:href="@{/{category}(category=${boardCat},page=${page})}"
                th:if="${#strings.isEmpty(param.searchType)}"></a>
             <a class="page-link" th:text="${page}" th:href="@{{category}/Board/search/(category=${boardCat}, page=${page}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}"
                th:if="${not #strings.isEmpty(param.searchType)}"></a>
       </li>
-      <li th:class="${boardlist.last}? 'disabled'">
-            <a class="page-link" th:href="@{/{category}(category=${boardCat},page=${boardlist.number + 2}) }" href="#" aria-label="Next"
+      <li th:class="${boardList.last}? 'disabled'">
+            <a class="page-link" th:href="@{/{category}(category=${boardCat},page=${boardList.number + 2}) }" href="#" aria-label="Next"
                th:if="${#strings.isEmpty(param.searchType)}">
               <span aria-hidden="true">&gt;&gt;</span>
             </a>
 
-            <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat},page=${boardlist.number + 2}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" href="#" aria-label="Next"
+            <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat},page=${boardList.number + 2}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" href="#" aria-label="Next"
                th:if="${not #strings.isEmpty(param.searchType)}">
               <span aria-hidden="true">&gt;&gt;</span>
               <!--                        <span class="sr-only">Next</span>-->
             </a>
       </li>
       <li>
-            <a class="page-link" th:href="@{/{category}(category=${boardCat}, page=${boardlist.totalPages})}" aria-label="Last"
+            <a class="page-link" th:href="@{/{category}(category=${boardCat}, page=${boardList.totalPages})}" aria-label="Last"
                th:if="${#strings.isEmpty(param.searchType)}">
               <span aria-hidden="true">Last</span>
             </a>
-            <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat}, page=${boardlist.totalPages}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" aria-label="Last"
+            <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat}, page=${boardList.totalPages}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" aria-label="Last"
                th:if="${not #strings.isEmpty(param.searchType)}">
               <span aria-hidden="true">Last</span>
             </a>
@@ -141,7 +142,7 @@
 
   </nav>
 </div>
-<div th:replace="fragments/footer :: footer"/>
+<div th:replace="fragments/footer :: footer"></div>
 
 </div>
 </body>

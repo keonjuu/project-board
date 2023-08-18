@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <!--<head th:replace="fragments/header :: header" />-->
 <head>
@@ -37,7 +37,7 @@
             background: #2b3035;
             width: 100%;
             text-align:center;
-            bottom: 0px;
+            bottom: 0;
         }
     </style>
 </head>
@@ -61,7 +61,7 @@
             <div class="form-group row">
                 <label th:for="userNo" class="col-sm-2 col-form-label">번호</label>
                 <div class="col-sm-10">
-                    <input type="text" th:field="*{id}" class="form-control" id="inputEmail3" placeholder="userNo">
+                    <input type="text" th:field="*{id}" class="form-control" id="userNo" placeholder="userNo">
                 </div>
             </div>
             <div class="form-group row">
@@ -109,6 +109,7 @@
         </form>
     </div>
 
-    <div th:replace="fragments/footer :: footer"/></div>
+    <div th:replace="fragments/footer :: footer"></div>
+</div>
 </body>
 </html>

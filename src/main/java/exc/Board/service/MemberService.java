@@ -1,10 +1,13 @@
 package exc.Board.service;
 
+
+import exc.Board.controller.Member.MemberForm;
 import exc.Board.domain.board.Board;
 import exc.Board.domain.member.Member;
 import exc.Board.repository.BoardRepository;
 import exc.Board.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +19,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
@@ -23,19 +27,19 @@ public class MemberService {
 
     // 회원가입
     @Transactional
-    public Long join(Member member) {
-
+    public Long join(MemberForm memberForm) {
         //isDuplicatedEmail(member); // 이메일 중복 체크 추가하기
+
+        // dto -> member entity 변환
+        Member member = memberForm.toEntity(memberForm);
+
         memberRepository.save(member);
         return member.getId(); //
     }
-/*    @Transactional
-    public void isValidEmail(){
-    }
-*/
+
 //    @Transactional
     public boolean validDuplicatedEmail(String email) {
-        System.out.println("validDuplicatedEmail.email = " + email);
+        log.info("validDuplicatedEmail.email = {}" , email);
         if(memberRepository.findByEmail(email).isPresent()){
             return true;
         }else{
@@ -46,7 +50,7 @@ public class MemberService {
 
     @Transactional
     public void isDuplicatedEmail(Member member) {
-        System.out.println("member.getEmail() = " + member.getEmail());
+        log.info("member.getEmail() = {}" , member.getEmail());
         memberRepository.findByEmail(member.getEmail())
                 .ifPresent(m -> {
                     throw new IllegalStateException("이미 사용중인 이메일입니다.");  // ifPresent 는 Optional이기 때문 가능.
@@ -82,7 +86,10 @@ public class MemberService {
     }
 
 
-    public Optional<Member> findOne(Member member) {
+    public Optional<Member> findOne(MemberForm memberform) {
+        // dto -> entity 변환
+        Member member = memberform.toEntity(memberform);
+
         return Optional.ofNullable(memberRepository.find(member.getId()));
     }
 

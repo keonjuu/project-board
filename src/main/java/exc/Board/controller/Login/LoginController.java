@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 
 @Slf4j
 @Controller
@@ -25,14 +24,14 @@ public class LoginController {
     private final LoginService loginService;
 
     @GetMapping("/login")
-    public String loginMemberFrom(@ModelAttribute("loginForm") loginForm form) {
+    public String loginMemberFrom(@ModelAttribute("loginForm") LoginForm form) {
 
 //        model.addAttribute("loginForm", new loginForm());
         return "Member/loginForm";
     }
 
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute("loginForm") loginForm form,  BindingResult bindingResult
+    public String login(@Valid @ModelAttribute("loginForm") LoginForm form, BindingResult bindingResult
 //                        , @RequestParam(defaultValue = "/") String redirectURL
                         , HttpServletRequest request
                         , Model model){
@@ -44,11 +43,10 @@ public class LoginController {
             bindingResult.rejectValue("pwd","pwd","비밀번호를 반드시 입력해야 합니다.");
         }
 
-
-        // form 에서 전달받은 email와 password 로 로그인 시도
+        // form 에서 전달받은 email, password 로 로그인 시도
         Member loginMember = loginService.login(form.getEmail(), form.getPwd());
-//        log.info("login? = {}" + loginMember);
 
+        // 엔티티 -> dto 로 반환
         if(loginMember == null){
             bindingResult.reject("loginFail","아이디(이메일) 또는 비밀번호가 맞지 않습니다.");
 //            log.info("bindingResult errors = {}", bindingResult);
@@ -67,19 +65,20 @@ public class LoginController {
             return "Message/message";
         }
 
+
         //로그인 접속시간 저장
-        loginMember.setLastDatetime(LocalDateTime.now());
+//        loginMember.setLastDatetime(LocalDateTime.now());
+//        log.info("loginMember = {}", loginMember);
         loginService.save(loginMember);
 
         // 로그인 성공 처리
         // 세션이 있으면 세션 반환, 없으면 신규 세션을 생성  default: request.getSession(true)
-        HttpSession session = request.getSession(); //false이면 세션이 없으면 새로운 세션을 생성하지 않는다.
+        HttpSession session = request.getSession(); //false 면 세션이 없으면 새로운 세션을 생성하지 않는다.
         // 세션에 로그인 회원 정보 보관
         session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
         // 세션에 저장한 urlPath 가져오기
         String urlPath = (String) session.getAttribute("requestURL");
         String redirectURL = (urlPath == null)? "/" : urlPath;
-
 //        log.info("urlPath = {}" , urlPath);
 
         log.info("login 시 loginMember = {}" , loginMember);
