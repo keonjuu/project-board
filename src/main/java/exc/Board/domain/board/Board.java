@@ -1,8 +1,13 @@
 package exc.Board.domain.board;
 
+import exc.Board.controller.Board.BoardForm;
 import exc.Board.domain.member.Member;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.Builder.Default;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
@@ -13,27 +18,35 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
-@Setter
-public class Board {
+@Builder(toBuilder = true)
+@AllArgsConstructor
+@ToString
+@EntityListeners(AuditingEntityListener.class)
+public
+class Board {
 
     @Id @GeneratedValue
     private Long boardNo;
 
     @Enumerated(EnumType.STRING)
-    private BoardCategory boardCategory = free;
+    @Default private BoardCategory boardCategory = FREE;
+//    private BoardCategory boardCategory;
 
     private String title;
 
     @Column(columnDefinition="TEXT")
     private String content;
 
-    @Column(columnDefinition="DATETIME(0) default CURRENT_TIMESTAMP")
+    @CreatedDate
+//    @Column(columnDefinition="DATETIME(0) default CURRENT_TIMESTAMP")
     private LocalDateTime regTime;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "regId", referencedColumnName = "email")
     private Member member;
-//    private String regId;
+
+    public Board() {}
+
 
     /*연관관계 매서드*/
     public void setMember(Member member){
@@ -45,32 +58,34 @@ public class Board {
         member.getBoardList().add(this);
 
 
-//        System.out.println("board.setMember(loginMember) = " + member);
+//        log.info("board.setMember(loginMember) = {}", member);
     }
-
-    @Column(columnDefinition="DATETIME(0) default CURRENT_TIMESTAMP")
+    @LastModifiedDate
+//    @Column(columnDefinition="DATETIME(0) default CURRENT_TIMESTAMP")
     private LocalDateTime modTime;
 
+//    @LastModifiedBy
     private String modId;
 
     @Column(columnDefinition = "varchar(1) default 'N'")
-    private String delYn = "N";
+    @Default private String delYn = "N";
 
 
-    @Override
-    public String toString() {
-        return "Board{" +
-                "boardNo=" + boardNo +
-                ", boardCategory=" + boardCategory +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", regTime=" + regTime +
-                ", modTime=" + modTime +
-                ", modId='" + modId + '\'' +
-                ", delYn='" + delYn + '\'' +
-                '}';
+    public static BoardForm toDTO(Board boardEntity){
+        return BoardForm.builder()
+                .boardNo(boardEntity.getBoardNo())
+                .title(boardEntity.getTitle())
+                .content(boardEntity.getContent())
+                .modId(boardEntity.getModId())
+                .modTime(boardEntity.getModTime())
+                .regTime(boardEntity.getRegTime())
+                .member(boardEntity.getMember())
+                .category(boardEntity.getBoardCategory())
+                .build();
     }
+
 }
+
 
 
 

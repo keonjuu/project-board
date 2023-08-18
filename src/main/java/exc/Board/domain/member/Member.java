@@ -1,8 +1,12 @@
 package exc.Board.domain.member;
 
+import exc.Board.controller.Member.MemberForm;
 import exc.Board.domain.board.Board;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.Builder.Default;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,7 +16,12 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
+@Builder(toBuilder = true)
+@ToString(exclude = "boardList")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
+@Slf4j
 @SequenceGenerator(
         name = "SEQ_GENERATOR",
         sequenceName = "member_seq",
@@ -24,48 +33,39 @@ public class Member implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_GENERATOR")
     @Column(name = "userNo")
     private Long id;
-
     private String email;
-
     private String userName;
-
     private String password;
-
-/*
-    @Embedded
-    private DateEntity dateEntity;
-*/
 
     @OneToMany(mappedBy = "member")
     private List<Board> boardList = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
-    private Role role = Role.USER;
+    @Default private Role role = Role.USER;
 
     @Enumerated(EnumType.STRING)
-    private MemberStatus status = MemberStatus.PENDING;
+    @Default private MemberStatus status = MemberStatus.PENDING;
 
-    @Column(columnDefinition="DATETIME(0) default CURRENT_TIMESTAMP")
+    //@Column(columnDefinition = "DATETIME(0) default CURRENT_TIMESTAMP")
+    @LastModifiedDate
     private LocalDateTime lastDatetime;
 
-    public Member() {
-    }
-
-    public Member(String email) {
+    public Member(String name, String email, String pwd, Role role, MemberStatus status, LocalDateTime lastDatetime) {
+        this.userName = name;
         this.email = email;
+        this.password = pwd;
+        this.role = role;
+        this.status = status;
+        this.lastDatetime = lastDatetime;
     }
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                ", status='" + status + '\'' +
-                ", lastDatetime='" + lastDatetime + '\'' +
-//                ", board='" + getBoardList().toString() + '\'' +
-                ", role=" + role +
-                '}';
+    public static MemberForm toMemberFormDTO(Member entity){
+        return MemberForm.builder()
+                .name(entity.getUserName())
+                .email(entity.getEmail())
+                .pwd(entity.getPassword())
+                .build();
     }
+
+
 }
