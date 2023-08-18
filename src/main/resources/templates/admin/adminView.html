@@ -1,34 +1,20 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <!--<head th:replace="fragments/header :: header" />-->
 <head>
     <title>게시글 admin</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>-->
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+     <link rel="stylesheet" href="/css/bootstrap.min.css">
 
     <style>
        .pagination {
             --bs-pagination-disabled-bg:#18bc9c;'
         }
-/*
-        .page-link{
-            background-color: var(--bs-info);
-
-        }
-        .active>.page-link{
-            background-color:#2c3e50;
-        }
-        */
-
         .form-group input:focus, .form-group textarea:focus {
             border: 0.15rem solid var(--bs-info);
         }
-        /*input[type=text]*/
         input[type=text], textarea[type=text]{
             width: 100%;
             padding: 12px 20px;
@@ -51,7 +37,7 @@
             background: #2b3035;
             width: 100%;
             text-align:center;
-            bottom: 0px;
+            bottom: 0;
         }
     </style>
 </head>
@@ -61,9 +47,7 @@
 <script th:inline="javascript">
 
     function save(id){
-        var selectedVal = $('#selectJoinYn_'+id.toString()).val();
-        // var selectedVal = $("select[name=selectJoinYn]").val();
-        //var selectedVal = $("#selectJoinYn option:selected").val();
+        const selectedVal = $('#selectJoinYn_' + id.toString()).val();
         location.href="/admin/save/" +id + "/"+ selectedVal ;
         console.log("location.href" + location.href);
     }
@@ -94,23 +78,21 @@
             <td><a id="id" href="#" th:text="${member.id}" th:href="@{/member/{userNo}/(userNo=${member.id})}">상세</a></td>
             <td name="userName" th:text="${member.userName}"></td>
             <td name="email" th:text="${member.email}"></td>
-            <td name="lastDatetime" th:text="${member?.role}"></td>
+            <td name="role" th:text="${member?.role}"></td>
             <td name="status" th:text="${member?.status}"></td>
-            <td name="lastDatetime" th:text="${member?.lastDatetime}"></td>
+            <td name="lastDatetime" th:text="${#temporals.format(member?.lastDatetime, 'yyyy-MM-dd HH:mm:ss')}"></td>
             <td>
-                <select class="form-select" name = "selectJoinYn" th:id="selectJoinYn_+${member.id}"  th:value="${member?.status}" th:style="${'display:inline-block;width:auto;'}">
-                    <option th:selected="${member?.status.name().equals('PENDING')}" th:value="none" > 선택 </option>
-                    <option th:selected="${member?.status.name().equals('ADMISSION')}" th:value="Y">Y</option>
-                    <option th:selected="${member?.status.name().equals('REJECT')}" th:value="N">N</option>
-                </select>
+                <label>
+                    <select class="form-select" name = "selectJoinYn" th:id="selectJoinYn_+${member.id}"  th:value="${member?.status}" th:style="${'display:inline-block;width:auto;'}">
+                        <option th:selected="${member?.status.name().equals('PENDING')}" th:value="none" > 선택 </option>
+                        <option th:selected="${member?.status.name().equals('ADMISSION')}" th:value="Y">Y</option>
+                        <option th:selected="${member?.status.name().equals('REJECT')}" th:value="N">N</option>
+                    </select>
+                </label>
                 <a id = "saveBtn" href="#" th:href="'javascript:save('+${member.id}+')'"
                    class="btn btn-info">저장
                 </a>
             </td>
-<!--            <td>
-                <a id = "infoBtn" href="#" th:href="@{/member/{userNo}/(userNo=*{member.id})}"
-                   class="btn btn-success">상세</a>
-            </td>-->
         </tr>
         </tbody>
     </table>
@@ -126,18 +108,16 @@
             <li th:class="${memberList.first} ? 'disabled'">
                 <a class="page-link" th:href="@{/admin(page=${memberList.number})}" href="#" aria-label="Previous">
                     <span aria-hidden="true">&lt;&lt;</span>
-                    <!--                        <span class="sr-only">Previous</span>-->
                 </a>
             </li>
 
             <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == memberList.number + 1} ? 'active'">
-                <a class="page-link"th:text="${page}" th:href="@{/admin(page=${page})}"></a>
+                <a class="page-link" th:href="@{/admin(page=${page})}" th:text="${page}"></a>
             </li>
 
             <li th:class="${memberList.last}? 'disabled'">
                 <a class="page-link" th:href="@{/admin(page=${memberList.number + 2}) }" href="#" aria-label="Next">
                     <span aria-hidden="true">&gt;&gt;</span>
-                    <!--                        <span class="sr-only">Next</span>-->
                 </a>
             </li>
 
@@ -151,7 +131,7 @@
     <br/>
 </div> <!-- /container -->
 
-    <div th:replace="fragments/footer :: footer"/>
+    <div th:replace="fragments/footer :: footer"></div>
 </div>
 </body>
 </html>

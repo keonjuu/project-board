@@ -42,23 +42,19 @@ public class adminControllerTest {
     }*/
     @Test
     @Transactional
-    @Commit
+//    @Commit
     public void 승인하기(){
-        String JoinYn = "Y";
+        String joinYn = "Y";
 
-        if(JoinYn.equals("Y")){
+        if(joinYn.equals("Y")){
             System.out.println("equals!!!!!!!!!!!!");
         }
-
-        if(JoinYn =="Y"){
-            System.out.println("=============================== ");
-        }
         findMember = memberRepository.find(1L);
-        findMember.setStatus(MemberStatus.REJECT);
+        findMember.toBuilder().status(MemberStatus.REJECT);
 
         System.out.println("setStatus findMember = " + findMember);
 //        memberService.save(findMember);
-        adminService.JoinYn(findMember);
+        adminService.joinYn(findMember);
 
         // 다시 꺼낸 값이랑 비교
         MemberStatus status = memberRepository.find(1L).getStatus();

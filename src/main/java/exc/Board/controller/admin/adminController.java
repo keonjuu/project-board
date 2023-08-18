@@ -13,8 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Controller
 @Slf4j
 @RequiredArgsConstructor
@@ -23,46 +21,33 @@ public class adminController {
     private final AdminService adminService;
     private final MemberService memberService;
 
-/*    @GetMapping("/admin")
-    public String mainAdmin(Model model){
-        // 관리자만
-        List<Member> memberList = memberService.findAll();
-//        System.out.println("memberList = " + memberList);
-        model.addAttribute("memberList", memberList);
-        return "/admin/adminView";
-    }
-*/
-
     @GetMapping("/admin")
     public String mainAdmin(@PageableDefault Pageable pageable, Model model){
         // 관리자만
         Page<Member> memberList = memberService.findAll(pageable);
         model.addAttribute("memberList", memberList);
-/*        System.out.println("memberList = " + memberList);
-        model.addAttribute("pageNo", memberList.getNumber());
-        model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
-        model.addAttribute("next", pageable.next().getPageNumber());
-        model.addAttribute("hasNext", memberList.hasNext());
-        model.addAttribute("hasPrev", memberList.hasPrevious());*/
+
         return "/admin/adminView";
     }
 
 
 //    @ResponseBody
-    @GetMapping("/admin/save/{id}/{JoinYn}")
+    @GetMapping("/admin/save/{id}/{joinYn}")
     public String JoinYN( @PathVariable("id") Long id
-                        , @PathVariable("JoinYn") String JoinYn
-                          , Model Model
+                        , @PathVariable("joinYn") String joinYn
                      ){
 //        Member findMember = memberRepository.find(id);
         Member findMember = memberService.findById(id);
 
-        if (JoinYn.equals("Y")){
-            findMember.setStatus(MemberStatus.ADMISSION);}
-        if( JoinYn.equals("N")){
-            findMember.setStatus(MemberStatus.REJECT);}
 
-        adminService.JoinYn(findMember);
+        if (joinYn.equals("Y")){
+            findMember = findMember.toBuilder().status(MemberStatus.ADMISSION).build(); // toBuilder()는 기존 객체의 값을 그대로 복사한 새로운 빌더를 생성
+        }
+       if( joinYn.equals("N")){
+            findMember = findMember.toBuilder().status(MemberStatus.REJECT).build();}
+//            findMember.setStatus(MemberStatus.REJECT);}
+
+        adminService.joinYn(findMember);
 
         return "redirect:/admin";
     }
