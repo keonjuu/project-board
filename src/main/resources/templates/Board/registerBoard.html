@@ -1,13 +1,10 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <!--<head th:replace="fragments/header :: header" />-->
 <head>
   <title>게시판</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>-->
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/board.css">
   <style>
@@ -37,7 +34,18 @@
       background-color: #0d6efd;
       border-color: #0d6efd;
     }
+    html,body{
+      height:100%;
+    }
 
+    footer{
+      position: absolute;
+      height: 5rem;
+      background: #2b3035;
+      width: 100%;
+      text-align:center;
+      bottom: 0;
+    }
   </style>
 </head>
 <body>
@@ -51,17 +59,17 @@
     <div class="form-group">
       <div>카테고리</div>
       <div class="form-check form-check-inline">
-        <input type="radio" value="notice" th:field="*{category}" th:th:disabled="${session.loginMember?.role.name().equals('USER')}"
+        <input type="radio" value="NOTICE" th:field="*{category}" th:th:disabled="${session.loginMember?.role.name().equals('USER')}"
                th:errorclass="field-error" class="form-check-input" id="noticeCat" name="noticeCat"/>
         <label th:for="noticeCat" class="form-check-label">공지사항</label>
       </div>
       <div class="form-check form-check-inline">
-        <input type="radio" value="free" th:field="*{category}" th:checked="true"
+        <input type="radio" value="FREE" th:field="*{category}" th:checked="true"
                th:errorclass="field-error" class="form-check-input" id="freeCat" name="freeCat /">
         <label th:for="freeCat" class="form-check-label">자유게시판</label>
       </div>
       <div class="form-check form-check-inline">
-        <input type="radio" value="qna" th:field="*{category}"
+        <input type="radio" value="QNA" th:field="*{category}"
                th:errorclass="field-error" class="form-check-input" id="QNACat" name="QNACat"/>
         <label th:for="QNACat" class="form-check-label">Q&A</label>
       </div>
@@ -76,8 +84,8 @@
     </div>
     <div class="form-group">
       <label th:for="content">내용</label>
-      <textarea type="text" th:field="*{content}" class="form-control" placeholder="내용을 입력하세요" th:style="${'min-height: 200px;'}"
-                th:errorclass="field-error"></textarea>
+      <textarea class="form-control" placeholder="내용을 입력하세요" th:errorclass="field-error" th:field="*{content}"
+                th:style="${'min-height: 200px;'}" type="text"></textarea>
       <div class = "field-error" th:errors="*{content}"></div>
 
     </div>
@@ -87,10 +95,9 @@
     </div>
   </form>
   <br/>
-<!--  <div th:replace="fragments/footer :: footer" />-->
-
 </div> <!-- /container -->
 
+<!--<div th:replace="fragments/footer :: footer"></div>-->
 
 </body>
 </html>

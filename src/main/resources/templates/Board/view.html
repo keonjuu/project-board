@@ -1,14 +1,11 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" >
 
 <!--<head th:replace="fragments/header :: header" />-->
 <head>
     <title>게시글 상세 페이지</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>-->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/board.css">
 
@@ -44,7 +41,7 @@
         $("textarea[name='content']").attr("readonly", false);
 
         // 저장&삭제 버튼 활성화
-        if($("#saveButton").css("display") == "none" & $("#deleteButton").css("display") == "none"){
+        if($("#saveButton").css("display") === "none" && $("#deleteButton").css("display") === "none"){
             $('#saveButton').show();
             $('#deleteButton').show();
             // $('#cancelButton').show();
@@ -57,21 +54,11 @@
 
     function deleteBoard(boardNo){
         console.log( "boardNo" + boardNo);
-        var formObj = $("form");
+        const formObj = $("form");
         formObj.attr("action", "/Board/"+boardNo +"/delete");
         formObj.attr("method", "post");
         formObj.submit();
     }
-    /*    /!* 삭제 버튼 *!/
-
-        function delete(boardNo){
-            var form = document.createElement("form");
-            form.setAttribute("action", "/Board/" + boardNo+ "/delete");
-            form.setAttribute("method", "post");
-            document.body.appendChild(form);
-            form.submit();
-        }*/
-
 
 </script>
 
@@ -82,10 +69,9 @@
     <form th:object="${boards}" method="post" class = "row g-3 fw-bolder">
             <div class="form-group col-12">
                 <h3>
-            <!--            <label th:for="boardCategory">카테고리</label>-->
-            <span th:if="${board.boardCategory.name().equals('free')}" class="form-control-plaintext" th:style="${'display:inline;'}"> 자유게시판</span>
-            <span th:if="${board.boardCategory.name().equals('notice')}" class="form-control-plaintext" th:style="${'display:inline;'}">공지사항</span>
-            <span th:if="${board.boardCategory.name().equals('qna')}" class="form-control-plaintext" th:style="${'display:inline;'}">Q&A</span>
+            <span th:if="${#strings.equals(board.getCategory().name(), 'FREE')}" class="form-control-plaintext" th:style="${'display:inline;'}"> 자유게시판</span>
+            <span th:if="${#strings.equals(board.getCategory().name(), 'NOTICE')}" class="form-control-plaintext" th:style="${'display:inline;'}">공지사항</span>
+            <span th:if="${#strings.equals(board.getCategory().name(), 'QNA')}" class="form-control-plaintext" th:style="${'display:inline;'}">Q&A</span>
                 </h3>
             </div>
         <div class="form-group col-12">
@@ -94,11 +80,11 @@
         </div>
         <div class="form-group col-6">
             <label th:for="content">작성자</label>
-            <span th:text="${board.member.email}" class="form-control-plaintext"  > 비어있음 </span>
+            <span th:text="${board.regId}" class="form-control-plaintext"  > 비어있음 </span>
         </div>
         <div class="form-group col-6">
             <label th:for="content">작성일</label>
-            <span th:text="${board.regTime}" class="form-control-plaintext" > 비어있음 </span>
+            <span th:text="${#temporals.format(board.regTime, 'yyyy-MM-dd HH:mm:ss')}" class="form-control-plaintext" > 비어있음 </span>
         </div>
         <div class="form-group col-6">
             <label th:for="modId">최종수정자</label>
@@ -106,11 +92,11 @@
         </div>
         <div class="form-group col-6">
             <label th:for="modTime">최종수정일</label>
-            <span th:text="${board.modTime}" class="form-control-plaintext" > 비어있음 </span>
+            <span th:text="${#temporals.format(board.modTime, 'yyyy-MM-dd HH:mm:ss')}" class="form-control-plaintext" > 비어있음 </span>
         </div>
         <div class="form-group col-12">
             <label class="form-label" th:for="title">제목</label>
-            <input type="text" th:field="${board.title}"  class="form-control col-8" readonly></label>
+            <input type="text" th:field="${board.title}"  class="form-control col-8" readonly>
             <!--      <span th:text="${board.title}" class="form-control" >제목 없음 </span>-->
         </div>
         <div class="form-group col-12">
@@ -119,7 +105,7 @@
             <!--      <span th:text="${board.content}" class="form-control" > 내용 없음 </span>-->
         </div>
         <div th:style="${'text-align: center'}">
-            <button type="button" class="btn btn-success col-auto" id="editButton" th:onclick="edit()"  th:style="${session.loginMember?.email == board.member.email? 'display:inline-block' : 'display:none'}" >수정</button>
+            <button type="button" class="btn btn-success col-auto" id="editButton" th:onclick="edit()"  th:style="${session.loginMember?.email == board.regId? 'display:inline-block' : 'display:none'}" >수정</button>
             <button type="submit" class="btn btn-success col-auto" id="saveButton" style="display:none;">저장</button>
             <button type="button" class="btn btn-danger col-auto" id="deleteButton" style="display:none;" th:onclick="'javascript:deleteBoard('+${board.boardNo}+')'" >삭제</button>
             <!--    th:href="@{/Board/{boardNo}/edit (boardNo=${board.boardNo})}"-->
