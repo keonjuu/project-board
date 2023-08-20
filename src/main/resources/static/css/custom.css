@@ -1,0 +1,86 @@
+
+  html,body{
+    height:100%;
+  }
+  .wrap{
+    min-height: 100%;
+    position:relative;
+  }
+  footer{
+    position: absolute;
+    height: 5rem;
+    background: #2b3035;
+    width: 100%;
+    text-align:center;
+    bottom: 0;
+  }
+
+    .container {
+        max-width: 960px;
+    }
+    .field-error {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+    .form-group {
+      margin-top: 1rem;
+    }
+/*    .form-group input:focus {
+        border: 0.15rem solid var(--bs-info);
+    }*/
+/*    textarea{
+        !*outline-color: var(--bs-info); // focus 테두리 색상 지정*!
+        min-height: 200px;
+    }*/
+    button{
+      display:inline-block;
+      margin-inline-end: 5px;
+    }
+
+    .form-check-input:checked {
+      background-color: #0d6efd;
+      border-color: #0d6efd;
+    }
+    .form-group input:focus, .form-group textarea:focus {
+        border: 0.15rem solid var(--bs-info);
+    }
+
+    input[type=text], textarea[type=text]{
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: none;
+            background-color: #ecf0f1;
+            /*color: white;*/
+    }
+        button{
+            display:inline-block;
+            margin-inline-end: 5px;
+        }
+        .form-group textarea{
+            min-height: 200px;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border: 0.15rem solid var(--bs-info);
+        }
+        /*input[type=text]*/
+        input[type=text], textarea[type=text]{
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: none;
+            background-color: #ecf0f1;
+            /*color: white;*/
+        }
+
+        .form-group-button{
+            display: flex;
+            flex-wrap: wrap;
+            align-content: center;
+            align-items: center;
+            justify-content: center;
+            margin-top:1rem;
+        }

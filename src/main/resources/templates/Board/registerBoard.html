@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/board.css">
+  <link rel="stylesheet" href="/css/custom.css">
   <style>
     .container {
         max-width: 960px;
@@ -55,7 +56,8 @@
 <div class="container" style="padding-top: 30px; width: 70%">
 <!--  <div th:replace="fragments/bodyHeader :: bodyHeader"/>-->
 
-  <form th:action="@{/boards/new}" th:object="${boards}" method="post" class="needs-validation fw-bolder">
+  <form method="post" class="needs-validation fw-bolder" enctype="multipart/form-data"
+        th:action="@{/boards/new}" th:object="${boards}" >
     <div class="form-group">
       <div>카테고리</div>
       <div class="form-check form-check-inline">
@@ -75,7 +77,10 @@
       </div>
       <div class = "field-error" th:errors="*{category}"></div>
     </div>
-
+    <div class="form-group">
+      <label th:for="attachFiles">첨부파일</label>
+      <input type="file" id="attachFiles" name="attachFiles" multiple="multiple" class="form-control-file" />
+    </div>
     <div class="form-group">
       <label th:for="title">제목</label>
       <input type="text" th:field="*{title}" class="form-control" placeholder="제목을 입력하세요"

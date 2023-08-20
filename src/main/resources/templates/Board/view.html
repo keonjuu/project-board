@@ -8,30 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/board.css">
-
-    <style>
-        button{
-            display:inline-block;
-            margin-inline-end: 5px;
-        }
-        .form-group textarea{
-            min-height: 200px;
-        }
-
-        .form-group input:focus, .form-group textarea:focus {
-            border: 0.15rem solid var(--bs-info);
-        }
-        /*input[type=text]*/
-        input[type=text], textarea[type=text]{
-            width: 100%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            box-sizing: border-box;
-            border: none;
-            background-color: #ecf0f1;
-            /*color: white;*/
-        }
-    </style>
+    <link rel="stylesheet" href="/css/custom.css">
 </head>
 <body>
 <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -99,6 +76,13 @@
             <input type="text" th:field="${board.title}"  class="form-control col-8" readonly>
             <!--      <span th:text="${board.title}" class="form-control" >제목 없음 </span>-->
         </div>
+<!--        <div>
+            <ul>
+                <li th:each="file : ${board.attachFiles}">
+                    <a th:href="@{/download/{id}(id=${file.fileNo})}" th:text="${file.originalFileName}"></a>
+                </li>
+            </ul>
+        </div>-->
         <div class="form-group col-12">
             <label class="form-label" th:for="content">내용</label>
                 <textarea type="text" th:field="${board.content}"  class="form-control" readonly></textarea>
