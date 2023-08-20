@@ -2,6 +2,7 @@ package exc.Board.service;
 
 
 import exc.Board.controller.Board.BoardForm;
+import exc.Board.domain.board.AttachFile;
 import exc.Board.domain.board.Board;
 import exc.Board.domain.board.BoardCategory;
 import exc.Board.repository.BoardRepository;
@@ -14,7 +15,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +25,6 @@ import java.time.LocalDateTime;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-
     // 삭제
     @Transactional
     public void deleteById(Long boardNo){
@@ -33,6 +34,22 @@ public class BoardService {
     //1. 저장
     @Transactional
     public void save(Board board) {
+        List<AttachFile> storeFiles = board.getAttachFiles();
+
+        // AttachFile 엔티티의 board 연관관계 설정
+        List<AttachFile> updatedStoreFiles = new ArrayList<>(storeFiles);
+        for (AttachFile attachFile : updatedStoreFiles) {
+            attachFile.setBoard(board);
+//            log.info("getStoreFileName= {}" ,attachFile.getStoreFileName());
+        }
+
+/*        List<AttachFile> updatedStoreFiles = new ArrayList<>();
+        storeFiles.forEach(s -> {
+            AttachFile.AttachFileBuilder fileBuilder = s.toBuilder().board(board);
+            updatedStoreFiles.add(fileBuilder.build());
+        });
+
+        log.info("storeFiles = {}", updatedStoreFiles);*/
         boardRepository.save(board);
     }
 
@@ -53,11 +70,7 @@ public class BoardService {
 
     //3. 게시판 상세 조회
     public Board findOne(Long boardNo) {
-
-        Board board = boardRepository.findByBoardNo(boardNo);
-//        log.info("toDTO = {}", Board.toDTO(board) );
-//        return Board.toDTO(board);
-        return board;
+        return boardRepository.findByBoardNo(boardNo);
     }
 
 

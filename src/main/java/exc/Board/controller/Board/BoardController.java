@@ -1,6 +1,8 @@
 package exc.Board.controller.Board;
 
+import exc.Board.domain.board.AttachFile;
 import exc.Board.domain.board.Board;
+import exc.Board.domain.board.FileStore;
 import exc.Board.domain.member.Member;
 import exc.Board.service.BoardService;
 import exc.Board.service.MemberService;
@@ -10,10 +12,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.time.LocalDateTime;
+import java.io.IOException;
+import java.util.List;
+
 
 @Controller
 @Slf4j
@@ -22,6 +27,7 @@ public class BoardController {
 
     private final BoardService boardService;
     private final MemberService memberService;
+    private final FileStore fileStore;
 
     @GetMapping("boards/new")
     public String createBoardForm(Model model){
@@ -30,7 +36,7 @@ public class BoardController {
     }
 
     @PostMapping("boards/new")
-    public String register(@Valid @ModelAttribute("boards") BoardForm form, BindingResult bindingResult, HttpServletRequest request){
+    public String register(@Valid @ModelAttribute("boards") BoardForm form, BindingResult bindingResult, HttpServletRequest request) throws IOException {
 
         if(form.getContent().length()<10) {
             bindingResult.rejectValue("content", "content","최소 10자 이상 입력해야 합니다. 현재 글자수="+ form.getContent().length() );
@@ -53,21 +59,34 @@ public class BoardController {
 
         // form 정보 board db 에 저장
         // dto -> Board entity
+
+        // 첨부파일 리스트 생성
+        List<AttachFile> storeFiles = fileStore.storeFiles(form.getAttachFiles());
+
+        // Board
         Board board = Board.builder()
                 .title(form.getTitle())
                 .content(form.getContent())
                 .boardCategory(form.getCategory())
                 .modId(findId.getEmail())
-                .member(findId) // 엔티티에 대한 의존을 완전 끊어야 한다...? 다 dto 로 바꿔야 해
+                .member(findId) // Member 연관관계
+                .attachFiles(storeFiles) // AttachFile 연관관계
                 .build();
 
-//        board.setMember(findId);
+
+/*        // 연관관계
+        board.setMember(findId);*/
 //        Member loginMember = (Member)session.getAttribute(SessionConst.LOGIN_MEMBER); // 타입캐스팅필요
 
-        System.err.println("저장시 board = " + board.toString());
+/*        // 모든 AttachFile 엔티티에 Board 엔티티 추가 -> 서비스 단에서
+        //attachFile.setBoard(board);
+        attachFileService.save(storeFiles);*/
+
         boardService.save(board);
+
         return "redirect:/";
     }
+
 
     // 상세페이지 조회
     @GetMapping("/Board/{boardNo}/view")
@@ -75,11 +94,11 @@ public class BoardController {
 
         // 게시글번호로 db 조회
         Board board = boardService.findOne(boardNo);
-        BoardForm form=BoardForm.toDTO(board);
+        BoardForm boardForm=BoardForm.toDTO(board);
 
-        log.info("BoardForm = {}", form);
+        log.info("BoardForm = {}", boardForm);
         // model 에 담아서 전달
-        model.addAttribute("board", form);
+        model.addAttribute("board", boardForm);
         return "Board/view";
     }
 
