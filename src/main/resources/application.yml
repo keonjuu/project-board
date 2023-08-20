@@ -16,6 +16,9 @@ spring:
     password: keonjuu
   messages:
     basename: messages,errors
+  servelt:
+    multipart:
+      enable: true
 
 
 logging:
@@ -36,3 +39,5 @@ server:
     whitelabel:
       enabled: false
 
+file:
+  dir: C:\Users\keonju\Documents\fileDiretory\
