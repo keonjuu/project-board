@@ -27,7 +27,8 @@ import static javax.persistence.FetchType.LAZY;
 public
 class Board {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long boardNo;
 
     @Enumerated(EnumType.STRING)

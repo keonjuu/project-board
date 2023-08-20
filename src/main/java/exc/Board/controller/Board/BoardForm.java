@@ -1,6 +1,6 @@
 package exc.Board.controller.Board;
 
-import exc.Board.domain.board.AttachFile;
+import exc.Board.domain.board.AttachFileForm;
 import exc.Board.domain.board.Board;
 import exc.Board.domain.board.BoardCategory;
 import exc.Board.domain.member.Member;
@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+
 
 @Data
 @Builder(toBuilder = true)
@@ -39,8 +40,14 @@ public class BoardForm {
     private Member member;
     private List<MultipartFile> attachFiles;
 
+    private List<AttachFileForm> files;
+
     public static BoardForm toDTO(Board boardEntity){
 
+        List<AttachFileForm> fileForm = boardEntity.getAttachFiles()
+                .stream()
+                .map(AttachFileForm::new)
+                .collect(toList());
 
         return BoardForm.builder()
                 .boardNo(boardEntity.getBoardNo())
@@ -50,7 +57,7 @@ public class BoardForm {
                 .modTime(boardEntity.getModTime())
                 .regTime(boardEntity.getRegTime())
                 .regId(boardEntity.getMember().getEmail()) // Lazy 초기화 ??? -> N + 1 문제
-//                .attachFiles(boardEntity.getAttachFiles().stream().map(af -> new AttachFile(af)).collect(toList()))
+                .files(fileForm)
                 .category(boardEntity.getBoardCategory())
                 .build();
     }
