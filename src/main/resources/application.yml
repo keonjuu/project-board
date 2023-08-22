@@ -8,7 +8,9 @@ spring:
         show_sql: true
         highlight_sql: true
         use_sql_comments: true
-#    open-in-view: false
+#    defer-datasource-initialization: true
+#    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  #    open-in-view: false
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/board
@@ -16,9 +18,14 @@ spring:
     password: keonjuu
   messages:
     basename: messages,errors
-  servelt:
+  servlet:
     multipart:
-      enable: true
+      enabled: true
+      max-request-size: 1024MB
+      max-file-size: 1024MB
+  sql:
+    init:
+#      mode: always
 
 
 logging:
@@ -40,4 +47,4 @@ server:
       enabled: false
 
 file:
-  dir: C:\Users\keonju\Documents\fileDiretory\
+  dir: C:\Users\User\Documents\fileDirectory\
