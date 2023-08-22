@@ -2,136 +2,132 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <!--<head th:replace="fragments/header :: header" />-->
-<head>
-    <title>게시글 admin</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-     <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <head>
+        <title>게시글 admin</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
 
-    <style>
-       .pagination {
-            --bs-pagination-disabled-bg:#18bc9c;'
-        }
-        .form-group input:focus, .form-group textarea:focus {
-            border: 0.15rem solid var(--bs-info);
-        }
-        input[type=text], textarea[type=text]{
-            width: 100%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            box-sizing: border-box;
-            border: none;
-            background-color: #ecf0f1;
-            /*color: white;*/
-        }
-    html,body{
-              height:100%;
-          }
-        .wrap{
-            min-height: 100%;
-            position:relative;
-        }
-        footer{
-            position: absolute;
-            height: 5rem;
-            background: #2b3035;
-            width: 100%;
-            text-align:center;
-            bottom: 0;
-        }
-    </style>
-</head>
-<body>
-<div class = "wrap">
-<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
-<script th:inline="javascript">
+        <style>
+            .pagination {
+                --bs-pagination-disabled-bg:#18bc9c;'
+            }
+            .form-group input:focus, .form-group textarea:focus {
+                border: 0.15rem solid var(--bs-info);
+            }
+            input[type=text], textarea[type=text]{
+                width: 100%;
+                padding: 12px 20px;
+                margin: 8px 0;
+                box-sizing: border-box;
+                border: none;
+                background-color: #ecf0f1;
+                /*color: white;*/}
+            html,body{
+                height:100%;
+            }
+            .wrap{
+                min-height: 100%;
+                position:relative;
+            }
+            footer{
+                position: absolute;
+                height: 5rem;
+                background: #2b3035;
+                width: 100%;
+                text-align:center;
+                bottom: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class = "wrap">
+        <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script th:inline="javascript">
+            function save(id){
+                const selectedVal = $('#selectJoinYn_' + id.toString()).val();
+                location.href="/admin/save/" +id + "/"+ selectedVal ;
+                console.log("location.href" + location.href);
+            }
+        </script>
 
-    function save(id){
-        const selectedVal = $('#selectJoinYn_' + id.toString()).val();
-        location.href="/admin/save/" +id + "/"+ selectedVal ;
-        console.log("location.href" + location.href);
-    }
-    
-</script>
+        <div th:replace="fragments/bodyHeader :: bodyHeader"></div>
 
-<div th:replace="fragments/bodyHeader :: bodyHeader"></div>
+        <div class="container" style="padding-top: 30px; width: 70%">
+            <button type="submit" class="btn btn-success col-auto" id="saveButton" style="display:none;">저장</button>
 
-<div class="container" style="padding-top: 30px; width: 70%">
-    <button type="submit" class="btn btn-success col-auto" id="saveButton" style="display:none;">저장</button>
+            <table style="width: 100%" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>유저번호</th>
+                        <th>이름</th>
+                        <th>이메일</th>
+                        <th>권한</th>
+                        <th>가입상태</th>
+                        <th>최종 접속일</th>
+                        <th>가입승인 여부</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="member : ${memberList}">
+                        <td><a id="id" href="#" th:text="${member.id}" th:href="@{/member/{userNo}/(userNo=${member.id})}">상세</a></td>
+                        <td name="userName" th:text="${member.userName}"></td>
+                        <td name="email" th:text="${member.email}"></td>
+                        <td name="role" th:text="${member?.role}"></td>
+                        <td name="status" th:text="${member?.status}"></td>
+                        <td name="lastDatetime" th:text="${#temporals.format(member?.lastDatetime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td>
+                            <label>
+                                <select class="form-select" name = "selectJoinYn" th:id="selectJoinYn_+${member.id}"  th:value="${member?.status}" th:style="${'display:inline-block;width:auto;'}">
+                                    <option th:selected="${member?.status.name().equals('PENDING')}" th:value="none" > 선택 </option>
+                                    <option th:selected="${member?.status.name().equals('ADMISSION')}" th:value="Y">Y</option>
+                                    <option th:selected="${member?.status.name().equals('REJECT')}" th:value="N">N</option>
+                                </select>
+                            </label>
+                            <a id = "saveBtn" href="#" th:href="'javascript:save('+${member.id}+')'" class="btn btn-info">저장
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <nav style="text-align: center;">
+                <ul class="pagination justify-content-center" th:with="start=${T(java.lang.Math).floor(memberList.number/10) * 10 + 1},
+                    last=${start + 9 < memberList.totalPages ? start + 9 : memberList.totalPages}">
+                    <li >
+                        <a class="page-link" th:href="@{/admin(page=1)}" aria-label="First">
+                            <span aria-hidden="true">First</span>
+                        </a>
+                    </li>
 
-    <table style="width: 100%" class="table table-striped">
-        <thead>
-        <tr>
-            <th>유저번호</th>
-            <th>이름</th>
-            <th>이메일</th>
-            <th>권한</th>
-            <th>가입상태</th>
-            <th>최종 접속일</th>
-            <th>가입승인 여부</th>
-            <th></th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="member : ${memberList}">
-            <td><a id="id" href="#" th:text="${member.id}" th:href="@{/member/{userNo}/(userNo=${member.id})}">상세</a></td>
-            <td name="userName" th:text="${member.userName}"></td>
-            <td name="email" th:text="${member.email}"></td>
-            <td name="role" th:text="${member?.role}"></td>
-            <td name="status" th:text="${member?.status}"></td>
-            <td name="lastDatetime" th:text="${#temporals.format(member?.lastDatetime, 'yyyy-MM-dd HH:mm:ss')}"></td>
-            <td>
-                <label>
-                    <select class="form-select" name = "selectJoinYn" th:id="selectJoinYn_+${member.id}"  th:value="${member?.status}" th:style="${'display:inline-block;width:auto;'}">
-                        <option th:selected="${member?.status.name().equals('PENDING')}" th:value="none" > 선택 </option>
-                        <option th:selected="${member?.status.name().equals('ADMISSION')}" th:value="Y">Y</option>
-                        <option th:selected="${member?.status.name().equals('REJECT')}" th:value="N">N</option>
-                    </select>
-                </label>
-                <a id = "saveBtn" href="#" th:href="'javascript:save('+${member.id}+')'"
-                   class="btn btn-info">저장
-                </a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <nav style="text-align: center;">
-        <ul class="pagination justify-content-center" th:with="start=${T(java.lang.Math).floor(memberList.number/10) * 10 + 1},
-            last=${start + 9 < memberList.totalPages ? start + 9 : memberList.totalPages}">
-            <li >
-                <a class="page-link" th:href="@{/admin(page=1)}" aria-label="First">
-                    <span aria-hidden="true">First</span>
-                </a>
-            </li>
+                    <li th:class="${memberList.first} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin(page=${memberList.number})}" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&lt;&lt;</span>
+                        </a>
+                    </li>
 
-            <li th:class="${memberList.first} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin(page=${memberList.number})}" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&lt;&lt;</span>
-                </a>
-            </li>
+                    <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == memberList.number + 1} ? 'active'">
+                        <a class="page-link" th:href="@{/admin(page=${page})}" th:text="${page}"></a>
+                    </li>
 
-            <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == memberList.number + 1} ? 'active'">
-                <a class="page-link" th:href="@{/admin(page=${page})}" th:text="${page}"></a>
-            </li>
+                    <li th:class="${memberList.last}? 'disabled'">
+                        <a class="page-link" th:href="@{/admin(page=${memberList.number + 2}) }" href="#" aria-label="Next">
+                            <span aria-hidden="true">&gt;&gt;</span>
+                        </a>
+                    </li>
 
-            <li th:class="${memberList.last}? 'disabled'">
-                <a class="page-link" th:href="@{/admin(page=${memberList.number + 2}) }" href="#" aria-label="Next">
-                    <span aria-hidden="true">&gt;&gt;</span>
-                </a>
-            </li>
+                    <li>
+                        <a class="page-link" th:href="@{/admin(page=${memberList.totalPages})}" aria-label="Last">
+                            <span aria-hidden="true">Last</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <br/>
+        </div> <!-- /container -->
 
-            <li>
-                <a class="page-link" th:href="@{/admin(page=${memberList.totalPages})}" aria-label="Last">
-                    <span aria-hidden="true">Last</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-    <br/>
-</div> <!-- /container -->
-
-    <div th:replace="fragments/footer :: footer"></div>
-</div>
-</body>
+            <div th:replace="fragments/footer :: footer"></div>
+        </div>
+    </body>
 </html>

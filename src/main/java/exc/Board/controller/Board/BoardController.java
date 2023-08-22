@@ -105,18 +105,22 @@ public class BoardController {
     // 수정
     @ResponseBody
     @PostMapping("/Board/{boardNo}/view")
-    public String boardEditView(@ModelAttribute("boards") BoardForm form, Model model) {
+    public String boardEditView(@ModelAttribute("boards") BoardForm form, Model model) throws IOException {
 
         log.info("info={}", form.getModId());
+        // 첨부파일 리스트 생성
+        List<AttachFile> storeFiles = fileStore.storeFiles(form.getAttachFiles());
 
         // 게시글번호로 db 조회 -> 영속상태 만들기
         Board board = boardService.findOne(form.getBoardNo());
         //log.info("board.toString() = {}" + board.toString());
 
+
         // 수정된 값을 화면에서 받아오기
         board = board.toBuilder()
                         .title(form.getTitle())
                         .content(form.getContent())
+                        .attachFiles(storeFiles)
                         .modId(form.getModId())
                         .build();
 

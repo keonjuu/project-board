@@ -1,152 +1,144 @@
 <!DOCTYPE html>
 <!--<html lang="en">-->
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-  <title>게시판</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <title>게시판</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/board.css">
 
-  <link rel="stylesheet" href="/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/css/board.css">
-<style>
-  html,body{
-    height:100%;
-  }
-  .wrap{
-    min-height: 100%;
-    position:relative;
-  }
-  footer{
-    position: absolute;
-    height: 5rem;
-    background: #2b3035;
-    width: 100%;
-    text-align:center;
-    bottom: 0;
-  }
-</style>
-</head>
-<body>
-<div class = "wrap">
+        <style>
+            html,body{
+                height:100%;
+            }
+            .wrap{
+                min-height: 100%;
+                position:relative;
+            }
+            footer{
+                position: absolute;
+                height: 5rem;
+                background: #2b3035;
+                width: 100%;
+                text-align:center;
+                bottom: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class = "wrap">
+            <div class="container"></div>
 
-<div class="container">
-</div>
+            <div th:replace="fragments/bodyHeader :: bodyHeader"></div>
 
-<div th:replace="fragments/bodyHeader :: bodyHeader"></div>
+            <div class="container" style="padding-top: 30px; width: 70%">
+                    <div class="form-group col-12">
+                        <h3>
+                            <span class="form-control-plaintext" style="display:inline;"> 내글 목록</span>
+                        </h3>
+                    </div>
+            </div>
+            <div class="container" style="padding-top: 30px; width: 70%">
+                <div class="group">
+                    <a class="btn btn-success"  href="/boards/new" role="button">새글 작성</a>
+                </div>
+            </div>
+            <div class="container mainTableDiv" style="padding-top: 30px; width: 70%; bottom: auto; padding-bottom: 7em; position: initial;">
+                <table class="table table-striped">
+                    <colgroup>
+                        <col style="width: 10%">
+                        <col style="width: 10%">
+                        <col style="width: 20%">
+                        <col style="width: 30%">
+                        <col style="width: 15%">
+                        <col style="width: 15%">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>카테고리</th>
+                        <th>게시글</th>
+                        <th>내용</th>
+                        <th>작성일</th>
+                        <th>수정일</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${boards}">
+                            <td th:text="${item.boardNo}"></td>
+                            <td th:switch="${item.category.name()}">
+                                <span th:case="NOTICE">공지사항</span>
+                                <span th:case="FREE">자유게시판</span>
+                                <span th:case="QNA">Q&A</span>
+                            </td>
+                            <td> <a th:text="${item.title}" th:href="@{/Board/{boardNo}/view (boardNo=${item.boardNo})}"></a></td>
+                            <td th:text="${item.content}"></td>
+                            <td th:text="${#temporals.format(item.regTime, 'yyyy-MM-dd')}"></td>
+                            <td th:text="${#temporals.format(item.modTime, 'yyyy-MM-dd')}"></td>
+                            <!--      <td th:text="${item.member.email}"></td>-->
+                        </tr>
+                    </tbody>
+                </table>
 
-<div class="container" style="padding-top: 30px; width: 70%">
-        <div class="form-group col-12">
-            <h3>
-                <span class="form-control-plaintext" style="display:inline;"> 내글 목록</span>
-            </h3>
+                <nav style="text-align: center;">
+                    <ul class="pagination justify-content-center" th:with="start=${T(java.lang.Math).floor(boards.number/10) * 10 + 1},
+                        last=${start + 9 < boards.totalPages ? start + 9 : boards.totalPages}">
+                        <li><span></span></li>
+                        <li>
+                <!--            <a class="page-link" th:href="@{/{category}(category=${boardCat}, page=1)}" aria-label="First"-->
+                            <a class="page-link" th:href="@{/member/{userNo}/board (userNo='__${userNo}__', page=1)}" aria-label="First"
+                                th:if="${#strings.isEmpty(param.searchType)}">
+                                <span aria-hidden="true">First</span>
+                            </a>
+                            <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat}, page=1, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" aria-label="First"
+                                th:if="${not #strings.isEmpty(param.searchType)}" >
+                                <span aria-hidden="true">First</span>
+                            </a>
+                        </li>
+                        <li th:class="${boards.first} ? 'disabled'">
+                            <a class="page-link" th:href="@{/member/{userNo}/board (userNo='__${userNo}__', page=${boards.number})}" href="#" aria-label="Previous"
+                                th:if="${#strings.isEmpty(param.searchType)}">
+                                <span aria-hidden="true">&lt;&lt;</span>
+                            </a>
+                            <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat}, page=${boards.number}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" href="#" aria-label="Previous"
+                                th:if="${not #strings.isEmpty(param.searchType)}">
+                                <span aria-hidden="true">&lt;&lt;</span>
+                                <!--                        <span class="sr-only">Previous</span>-->
+                            </a>
+                        </li>
+                        <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == boards.number + 1} ? 'active'">
+                            <a class="page-link" th:text="${page}" th:href="@{/member/{userNo}/board (userNo='__${userNo}__',page=${page})}"
+                                th:if="${#strings.isEmpty(param.searchType)}"></a>
+                            <a class="page-link" th:text="${page}" th:href="@{{category}/Board/search/(category=${boardCat}, page=${page}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}"
+                                th:if="${not #strings.isEmpty(param.searchType)}"></a>
+                        </li>
+                        <li th:class="${boards.last}? 'disabled'">
+                            <a class="page-link" th:href="@{/member/{userNo}/board (userNo='__${userNo}__',page=${boards.number + 2}) }" href="#" aria-label="Next"
+                                th:if="${#strings.isEmpty(param.searchType)}">
+                                <span aria-hidden="true">&gt;&gt;</span>
+                            </a>
+                            <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat},page=${boards.number + 2}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" href="#" aria-label="Next"
+                                th:if="${not #strings.isEmpty(param.searchType)}">
+                                <span aria-hidden="true">&gt;&gt;</span>
+                                <!--                        <span class="sr-only">Next</span>-->
+                            </a>
+                        </li>
+                        <li>
+                            <a class="page-link" th:href="@{/member/{userNo}/board (userNo='__${userNo}__' , page=${boards.totalPages})}" aria-label="Last"
+                                th:if="${#strings.isEmpty(param.searchType)}">
+                                <span aria-hidden="true">Last</span>
+                            </a>
+                            <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat}, page=${boards.totalPages}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" aria-label="Last"
+                                th:if="${not #strings.isEmpty(param.searchType)}">
+                                <span aria-hidden="true">Last</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div th:replace="fragments/footer :: footer"></div>
+
         </div>
-</div>
-
-<div class="container" style="padding-top: 30px; width: 70%">
-  <div class="group">
-    <a class="btn btn-success"  href="/boards/new" role="button">새글 작성</a>
-  </div>
-</div>
-
-
-<div class="container mainTableDiv" style="padding-top: 30px; width: 70%; bottom: auto; padding-bottom: 7em; position: initial;">
-  <table class="table table-striped">
-    <colgroup>
-      <col style="width: 10%">
-      <col style="width: 10%">
-      <col style="width: 20%">
-      <col style="width: 30%">
-      <col style="width: 15%">
-      <col style="width: 15%">
-    </colgroup>
-    <thead>
-    <tr>
-        <th>번호</th>
-        <th>카테고리</th>
-        <th>게시글</th>
-        <th>내용</th>
-        <th>작성일</th>
-        <th>수정일</th>
-      <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="item : ${boardList}">
-        <td th:text="${item.boardNo}"></td>
-        <td th:switch="${item.category.name()}">
-            <span th:case="NOTICE">공지사항</span>
-            <span th:case="FREE">자유게시판</span>
-            <span th:case="QNA">Q&A</span>
-        </td>
-        <td> <a th:text="${item.title}" th:href="@{/Board/{boardNo}/view (boardNo=${item.boardNo})}"></a></td>
-        <td th:text="${item.content}"></td>
-        <td th:text="${#temporals.format(item.regTime, 'yyyy-MM-dd')}"></td>
-        <td th:text="${#temporals.format(item.modTime, 'yyyy-MM-dd')}"></td>
-        <!--      <td th:text="${item.member.email}"></td>-->
-    </tr>
-    </tbody>
-  </table>
-
-  <nav style="text-align: center;">
-    <ul class="pagination justify-content-center" th:with="start=${T(java.lang.Math).floor(boardList.number/10) * 10 + 1},
-            last=${start + 9 < boardList.totalPages ? start + 9 : boardList.totalPages}">
-      <li><span></span></li>
-      <li>
-<!--            <a class="page-link" th:href="@{/{category}(category=${boardCat}, page=1)}" aria-label="First"-->
-            <a class="page-link" th:href="@{/member/{userNo}/board (userNo='__${userNo}__', page=1)}" aria-label="First"
-               th:if="${#strings.isEmpty(param.searchType)}">
-              <span aria-hidden="true">First</span>
-            </a>
-            <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat}, page=1, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" aria-label="First"
-               th:if="${not #strings.isEmpty(param.searchType)}" >
-              <span aria-hidden="true">First</span>
-            </a>
-      </li>
-      <li th:class="${boardList.first} ? 'disabled'">
-            <a class="page-link" th:href="@{/member/{userNo}/board (userNo='__${userNo}__', page=${boardList.number})}" href="#" aria-label="Previous"
-               th:if="${#strings.isEmpty(param.searchType)}">
-              <span aria-hidden="true">&lt;&lt;</span>
-            </a>
-            <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat}, page=${boardList.number}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" href="#" aria-label="Previous"
-               th:if="${not #strings.isEmpty(param.searchType)}">
-              <span aria-hidden="true">&lt;&lt;</span>
-              <!--                        <span class="sr-only">Previous</span>-->
-            </a>
-      </li>
-      <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == boardList.number + 1} ? 'active'">
-            <a class="page-link" th:text="${page}" th:href="@{/member/{userNo}/board (userNo='__${userNo}__',page=${page})}"
-               th:if="${#strings.isEmpty(param.searchType)}"></a>
-            <a class="page-link" th:text="${page}" th:href="@{{category}/Board/search/(category=${boardCat}, page=${page}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}"
-               th:if="${not #strings.isEmpty(param.searchType)}"></a>
-      </li>
-      <li th:class="${boardList.last}? 'disabled'">
-            <a class="page-link" th:href="@{/member/{userNo}/board (userNo='__${userNo}__',page=${boardList.number + 2}) }" href="#" aria-label="Next"
-               th:if="${#strings.isEmpty(param.searchType)}">
-              <span aria-hidden="true">&gt;&gt;</span>
-            </a>
-
-            <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat},page=${boardList.number + 2}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" href="#" aria-label="Next"
-               th:if="${not #strings.isEmpty(param.searchType)}">
-              <span aria-hidden="true">&gt;&gt;</span>
-              <!--                        <span class="sr-only">Next</span>-->
-            </a>
-      </li>
-      <li>
-            <a class="page-link" th:href="@{/member/{userNo}/board (userNo='__${userNo}__' , page=${boardList.totalPages})}" aria-label="Last"
-               th:if="${#strings.isEmpty(param.searchType)}">
-              <span aria-hidden="true">Last</span>
-            </a>
-            <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat}, page=${boardList.totalPages}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" aria-label="Last"
-               th:if="${not #strings.isEmpty(param.searchType)}">
-              <span aria-hidden="true">Last</span>
-            </a>
-      </li>
-    </ul>
-
-  </nav>
-</div>
-<div th:replace="fragments/footer :: footer"></div>
-
-</div>
-</body>
+    </body>
 </html>

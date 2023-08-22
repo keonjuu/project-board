@@ -44,10 +44,10 @@ public class HomeController {
         model.addAttribute("member", loginMember);
 
         // 게시판 데이터 가져오기
-        //List<Board> boardList = boardService.findAll();
-        Page<BoardForm> boardList = boardService.findAll(pageable);
-        //log.info("boardList = {}" , boardList.getContent());
-        model.addAttribute("boardList", boardList);
+        //List<Board> boards = boardService.findAll();
+        Page<BoardForm> boards = boardService.findAll(pageable);
+        //log.info("boards = {}" , boards.getContent());
+        model.addAttribute("boards", boards);
 
         return "Home/loginHome";
 
@@ -57,14 +57,14 @@ public class HomeController {
     public String categoryHome(@PathVariable("category") BoardCategory category, Model model, Pageable pageable){
 
         // 게시판
-        Page<BoardForm> boardList = boardService.findCategory(category,pageable);
-        log.info("boardList.getContent = {}", boardList.getContent());
-//       log.info("boardList = {}" , boardList.getContent().stream().filter(board -> board.equals(BoardCategory.values())).toString());
+        Page<BoardForm> boards = boardService.findCategory(category,pageable);
+        log.info("boards.getContent = {}", boards.getContent());
+//       log.info("boards = {}" , boards.getContent().stream().filter(board -> board.equals(BoardCategory.values())).toString());
 
-        model.addAttribute("boardList", boardList);
+        model.addAttribute("boards", boards);
         model.addAttribute("boardCat", category);
 
-//        return boardList.getContent().toString();
+//        return boards.getContent().toString();
         return "Home/loginHome";
     }
 
@@ -76,9 +76,9 @@ public class HomeController {
 
         log.info("searchType= {}, keyword= {}", searchType, keyword);
 
-        Page<BoardForm> boardList = boardService.searchBoard(searchType, keyword, pageable);
-//        log.info("Board/search boardList = {}" , boardList.getContent());
-        model.addAttribute("boardList", boardList);
+        Page<BoardForm> boards = boardService.searchBoard(searchType, keyword, pageable);
+//        log.info("Board/search boards = {}" , boards.getContent());
+        model.addAttribute("boards", boards);
 
         return "/Home/loginHome";
     }

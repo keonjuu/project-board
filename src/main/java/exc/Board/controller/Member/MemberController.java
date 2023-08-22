@@ -53,7 +53,7 @@ public class MemberController {
                 );
         log.info("memberBoard = {}" , memberBoard);
 
-        model.addAttribute("boardList", memberBoard);
+        model.addAttribute("boards", memberBoard);
         return "Member/memberBoardList";
     }
 

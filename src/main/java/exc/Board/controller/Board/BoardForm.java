@@ -1,6 +1,5 @@
 package exc.Board.controller.Board;
 
-import exc.Board.domain.board.AttachFileForm;
 import exc.Board.domain.board.Board;
 import exc.Board.domain.board.BoardCategory;
 import exc.Board.domain.member.Member;

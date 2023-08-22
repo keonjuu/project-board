@@ -14,10 +14,10 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    //@EntityGraph(attributePaths = {"boardList"}, type= EntityGraph.EntityGraphType.LOAD)
+    //@EntityGraph(attributePaths = {"boards"}, type= EntityGraph.EntityGraphType.LOAD)
 
     /*// lazy 로딩된 일대 다 엔티티 불러오기 (fetch join vs join )
-    @Query("select m from Member m join m.boardList b where m.id = :id")
+    @Query("select m from Member m join m.boards b where m.id = :id")
     Page<Member> findALLWithBoardList(@Param("id") Long userId, Pageable pageable);*/
 
 

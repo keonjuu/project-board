@@ -81,7 +81,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="item : ${boardList}">
+    <tr th:each="item : ${boards}">
       <td th:text="${item.boardNo}"></td>
       <td> <a th:text="${item.title}" th:href="@{/Board/{boardNo}/view (boardNo=${item.boardNo})}"></a></td>
       <td th:text="${item.regId}"></td>
@@ -89,8 +89,8 @@
     </tbody>
   </table>
   <nav style="text-align: center;">
-    <ul class="pagination justify-content-center" th:with="start=${T(java.lang.Math).floor(boardList.number/10) * 10 + 1},
-            last=${start + 9 < boardList.totalPages ? start + 9 : boardList.totalPages}">
+    <ul class="pagination justify-content-center" th:with="start=${T(java.lang.Math).floor(boards.number/10) * 10 + 1},
+            last=${start + 9 < boards.totalPages ? start + 9 : boards.totalPages}">
       <li><span></span></li>
       <li >
 <!--        <a class="page-link" th:href="@{/{category}(category=${boardCat}, page=1)}" aria-label="First">-->
@@ -99,30 +99,30 @@
         </a>
       </li>
 
-      <li th:class="${boardList.first} ? 'disabled'">
-<!--        <a class="page-link" th:href="@{/{category}(category=${boardCat}, page=${boardList.number})}" href="#" aria-label="Previous">-->
-        <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat}, page=${boardList.number}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" href="#" aria-label="Previous">
+      <li th:class="${boards.first} ? 'disabled'">
+<!--        <a class="page-link" th:href="@{/{category}(category=${boardCat}, page=${boards.number})}" href="#" aria-label="Previous">-->
+        <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat}, page=${boards.number}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" href="#" aria-label="Previous">
           <span aria-hidden="true">&lt;&lt;</span>
           <!--                        <span class="sr-only">Previous</span>-->
         </a>
       </li>
 
-      <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == boardList.number + 1} ? 'active'">
+      <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == boards.number + 1} ? 'active'">
 <!--        <a class="page-link"th:text="${page}" th:href="@{/{category}(category=${boardCat},page=${page})}"></a>-->
         <a class="page-link"th:text="${page}" th:href="@{{category}/Board/search/(category=${boardCat}, page=${page}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" ></a>
       </li>
 
-      <li th:class="${boardList.last}? 'disabled'">
-<!--        <a class="page-link" th:href="@{/{category}(category=${boardCat},page=${boardList.number + 2}) }" href="#" aria-label="Next">-->
-        <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat},page=${boardList.number + 2}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" href="#" aria-label="Next">
+      <li th:class="${boards.last}? 'disabled'">
+<!--        <a class="page-link" th:href="@{/{category}(category=${boardCat},page=${boards.number + 2}) }" href="#" aria-label="Next">-->
+        <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat},page=${boards.number + 2}, searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" href="#" aria-label="Next">
           <span aria-hidden="true">&gt;&gt;</span>
           <!--                        <span class="sr-only">Next</span>-->
         </a>
       </li>
 
       <li>
-<!--        <a class="page-link" th:href="@{/{category}(category=${boardCat}, page=${boardList.totalPages})}" aria-label="Last">-->
-        <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat}, page=${boardList.totalPages},  searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" aria-label="Last">
+<!--        <a class="page-link" th:href="@{/{category}(category=${boardCat}, page=${boards.totalPages})}" aria-label="Last">-->
+        <a class="page-link" th:href="@{{category}/Board/search/(category=${boardCat}, page=${boards.totalPages},  searchType=${param.searchType}, searchKeyword=${param.searchKeyword})}" aria-label="Last">
           <span aria-hidden="true">Last</span>
         </a>
       </li>

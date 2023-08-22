@@ -17,28 +17,28 @@ import java.util.List;
 @Entity
 @Getter
 @Builder(toBuilder = true)
-@ToString(exclude = "boardList")
+@ToString(exclude = "boards")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Slf4j
 @SequenceGenerator(
-        name = "SEQ_GENERATOR",
-        sequenceName = "member_seq",
-        allocationSize = 1
+    name = "SEQ_GENERATOR",
+    sequenceName = "member_seq",
+    allocationSize = 1
 )
 public class Member implements Serializable {
 
     @Id /*@GeneratedValue(generator = "sequence-generator")*/
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_GENERATOR")
-    @Column(name = "userNo")
+    @Column(name = "user_no")
     private Long id;
     private String email;
     private String userName;
     private String password;
 
     @OneToMany(mappedBy = "member")
-    private List<Board> boardList = new ArrayList<>();
+    private List<Board> boards = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Default private Role role = Role.USER;

@@ -14,11 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,13 +55,13 @@ public class BoardRepositoryTest {
     public void 게시글_전체조회(){
         //when
         //given
-        List<Board> boardList = boardRepository.findAll();
+        List<Board> boards = boardRepository.findAll();
         //then
-        for (Board board : boardList) {
+        for (Board board : boards) {
             System.out.println("board = " + board.toString());
 //            System.out.println("board.getTitle() = " + board.getTitle());
         }
-        Assertions.assertThat(boardList.size()).isEqualTo(2);
+        Assertions.assertThat(boards.size()).isEqualTo(2);
     }
 
     // 게시글 상세조회
@@ -96,17 +94,17 @@ public class BoardRepositoryTest {
 
     @Test
     public void 게시글_카테고리조회(){
-        List<Board> boardList = boardRepository.findAll()
+        List<Board> boards = boardRepository.findAll()
                 .stream()
                 .filter(c -> c.getBoardCategory().equals(BoardCategory.QNA))
                 .sorted(Comparator.comparing(Board::getBoardNo).reversed())
                 .collect(Collectors.toList());
 
-        System.out.println("boardList = " + boardList);
+        System.out.println("boards = " + boards);
 
         // then
-        Assertions.assertThat(boardList.size()).isEqualTo(2);
-        Assertions.assertThat(boardList.get(0).getBoardCategory()).isEqualTo(BoardCategory.QNA);
+        Assertions.assertThat(boards.size()).isEqualTo(2);
+        Assertions.assertThat(boards.get(0).getBoardCategory()).isEqualTo(BoardCategory.QNA);
 
     }
 
@@ -122,9 +120,9 @@ public class BoardRepositoryTest {
 //        Slice<Member> slice = memberRepository.findAll(pageRequest);
 
         //then
-        List<Board> boardList = page.getContent();
-        System.out.println("boardList size = " + boardList.size());
-        for (Board board : boardList) {
+        List<Board> boards = page.getContent();
+        System.out.println("boards size = " + boards.size());
+        for (Board board : boards) {
             System.out.println("board = " + board);
         }
     }
@@ -136,18 +134,18 @@ public class BoardRepositoryTest {
         Page<Board> page = boardRepository.findCategory(BoardCategory.NOTICE,pageRequest);
 
         System.out.println("page.getContent = " + page.getContent());
-        System.out.println("boardList = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.NOTICE)).collect(Collectors.toList()));
-/*        List<Board> boardList = boardRepository.findAll(pageRequest).stream()
+        System.out.println("boards = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.NOTICE)).collect(Collectors.toList()));
+/*        List<Board> boards = boardRepository.findAll(pageRequest).stream()
                 .filter(c -> c.getBoardCategory().equals(BoardCategory.nO)).collect(Collectors.toList());
 
 
-//        System.out.println("boardList = " + boardList);
-        Page<Board> boards = new PageImpl<>(boardList);
+//        System.out.println("boards = " + boards);
+        Page<Board> boards = new PageImpl<>(boards);
         System.out.println("boards = " + boards);
 /*
         // then
-        Assertions.assertThat(boardList.size()).isEqualTo(2);
-        Assertions.assertThat(boardList.get(0).getBoardCategory()).isEqualTo(BoardCategory.QNA);
+        Assertions.assertThat(boards.size()).isEqualTo(2);
+        Assertions.assertThat(boards.get(0).getBoardCategory()).isEqualTo(BoardCategory.QNA);
 */
 
     }
@@ -158,7 +156,7 @@ public class BoardRepositoryTest {
         String keword = "keonjuu";
         Page<Board> page = boardRepository.findByRegIdContaining(keword, pageRequest);
         System.out.println("page.getContent = " + page.getContent());
-        System.out.println("boardList = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.QNA)).collect(Collectors.toList()));
+        System.out.println("boards = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.QNA)).collect(Collectors.toList()));
 
     }
 
@@ -170,7 +168,7 @@ public class BoardRepositoryTest {
         String keword = "언제쯤";
         Page<Board> page = boardRepository.findByTitleContaining(keword, pageRequest);
         System.out.println("page.getContent = " + page.getContent());
-        System.out.println("boardList = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.QNA)).collect(Collectors.toList()));
+        System.out.println("boards = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.QNA)).collect(Collectors.toList()));
 
     }
 
@@ -180,7 +178,7 @@ public class BoardRepositoryTest {
         String keword = "언제쯤";
         Page<Board> page = boardRepository.findByContentContaining(keword, pageRequest);
         System.out.println("page.getContent = " + page.getContent());
-        System.out.println("boardList = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.QNA)).collect(Collectors.toList()));
+        System.out.println("boards = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.QNA)).collect(Collectors.toList()));
 
     }
 
@@ -192,7 +190,7 @@ public class BoardRepositoryTest {
         String keword = "언제쯤";
         Page<Board> page = boardRepository.findByBoardCategoryAndDelYnEqualsAndTitleContaining(BoardCategory.QNA,"N", keword ,pageRequest);
         System.out.println("page.getContent = " + page.getContent());
-        System.out.println("boardList = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.QNA)).collect(Collectors.toList()));
+        System.out.println("boards = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.QNA)).collect(Collectors.toList()));
 
     }
     @Test
@@ -201,7 +199,7 @@ public class BoardRepositoryTest {
         String keword = "언제쯤";
         Page<Board> page = boardRepository.findByBoardCategoryAndDelYnEqualsAndContentContaining(BoardCategory.QNA, "N",keword ,pageRequest);
         System.out.println("page.getContent = " + page.getContent());
-        System.out.println("boardList = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.QNA)).collect(Collectors.toList()));
+        System.out.println("boards = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.QNA)).collect(Collectors.toList()));
 
     }
 
@@ -216,7 +214,7 @@ public class BoardRepositoryTest {
         System.out.println("noticePage.getContent = " + noticePage.getContent());
         System.out.println("freePage.getContent = " + freePage.getContent());
 
-//        System.out.println("boardList = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.NOTICE)).collect(Collectors.toList()));
+//        System.out.println("boards = " + page.getContent().stream().filter(board -> board.getBoardCategory().equals(BoardCategory.NOTICE)).collect(Collectors.toList()));
 
     }
 
@@ -230,12 +228,12 @@ public class BoardRepositoryTest {
         Page<Board> userPage = boardRepository.findAllByUserNo(findMember.getId(), pageRequest);
 
         //then
-        List<Board> boardList = userPage.getContent();
+        List<Board> boards = userPage.getContent();
         System.out.println("page.getContent() = " + userPage.getContent());
         System.out.println("page.getSize() = " + userPage.getSize());  // 페이지 크기
         System.out.println("page.getTotalElements = " + userPage.getTotalElements()); // 전체 count
-        System.out.println("boardList size = " + boardList.size());
-/*        for (Board board : boardList) {
+        System.out.println("boards size = " + boards.size());
+/*        for (Board board : boards) {
             System.out.println("board = " + board);
         }*/
 
@@ -256,7 +254,7 @@ public class BoardRepositoryTest {
 
 
         System.out.println("page.getContent = " + page.getContent());
-//        System.out.println("boardList = " + page.getContent().stream().filter(board -> board.getCategory().equals(BoardCategory.NOTICE)).collect(Collectors.toList()));
+//        System.out.println("boards = " + page.getContent().stream().filter(board -> board.getCategory().equals(BoardCategory.NOTICE)).collect(Collectors.toList()));
 
     }
 
