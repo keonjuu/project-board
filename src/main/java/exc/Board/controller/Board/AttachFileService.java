@@ -28,4 +28,9 @@ public class AttachFileService {
     public Optional<AttachFile> findAttachFileById(Long fileId) {
         return attachFileRepository.findById(fileId);
     }
+
+    @Transactional
+    public void deleteAttachFileById(Long fileId){
+        attachFileRepository.deleteById(fileId);
+    }
 }
