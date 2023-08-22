@@ -2,102 +2,135 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en" >
 
 <!--<head th:replace="fragments/header :: header" />-->
-<head>
-    <title>게시글 상세 페이지</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/board.css">
-    <link rel="stylesheet" href="/css/custom.css">
-</head>
-<body>
-<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
-<script>
-    function edit(){
-        $("input[name='title']").attr("readonly", false);
-        $("textarea[name='content']").attr("readonly", false);
+    <head>
+        <title>게시글 상세 페이지</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/board.css">
+        <link rel="stylesheet" href="/css/custom.css">
+    </head>
+    <body>
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
 
-        // 저장&삭제 버튼 활성화
-        if($("#saveButton").css("display") === "none" && $("#deleteButton").css("display") === "none"){
-            $('#saveButton').show();
-            $('#deleteButton').show();
-            // $('#cancelButton').show();
-            $('#editButton').hide();
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            $(".delete-link").click(function (event) {
+                event.preventDefault(); // 기본 클릭 동작 방지
+                const fileId = parseInt($(this).attr('id'));
+                const clickedLink = $(this);
+                deleteFile(fileId, clickedLink);
+            });
+
+        function deleteFile(fileId, clickedLink) {
+            $.ajax({
+                type: "POST",
+                url: "/delete/" + fileId,
+                success: function (response) {
+                    if (response === "success") {
+                        // alert("파일이 삭제되었습니다.");
+                        // 삭제 성공시 태그 삭제
+                        $(clickedLink).parent().remove();
+                    } else {
+                        alert("파일 삭제 중 오류가 발생했습니다.");
+                    }
+                },
+                error: function () {
+                    alert("파일 삭제 중 오류가 발생했습니다.");
+                }
+            });
         }
-    }
-    function cancel(){
-        location.href="/";
-    }
+    });
 
-    function deleteBoard(boardNo){
-        console.log( "boardNo" + boardNo);
-        const formObj = $("form");
-        formObj.attr("action", "/Board/"+boardNo +"/delete");
-        formObj.attr("method", "post");
-        formObj.submit();
-    }
+    function edit(){
+            $("input[name='title']").attr("readonly", false);
+            $("textarea[name='content']").attr("readonly", false);
+            $("#attachFiles").removeAttr("style");
 
-</script>
+            // 저장&삭제 버튼 활성화
+            if($("#saveButton").css("display") === "none" && $("#deleteButton").css("display") === "none"){
+                $('#saveButton').show();
+                $('#deleteButton').show();
+                // $('#cancelButton').show();
+                $('#editButton').hide();
+            }
+        }
+        function cancel(){
+            location.href="/";
+        }
+        function deleteBoard(boardNo){
+            console.log( "boardNo" + boardNo);
+            const formObj = $("form");
+            formObj.attr("action", "/Board/"+boardNo +"/delete");
+            formObj.attr("method", "post");
+            formObj.submit();
+        }
+    </script>
 
-<div th:replace="fragments/bodyHeader :: bodyHeader"></div>
-<div class="container" style="padding-top: 30px; width: 70%">
-    <!--    <div th:replace="fragments/bodyHeader :: bodyHeader"/>-->
-    <!--    th:action="@{/Board/{boardNo}/view (boardNo=${board.boardNo}) }"-->
-    <form th:object="${boards}" method="post" class = "row g-3 fw-bolder">
-            <div class="form-group col-12">
-                <h3>
-            <span th:if="${#strings.equals(board.getCategory().name(), 'FREE')}" class="form-control-plaintext" th:style="${'display:inline;'}"> 자유게시판</span>
-            <span th:if="${#strings.equals(board.getCategory().name(), 'NOTICE')}" class="form-control-plaintext" th:style="${'display:inline;'}">공지사항</span>
-            <span th:if="${#strings.equals(board.getCategory().name(), 'QNA')}" class="form-control-plaintext" th:style="${'display:inline;'}">Q&A</span>
-                </h3>
-            </div>
-        <div class="form-group col-12">
-            <label th:for="boardNo">게시글 번호</label>
-            <span th:text="${board.boardNo}" class="form-control-plaintext" th:style="${'display:inline; margin-inline-start:5px'}"> </span>   <!--th:style="${'display:inline; margin-inline-start:5px'}"-->
+        <div th:replace="fragments/bodyHeader :: bodyHeader"></div>
+        <div class="container" style="padding-top: 30px; width: 70%">
+            <!--    <div th:replace="fragments/bodyHeader :: bodyHeader"/>-->
+            <!--    th:action="@{/Board/{boardNo}/view (boardNo=${board.boardNo}) }"-->
+            <form th:object="${boards}" method="post" class = "row g-3 fw-bolder" enctype="multipart/form-data">
+                <div class="form-group col-12">
+                    <h3>
+                <span th:if="${#strings.equals(board.getCategory().name(), 'FREE')}" class="form-control-plaintext" th:style="${'display:inline;'}"> 자유게시판</span>
+                <span th:if="${#strings.equals(board.getCategory().name(), 'NOTICE')}" class="form-control-plaintext" th:style="${'display:inline;'}">공지사항</span>
+                <span th:if="${#strings.equals(board.getCategory().name(), 'QNA')}" class="form-control-plaintext" th:style="${'display:inline;'}">Q&A</span>
+                    </h3>
+                </div>
+                <div class="form-group col-12">
+                    <label th:for="boardNo">게시글 번호</label>
+                    <span th:text="${board.boardNo}" class="form-control-plaintext" th:style="${'display:inline; margin-inline-start:5px'}"> </span>   <!--th:style="${'display:inline; margin-inline-start:5px'}"-->
+                </div>
+                <div class="form-group col-6">
+                    <label th:for="content">작성자</label>
+                    <span th:text="${board.regId}" class="form-control-plaintext"  > 비어있음 </span>
+                </div>
+                <div class="form-group col-6">
+                    <label th:for="content">작성일</label>
+                    <span th:text="${#temporals.format(board.regTime, 'yyyy-MM-dd HH:mm:ss')}" class="form-control-plaintext" > 비어있음 </span>
+                </div>
+                <div class="form-group col-6">
+                    <label th:for="modId">최종수정자</label>
+                    <span th:text="${board.modId}" class="form-control-plaintext" > 비어있음 </span>
+                </div>
+                <div class="form-group col-6">
+                    <label th:for="modTime">최종수정일</label>
+                    <span th:text="${#temporals.format(board.modTime, 'yyyy-MM-dd HH:mm:ss')}" class="form-control-plaintext" > 비어있음 </span>
+                </div>
+                <div class="form-group col-12">
+                    <label th:for="attachFiles">첨부파일</label>
+                    <input type="file" id="attachFiles" name="attachFiles" multiple="multiple" class="form-control-file" th:style="${'display:none'}" />
+                </div>
+                <div class="form-group col-12">
+                    <ul>
+                        <li th:each="file : ${board.files}">
+                            <a th:href="@{/download/{id}(id=${file.id})}" th:text="${file.originalFileName}" th:id="file_+${file.id}"></a>
+                            <a th:href="@{/delete/{id}(id=${file.id})}" th:text="x" th:style="'color: red'" class="delete-link" th:id="${file.id}"></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="form-group col-12">
+                    <label class="form-label" th:for="title">제목</label>
+                    <input type="text" th:field="${board.title}"  class="form-control col-8" readonly>
+                    <!--      <span th:text="${board.title}" class="form-control" >제목 없음 </span>-->
+                </div>
+                <div class="form-group col-12">
+                    <label class="form-label" th:for="content">내용</label>
+                        <textarea type="text" th:field="${board.content}"  class="form-control" readonly></textarea>
+                    <!--      <span th:text="${board.content}" class="form-control" > 내용 없음 </span>-->
+                </div>
+                <div th:style="${'text-align: center'}">
+                    <button type="button" class="btn btn-success col-auto" id="editButton" th:onclick="edit()"  th:style="${session.loginMember?.email == board.regId? 'display:inline-block' : 'display:none'}" >수정</button>
+                    <button type="submit" class="btn btn-success col-auto" id="saveButton" style="display:none;">저장</button>
+                    <button type="button" class="btn btn-danger col-auto" id="deleteButton" style="display:none;" th:onclick="'javascript:deleteBoard('+${board.boardNo}+')'" >삭제</button>
+                    <!--    th:href="@{/Board/{boardNo}/edit (boardNo=${board.boardNo})}"-->
+                    <button type="button" class="btn btn-warning col-auto" id="cancelButton" th:onclick="cancel()">목록</button>
+                </div>
+            </form>
+            <br/>
         </div>
-        <div class="form-group col-6">
-            <label th:for="content">작성자</label>
-            <span th:text="${board.regId}" class="form-control-plaintext"  > 비어있음 </span>
-        </div>
-        <div class="form-group col-6">
-            <label th:for="content">작성일</label>
-            <span th:text="${#temporals.format(board.regTime, 'yyyy-MM-dd HH:mm:ss')}" class="form-control-plaintext" > 비어있음 </span>
-        </div>
-        <div class="form-group col-6">
-            <label th:for="modId">최종수정자</label>
-            <span th:text="${board.modId}" class="form-control-plaintext" > 비어있음 </span>
-        </div>
-        <div class="form-group col-6">
-            <label th:for="modTime">최종수정일</label>
-            <span th:text="${#temporals.format(board.modTime, 'yyyy-MM-dd HH:mm:ss')}" class="form-control-plaintext" > 비어있음 </span>
-        </div>
-        <div class="form-group col-12">
-            <label class="form-label" th:for="title">제목</label>
-            <input type="text" th:field="${board.title}"  class="form-control col-8" readonly>
-            <!--      <span th:text="${board.title}" class="form-control" >제목 없음 </span>-->
-        </div>
-        <div>
-            <ul>
-                <li th:each="file : ${board.files}">
-                    <a th:href="@{/download/{id}(id=${file.id})}" th:text="${file.originalFileName}"></a>
-                </li>
-            </ul>
-        </div>
-        <div class="form-group col-12">
-            <label class="form-label" th:for="content">내용</label>
-                <textarea type="text" th:field="${board.content}"  class="form-control" readonly></textarea>
-            <!--      <span th:text="${board.content}" class="form-control" > 내용 없음 </span>-->
-        </div>
-        <div th:style="${'text-align: center'}">
-            <button type="button" class="btn btn-success col-auto" id="editButton" th:onclick="edit()"  th:style="${session.loginMember?.email == board.regId? 'display:inline-block' : 'display:none'}" >수정</button>
-            <button type="submit" class="btn btn-success col-auto" id="saveButton" style="display:none;">저장</button>
-            <button type="button" class="btn btn-danger col-auto" id="deleteButton" style="display:none;" th:onclick="'javascript:deleteBoard('+${board.boardNo}+')'" >삭제</button>
-            <!--    th:href="@{/Board/{boardNo}/edit (boardNo=${board.boardNo})}"-->
-            <button type="button" class="btn btn-warning col-auto" id="cancelButton" th:onclick="cancel()">목록</button>
-        </div>
-    </form>
-    <br/>
-</div> <!-- /container -->
 
-</body>
+    </body>
 </html>
