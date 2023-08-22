@@ -3,8 +3,12 @@ package exc.Board.domain.board;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -14,6 +18,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @ToString
 @Slf4j
+@EntityListeners(AuditingEntityListener.class)
 public class AttachFile {
     @Id
     @GeneratedValue
@@ -24,8 +29,8 @@ public class AttachFile {
     private String storeFileName;
     private String filePath;
 
-    @ManyToOne(fetch = FetchType.LAZY )
-    @JoinColumn(name = "board_no" , referencedColumnName = "boardNo")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "boardNo" , referencedColumnName = "boardNo")
     @ToString.Exclude
     @JsonIgnore
     private Board board;
@@ -42,10 +47,10 @@ public class AttachFile {
         }
     }
 
-/*    public AttachFile(AttachFile attachFile){
-        filePath = attachFile.filePath;
-        originalFileName = attachFile.originalFileName;
-        storeFileName = attachFile.storeFileName;
-    }*/
+    @CreatedDate
+    private LocalDateTime regTime;
+
+    @LastModifiedDate
+    private LocalDateTime modTime;
 
 }
