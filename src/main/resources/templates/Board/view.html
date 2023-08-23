@@ -15,6 +15,8 @@
 
     <script th:inline="javascript">
         $(document).ready(function () {
+            $("#attachFiles").attr("change-files", false);
+
             $(".delete-link").click(function (event) {
                 event.preventDefault(); // 기본 클릭 동작 방지
                 const fileId = parseInt($(this).attr('id'));
@@ -40,9 +42,86 @@
                 }
             });
         }
+
+        $("#attachFiles").on("change", function () {
+            $("#attachFiles").attr("change-files", true);
+            var fileList = this.files; // 'this'를 통해 선택한 파일들 가져오기
+            const selectedFilesList = $("#selectedFiles");
+
+            console.log(fileList , selectedFilesList);
+
+            // 선택한 파일 목록 만들기
+            selectedFilesList.empty(); // 기존 목록 비우기
+            const ul  = $("<ui>");
+
+            for (let i = 0; i < fileList.length; i++) {
+                const listItem = $("<li>");
+                const link = $("<a>").text(fileList[i].name);
+                const deleteLink = $("<a>")
+                        .addClass("delete-link")
+                        .text("x")
+                        .css("color", "red")
+                        .attr("data-index", i); // index 값 설정
+
+                listItem.append(link.text(fileList[i].name)); // <a> 태그를 <li> 에 추가
+                listItem.append(deleteLink);
+                ul.append(listItem); // <ul> 안에 <li> 추가
+                selectedFilesList.append(ul); // <div> 안에 추가
+            }
+        });
+            // "x" 클릭시 <li> 삭제 (이벤트 위임) -WHY? 동적태그
+            $("#selectedFiles").on("click", ".delete-link", function (event) {
+                event.preventDefault(); // 기본 클릭 동작 방지
+
+                const clickedLink = $(this);
+                const deleteIndex = clickedLink.attr("data-index"); // 삭제할 index 추출
+
+                $(clickedLink).parent().remove();
+
+                updateFileInput(deleteIndex); // 파일 input 업데이트
+                updateFileList(deleteIndex); // 변경된 input 에 맞춰서 새로 selectedFiles 뿌려주기
+
+            });
+
+            // 파일 input 태그에 업데이트  -> DataTransfer 로 fileList 새로 만들기
+            function updateFileInput(deleteIndex) {
+
+                const dataTransfer = new DataTransfer();
+                var fileArray = Array.from($("#attachFiles")[0].files);
+                fileArray.splice(deleteIndex,1); // 해당하는 index 파일을 배열에서 제거
+                console.log("after splice=> ", fileArray);
+
+                fileArray.forEach(file => { dataTransfer.items.add(file);});
+
+                //남은 배열을 dataTransfer로 처리(Array -> FileList)
+                $("#attachFiles")[0].files = dataTransfer.files;  // 제거 처리된 FileList를 돌려줌
+                console.log("updateFileInput >> attachFiles ", $("#attachFiles")[0].files);
+            }
+
+            // 파일 목록 업데이트
+            function updateFileList(deleteIndex) {
+
+                const selectedFilesDiv = $("#selectedFiles");
+                // 선택한 파일 목록 만들기
+                selectedFilesList.empty(); // 기존 목록 비우기
+                const ul  = $("<ui>");
+                for (let i = 0; i < fileList.length; i++) {
+                    const listItem = $("<li>");
+                    const link = $("<a>").text(fileList[i].name);
+                    const deleteLink = $("<a>")
+                        .addClass("delete-link")
+                        .text("x")
+                        .css("color", "red")
+                        .attr("data-index", i); // index 값 설정
+                    listItem.append(link.text(fileList[i].name)); // <a> 태그를 <li> 에 추가
+                    listItem.append(deleteLink);
+                    ul.append(listItem); // <ul> 안에 <li> 추가
+                    selectedFilesList.append(ul); // <div> 안에 추가
+                }
+            }
     });
 
-    function edit(){
+        function edit(){
             $("input[name='title']").attr("readonly", false);
             $("textarea[name='content']").attr("readonly", false);
             $("#attachFiles").removeAttr("style");
@@ -53,6 +132,7 @@
                 $('#deleteButton').show();
                 // $('#cancelButton').show();
                 $('#editButton').hide();
+                $(".delete-link").show();
             }
         }
         function cancel(){
@@ -71,7 +151,7 @@
         <div class="container" style="padding-top: 30px; width: 70%">
             <!--    <div th:replace="fragments/bodyHeader :: bodyHeader"/>-->
             <!--    th:action="@{/Board/{boardNo}/view (boardNo=${board.boardNo}) }"-->
-            <form th:object="${boards}" method="post" class = "row g-3 fw-bolder" enctype="multipart/form-data">
+            <form th:id="update-form" th:object="${boards}" method="post" class = "row g-3 fw-bolder" enctype="multipart/form-data">
                 <div class="form-group col-12">
                     <h3>
                 <span th:if="${#strings.equals(board.getCategory().name(), 'FREE')}" class="form-control-plaintext" th:style="${'display:inline;'}"> 자유게시판</span>
@@ -84,11 +164,11 @@
                     <span th:text="${board.boardNo}" class="form-control-plaintext" th:style="${'display:inline; margin-inline-start:5px'}"> </span>   <!--th:style="${'display:inline; margin-inline-start:5px'}"-->
                 </div>
                 <div class="form-group col-6">
-                    <label th:for="content">작성자</label>
+                    <label th:for="regId">작성자</label>
                     <span th:text="${board.regId}" class="form-control-plaintext"  > 비어있음 </span>
                 </div>
                 <div class="form-group col-6">
-                    <label th:for="content">작성일</label>
+                    <label th:for="regTime">작성일</label>
                     <span th:text="${#temporals.format(board.regTime, 'yyyy-MM-dd HH:mm:ss')}" class="form-control-plaintext" > 비어있음 </span>
                 </div>
                 <div class="form-group col-6">
@@ -100,26 +180,26 @@
                     <span th:text="${#temporals.format(board.modTime, 'yyyy-MM-dd HH:mm:ss')}" class="form-control-plaintext" > 비어있음 </span>
                 </div>
                 <div class="form-group col-12">
-                    <label th:for="attachFiles">첨부파일</label>
-                    <input type="file" id="attachFiles" name="attachFiles" multiple="multiple" class="form-control-file" th:style="${'display:none'}" />
-                </div>
-                <div class="form-group col-12">
-                    <ul>
-                        <li th:each="file : ${board.files}">
-                            <a th:href="@{/download/{id}(id=${file.id})}" th:text="${file.originalFileName}" th:id="file_+${file.id}"></a>
-                            <a th:href="@{/delete/{id}(id=${file.id})}" th:text="x" th:style="'color: red'" class="delete-link" th:id="${file.id}"></a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="form-group col-12">
                     <label class="form-label" th:for="title">제목</label>
                     <input type="text" th:field="${board.title}"  class="form-control col-8" readonly>
                     <!--      <span th:text="${board.title}" class="form-control" >제목 없음 </span>-->
                 </div>
                 <div class="form-group col-12">
                     <label class="form-label" th:for="content">내용</label>
-                        <textarea type="text" th:field="${board.content}"  class="form-control" readonly></textarea>
+                    <textarea type="text" th:field="${board.content}"  class="form-control" readonly></textarea>
                     <!--      <span th:text="${board.content}" class="form-control" > 내용 없음 </span>-->
+                </div>
+                <div class="form-group col-12">
+                    <label th:for="attachFiles">첨부파일</label>
+                    <input type="file" id="attachFiles" name="attachFiles" multiple="multiple" class="form-control-file" th:style="${'display:none'}" />
+                </div>
+                <div class="form-group col-12" id="selectedFiles">
+                    <ul>
+                        <li th:each="file : ${board.files}">
+                            <a th:href="@{/download/{id}(id=${file.id})}" th:text="${file.originalFileName}" th:id="file_+${file.id}"></a>
+                            <a th:href="@{/delete/{id}(id=${file.id})}" th:text="x" th:style="${'color:red; display:none;'}" class="delete-link" th:id="${file.id}"></a>
+                        </li>
+                    </ul>
                 </div>
                 <div th:style="${'text-align: center'}">
                     <button type="button" class="btn btn-success col-auto" id="editButton" th:onclick="edit()"  th:style="${session.loginMember?.email == board.regId? 'display:inline-block' : 'display:none'}" >수정</button>
