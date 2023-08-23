@@ -8,6 +8,7 @@ import exc.Board.service.BoardService;
 import exc.Board.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,6 +28,7 @@ public class BoardController {
 
     private final BoardService boardService;
     private final MemberService memberService;
+    private final AttachFileService attachFileService;
     private final FileStore fileStore;
 
     @GetMapping("boards/new")
@@ -103,32 +105,45 @@ public class BoardController {
     }
 
     // 수정
-    @ResponseBody
     @PostMapping("/Board/{boardNo}/view")
-    public String boardEditView(@ModelAttribute("boards") BoardForm form, Model model) throws IOException {
-
-        log.info("info={}", form.getModId());
-        // 첨부파일 리스트 생성
-        List<AttachFile> storeFiles = fileStore.storeFiles(form.getAttachFiles());
+    public ResponseEntity<?> boardEditView(@PathVariable("boardNo") Long boardNo, @ModelAttribute("boards") BoardForm form, Model model) throws IOException {
 
         // 게시글번호로 db 조회 -> 영속상태 만들기
         Board board = boardService.findOne(form.getBoardNo());
-        //log.info("board.toString() = {}" + board.toString());
 
+        // 첨부파일이 새로 들어오면
+        if(form.getAttachFiles() != null) {
 
-        // 수정된 값을 화면에서 받아오기
-        board = board.toBuilder()
-                        .title(form.getTitle())
-                        .content(form.getContent())
-                        .attachFiles(storeFiles)
-                        .modId(form.getModId())
-                        .build();
+            // 기존 저장된 첨부파일 리스트 확인해서 디렉토리에서 삭제
+            List<AttachFile> allFiles = attachFileService.findAttachFilesByBoardNo(boardNo);
+            if(!allFiles.isEmpty()){
+                for (AttachFile file : allFiles) {
+                    fileStore.deleteFile(file.getId());
+                }
+            }
+            // 첨부파일 리스트 새로 생성
+            List<AttachFile> storeFiles = fileStore.storeFiles(form.getAttachFiles());
 
+            // {title, content, attachFiles} 필드 값 수정
+            board = board.toBuilder()
+                    .title(form.getTitle())
+                    .content(form.getContent())
+                    .attachFiles(storeFiles)
+                    .modId(form.getModId())
+                    .build();
+        } else{
+            // {title, content} 필드 값 수정
+            board = board.toBuilder()
+                    .title(form.getTitle())
+                    .content(form.getContent())
+                    .modId(form.getModId())
+                    .build();
+        }
         // 객체로 받은 값을 db에 새로 저장
         boardService.save(board);
-        log.info("board.toString() = {}" + board);
 
-        return "<script>alert('수정 사항이 저장되었습니다.');location.href='/';</script>";
+        return ResponseEntity.ok()
+                .body(form.toString());
     }
 
 

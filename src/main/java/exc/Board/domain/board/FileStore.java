@@ -28,11 +28,13 @@ public class FileStore {
             return fileDir + filename;
         }
 
-        public List<AttachFile> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
+        public List<AttachFile> storeFiles(List<MultipartFile> files) throws IOException {
             List<AttachFile> storeFileResult = new ArrayList<>();
-            for (MultipartFile multipartFile : multipartFiles) {
-                if (!multipartFile.isEmpty()) {
-                    storeFileResult.add(storeFile(multipartFile));
+            if (files != null && files.size() > 0) {
+                for (MultipartFile multipartFile : files) {
+                    if (!multipartFile.isEmpty()) {
+                        storeFileResult.add(storeFile(multipartFile));
+                    }
                 }
             }
             return storeFileResult;
