@@ -135,6 +135,57 @@
                 $(".delete-link").show();
             }
         }
+        function save() {
+            // form data 생성
+            const formData = new FormData();
+
+            const title = $("#title").val();
+            const content = $("#content").val();
+            const filesElement =$("#attachFiles")[0];
+            const changeFilesValue = filesElement.getAttribute("change-files");
+
+            formData.append("title", title);
+            formData.append("content", content);
+            if (changeFilesValue) {
+                if ($("#attachFiles")[0].files.length > 0) {
+                    const attachFiles = $("#attachFiles")[0].files;
+                    for (let i = 0; i < attachFiles.length; i++) {
+                        formData.append("attachFiles", attachFiles[i]);
+                        // console.log("attachFiles = ", attachFiles[i]);
+                    }
+                }
+            }
+            const boardNo = [[${board.boardNo}]];
+            $.ajax({
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false,
+                cache: false,
+                type:"POST",
+                url:"/Board/" + boardNo + "/view",
+                data:formData,
+                success:function (data){
+                    console.log("data = ", data);
+                    alert("수정 사항이 저장되었습니다.");
+
+                    $("#saveButton").css("display","none");
+                    $("#deleteButton").css("display", "none");
+                    $("#editButton").removeAttr("style");
+
+
+                    $("input[name='title']").attr("readonly", true);
+                    $("textarea[name='content']").attr("readonly", true);
+                    $("#attachFiles").css("display", "none");
+                    $(".delete-link").hide();
+
+                },
+                error: function(xhr, status, error) {
+                    alert(status + "=> 에러났어");
+                    console.log(error);
+                }
+            });
+        }
+
         function cancel(){
             location.href="/";
         }
@@ -203,7 +254,7 @@
                 </div>
                 <div th:style="${'text-align: center'}">
                     <button type="button" class="btn btn-success col-auto" id="editButton" th:onclick="edit()"  th:style="${session.loginMember?.email == board.regId? 'display:inline-block' : 'display:none'}" >수정</button>
-                    <button type="submit" class="btn btn-success col-auto" id="saveButton" style="display:none;">저장</button>
+                    <button type="button" class="btn btn-success col-auto" id="saveButton" th:onclick="save()" style="display:none;">저장</button>
                     <button type="button" class="btn btn-danger col-auto" id="deleteButton" style="display:none;" th:onclick="'javascript:deleteBoard('+${board.boardNo}+')'" >삭제</button>
                     <!--    th:href="@{/Board/{boardNo}/edit (boardNo=${board.boardNo})}"-->
                     <button type="button" class="btn btn-warning col-auto" id="cancelButton" th:onclick="cancel()">목록</button>
