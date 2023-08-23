@@ -33,4 +33,9 @@ public class AttachFileService {
     public void deleteAttachFileById(Long fileId){
         attachFileRepository.deleteById(fileId);
     }
+
+    public List<AttachFile> findAttachFilesByBoardNo(Long boardNo){
+        return attachFileRepository.findByBoard_BoardNo(boardNo);
+    }
+
 }
