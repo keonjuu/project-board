@@ -5,40 +5,33 @@
         <title>게시판</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <link rel="stylesheet" href="/css/bootstrap.min.css">
-        <link rel="stylesheet" href="/css/board.css">
         <link rel="stylesheet" href="/css/custom.css">
     </head>
     <body>
         <div class = "wrap">
-
             <div class="container"></div>
-
             <div th:replace="fragments/bodyHeader :: bodyHeader"></div>
-
             <div class="container" th:style="${'text-align:center; padding-top:30px; width:70%'}">
                 <a th:href="@{/}" class="btn btn-default fw-bolder">전체</a>
                 <a th:href="@{/NOTICE}" class="btn btn-default fw-bolder">공지사항</a>
                 <a th:href="@{/FREE}" class="btn btn-default fw-bolder">자유게시판</a> <!--fs-2-->
                 <a th:href="@{/QNA}" class="btn btn-default fw-bolder">Q&A</a>
             </div>
-
             <div class="container" style="padding-top: 30px; width: 70%">
                 <div class="group">
                     <a class="btn btn-success"  th:href="@{/boards/new}" role="button">새글 작성</a>
                 </div>
             </div>
-
             <div  class="container mainTableDiv"  style="padding-top: 30px; width: 70%; bottom: auto; position: initial;">
                 <form th:action="@{/Board/search}" th:class="searchForm" method="get" class="form-inline">
-                    <select th:id="searchType" class="form-select" name="searchType" style="width: 20%; display: inline-block;" >
+                    <select th:id="searchType" class="form-select" name="searchType" style="width:20%; display:inline-block;" >
                         <option th:value="title">제목</option>
                         <option th:value="content">내용</option>
                         <option th:value="regId">글쓴이</option>
                     </select>
-                    <input type="text" name="searchKeyword" placeholder="검색어를 입력해주세요" style="width: 40%;">
-                    <button style="width: 10%;" type="submit" class="btn btn-primary" >검색</button>
+                    <input type="text" class="form-control" name="searchKeyword" placeholder="검색어를 입력해주세요" style="width:40%; display:inline-block;">
+                    <button style="width:10%;" type="submit" class="btn btn-primary" >검색</button>
                 </form>
             </div>
 

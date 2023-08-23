@@ -6,37 +6,15 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="/css/bootstrap.min.css">
-        <link rel="stylesheet" href="/css/board.css">
-
-        <style>
-            html,body{
-                height:100%;
-            }
-            .wrap{
-                min-height: 100%;
-                position:relative;
-            }
-            footer{
-                position: absolute;
-                height: 5rem;
-                background: #2b3035;
-                width: 100%;
-                text-align:center;
-                bottom: 0;
-            }
-        </style>
+        <link rel="stylesheet" href="/css/custom.css">
     </head>
     <body>
         <div class = "wrap">
             <div class="container"></div>
-
             <div th:replace="fragments/bodyHeader :: bodyHeader"></div>
-
             <div class="container" style="padding-top: 30px; width: 70%">
                     <div class="form-group col-12">
-                        <h3>
-                            <span class="form-control-plaintext" style="display:inline;"> 내글 목록</span>
-                        </h3>
+                        <h3><span class="form-control-plaintext" style="display:inline;"> 내글 목록</span></h3>
                     </div>
             </div>
             <div class="container" style="padding-top: 30px; width: 70%">
@@ -80,7 +58,6 @@
                         </tr>
                     </tbody>
                 </table>
-
                 <nav style="text-align: center;">
                     <ul class="pagination justify-content-center" th:with="start=${T(java.lang.Math).floor(boards.number/10) * 10 + 1},
                         last=${start + 9 < boards.totalPages ? start + 9 : boards.totalPages}">
@@ -138,7 +115,6 @@
                 </nav>
             </div>
             <div th:replace="fragments/footer :: footer"></div>
-
         </div>
     </body>
 </html>

@@ -5,18 +5,13 @@
         <title>게시글 admin</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <link rel="stylesheet" href="/css/bootstrap.min.css">
-        <link rel="stylesheet" href="/css/board.css">
         <link rel="stylesheet" href="/css/custom.css">
-
-    </head>
-    <body>
-        <div class = "wrap">
         <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
-
+    </head>
+<body>
+    <div class = "wrap">
             <div th:replace="fragments/bodyHeader :: bodyHeader"></div>
-
             <div class="container mainTableDiv" style="padding-top: 30px; width: 70%">
                 <form th:object="${member}" method="get" class = "fw-bolder">
                     <div class="form-group row">
@@ -61,7 +56,6 @@
                     </div>
                 </form>
             </div>
-
             <div th:replace="fragments/footer :: footer"></div>
         </div>
 </body>
