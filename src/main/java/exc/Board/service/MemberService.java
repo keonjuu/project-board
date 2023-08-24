@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,11 +25,15 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // 회원가입
     @Transactional
     public Long join(MemberForm memberForm) {
         //isDuplicatedEmail(member); // 이메일 중복 체크 추가하기
+
+        // passwordEncoder
+        memberForm.setPwd(passwordEncoder.encode(memberForm.getPwd()));
 
         // dto -> member entity 변환
         Member member = memberForm.toEntity(memberForm);

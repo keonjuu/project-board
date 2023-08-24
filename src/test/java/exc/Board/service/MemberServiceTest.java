@@ -9,11 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class) // JUnit 실행시 Spring과 함께 실행
 @SpringBootTest
@@ -22,6 +21,7 @@ public class MemberServiceTest {
     private static Logger logger = LoggerFactory.getLogger(MemberServiceTest.class);
     @Autowired MemberService memberService;
     @Autowired MemberRepository memberRepository;
+    @Autowired PasswordEncoder passwordEncoder;
 
     MemberForm form;
     Member member;
@@ -37,15 +37,15 @@ public class MemberServiceTest {
 
     @Test
     @Commit
-        public void 회원가입(){
-            //given (어떤 데이터를 기반으로 하는지)
-            form = MemberForm.builder()
-                    .name("hello33")
-                    .email("hello101@innotree.com")
-                    .pwd("hello100")
-                    .build();
-            member = form.toEntity(form);
-            logger.info("form = {} , member = {}" , form, member);
+    public void 회원가입(){
+        //given (어떤 데이터를 기반으로 하는지)
+        form = MemberForm.builder()
+                .name("hello102")
+                .email("hello102@innotree.com")
+                .pwd(passwordEncoder.encode("hello102"))  // 패스워드 인코더
+                .build();
+        member = form.toEntity(form);
+        logger.info("form = {} , member = {}" , form, member);
 
         //when (가입 서비스 검증할 떄)
         Long saveId = memberService.join(form);
