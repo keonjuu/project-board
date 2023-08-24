@@ -1,9 +1,11 @@
 package com.Board.validation;
 
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.validation.DefaultMessageCodesResolver;
 
+@Slf4j
 public class MessageCodesResolver {
 
 
@@ -13,7 +15,7 @@ public class MessageCodesResolver {
          String[] messageCodes = codesResolver.resolveMessageCodes("required", "item");
 
          for (String messageCode : messageCodes) {
-             System.out.println("messageCode = " + messageCode);
+             log.info("messageCode = {}" + messageCode);
          }
 /*
          messageCode = required.item
@@ -26,7 +28,7 @@ public class MessageCodesResolver {
     void messageCodesResolverField(){
          String[] messageCodes = codesResolver.resolveMessageCodes("required", "item", "itemName", String.class);
          for (String messageCode : messageCodes) {
-             System.out.println("messageCode = " + messageCode);
+             log.info("messageCode = {}" + messageCode);
 
          }
 

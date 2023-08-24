@@ -5,21 +5,24 @@ import com.Board.Member.entity.MemberStatus;
 import com.Board.Member.MemberRepository;
 import com.Board.Admin.AdminService;
 import com.Board.Member.MemberService;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @RunWith(SpringRunner.class) // JUnit 실행시 Spring과 함께 실행
 @SpringBootTest
 @Transactional
-public class adminControllerTest {
-    @Autowired AdminService adminService;
-    @Autowired MemberRepository memberRepository;
-    @Autowired MemberService memberService;
+public class AdminControllerTest {
+    @Autowired private AdminService adminService;
+    @Autowired private MemberRepository memberRepository;
+    @Autowired private MemberService memberService;
 
     Member adminMember;
     Member findMember;
@@ -33,22 +36,17 @@ public class adminControllerTest {
         adminMember = memberRepository.find(adminId);
         findMember = memberRepository.find(findId);
 *//*        //then
-        System.out.println("findMember = " + findMember);*//*
+        log.info("findMember = " + findMember);*//*
     }*/
     @Test
-    @Transactional
+    @DisplayName("승인하기")
 //    @Commit
-    public void 승인하기(){
-        String joinYn = "Y";
+    public void joinYn(){
 
-        if(joinYn.equals("Y")){
-            System.out.println("equals!!!!!!!!!!!!");
-        }
         findMember = memberRepository.find(1L);
         findMember.toBuilder().status(MemberStatus.REJECT);
 
-        System.out.println("setStatus findMember = " + findMember);
-//        memberService.save(findMember);
+        log.info("setStatus findMember = {}" , findMember);
         adminService.joinYn(findMember);
 
         // 다시 꺼낸 값이랑 비교

@@ -28,11 +28,8 @@ public class SessionInfoController {
         session.getAttributeNames().asIterator()
                 .forEachRemaining(name -> log.info("session name={} , value={}",name, session.getAttribute(name)));
 
-        System.out.println("session.getAttribute(SessionConst.LOGIN_MEMBER) = " + session.getAttribute(SessionConst.LOGIN_MEMBER));
-        System.out.println("session.getAttribute(\"loginMember\") = " + session.getAttribute("loginMember"));
-        /*Member loginMember = (Member) session.getAttribute("loginMember");
-        System.out.println("loginMember = " + loginMember.getEmail());*/
-
+        log.info("session.getAttribute(SessionConst.LOGIN_MEMBER) = {}", session.getAttribute(SessionConst.LOGIN_MEMBER));
+        log.info("session.getAttribute(\"loginMember\") = {}", session.getAttribute("loginMember"));
         log.info("sessionId = {}", session.getId());
         log.info("maxInactiveInterval = {}", session.getMaxInactiveInterval());
         log.info("creationTime = {}", new Date(session.getCreationTime()));

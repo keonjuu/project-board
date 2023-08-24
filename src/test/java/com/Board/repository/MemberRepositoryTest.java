@@ -1,24 +1,22 @@
 package com.Board.repository;
 
-import com.Board.Member.dto.MemberForm;
-import com.Board.Member.MemberRepository;
 import com.Board.Board.entity.Board;
-import com.Board.Member.entity.Member;
+import com.Board.Member.MemberRepository;
 import com.Board.Member.MemberService;
+import com.Board.Member.dto.MemberForm;
+import com.Board.Member.entity.Member;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,21 +24,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 //@RunWith(SpringRunner.class)
+@Slf4j
 @SpringBootTest
 @Transactional(readOnly = true)
-public class MemberRepositoryTest {
-    private static Logger logger = LoggerFactory.getLogger(MemberRepositoryTest.class);
+class MemberRepositoryTest {
 
-    @Autowired MemberService memberService;
     @Autowired
-    MemberRepository memberRepository;
-    @Autowired EntityManager em;
+    private MemberService memberService;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
 
     Member findMember;
     Member adminMember;
 
     @BeforeEach
-    void 회원찾기(){
+    @DisplayName("회원찾기")
+    void findMember(){
         //given
         Long adminId = 20230005L;
         Long findId = 20231010L;
@@ -48,7 +49,7 @@ public class MemberRepositoryTest {
         adminMember = memberRepository.find(adminId);
         findMember = memberRepository.find(findId);
 /*        //then
-        System.out.println("findMember = " + findMember);*/
+        log.info("findMember = {}", findMember);*/
     }
 
     @Test
@@ -58,16 +59,16 @@ public class MemberRepositoryTest {
                 .email("keonjuu")
                 .pwd("kkk")
                 .build();
-        System.out.println("MemberForm = " + form);
+        log.info("MemberForm = {}" , form);
         Member entity= form.toEntity(form);
         /*Member entity = Member.toEntity(form);*/
-        logger.info("entity = {}" , entity);
+        log.info("entity = {}" , entity);
     }
 
     @Test
     @Transactional
-    @Commit
-    void 회원가입(){
+    @DisplayName("회원가입")
+    void join(){
         //given
 /*        Member member = new Member();
         member.setUserName("건주");
@@ -80,7 +81,7 @@ public class MemberRepositoryTest {
                 .pwd("dtoMember")
                 .build();
         Member entity = form.toEntity(form);
-        logger.info("form = {}", form);
+        log.info("form = {}", form);
 
         // when
         memberRepository.save(entity);
@@ -91,52 +92,58 @@ public class MemberRepositoryTest {
     }
 
     @Test
+    @DisplayName("회원삭제")
 //    @Commit
-    void 회원삭제(){
+    void delete(){
         memberRepository.delete(findMember.getId());
     }
 
     @Test
-    void 전체조회(){
+    @DisplayName("전체조회")
+    void findAll(){
         List<Member> memberList = memberRepository.findAll();
         for (Member member : memberList) {
-            System.out.println("userId= " + member.getId() + ", userName = " + member.getUserName() + ", group = " + member.getRole() );
+            log.info("userId= {}, userName = {}, role = {}", member.getId(), member.getUserName(), member.getRole());
         }
     }
     @Test
-    void 이메일_중복체크(){
+    @DisplayName("이메일_중복체크")
+    void isDuplicatedEmail(){
         //given
         //when
         //then
         IllegalStateException e = assertThrows(IllegalStateException.class, ()->memberService.isDuplicatedEmail(findMember));
-//        System.out.println("e = " + e);
+//        log.info("e = {}" + e);
         assertThat(e.getMessage()).isEqualTo("이미 사용중인 이메일입니다.");
     }
 
 
     @Test
-    void 사용자명조회(){
+    @DisplayName("사용자명조회")
+    void findByName(){
         //given
         String userName = findMember.getUserName();
         //when
         Optional<Member> findNames = memberRepository.findByName(userName);
-        System.out.println("findNames = " + findNames);
+        log.info("findNames = {}", findNames);
         // then
 //        org.junit.jupiter.api.Assertions.assertEquals(userName, findNames);
     }
     @Test
-    void 사용자명전체조회(){
+    @DisplayName("사용자명전체조회")
+    void findAllByName(){
         //given
         String userName = findMember.getUserName();
         // when
         List<Member> findNames = memberRepository.findAllByName(userName);
         //then
-        System.out.println("findNames = " + findNames);
+        log.info("findNames = {}", findNames);
     }
 
 
     @Test
-    public void 페이징() throws Exception {
+    @DisplayName("페이징")
+    void paging(){
         //given
 
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
@@ -159,25 +166,25 @@ public class MemberRepositoryTest {
 
         //then
         List<MemberForm> memberList = page.getContent();
-        System.out.println("memberList size = " + memberList.size());
+        log.info("memberList size = {}" , memberList.size());
         for (MemberForm member : memberList) {
-            System.out.println("member = " + member);
+            log.info("member = {}" , member);
         }
     }
 
 
     @Test
-    public void 사용자글목록조회(){
+    @DisplayName("사용자글목록조회")
+    void findMember_boards(){
         // when
         List<Board> boards = findMember.getBoards();
         for (Board board : boards) {
-            System.out.println(board);
+            log.info("board={}",board);
         }
 
-        Page<Board> memberBoards = (Page<Board>)findMember.getBoards();
         boards.forEach(m -> m.getMember().getUserName());
 
-        System.out.println( "boards= "+ boards);
+        log.info("boards={}", boards);
 
         /*for (Board board : pageList) {
             board.getMember().getUserName();

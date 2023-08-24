@@ -1,59 +1,49 @@
 package com.Board.controller.Login;
 
-import com.Board.Board.BoardController;
 import com.Board.Login.LoginForm;
 import com.Board.Login.LoginService;
 import com.Board.Member.entity.Member;
+import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @RunWith(SpringRunner.class)
-//@SpringBootTest
-@Transactional
-@WebMvcTest
-
+@SpringBootTest
+@Transactional(readOnly = true)
 public class LoginControllerTest {
-    private static Logger logger = LoggerFactory.getLogger(LoginControllerTest.class);
 
-    @Autowired LoginService loginService;
-    @Autowired BoardController boardController;
-    @Autowired MockMvc mockMvc;
-
+    @Autowired
+    private LoginService loginService;
     private LoginForm form;
+
     @Before
-    public void setUp() throws Exception {
-        form.builder().email("keonjuu@innotree.com").pwd("kkk").build();
-//        loginForm form = new loginForm();
-//        form.setEmail("keonjuu@innotree.com");
-//        form.setPwd("kkk");
+    public void setUp() {
+       form = LoginForm.builder()
+                .email("hello102@innotree.com")
+                .pwd("hello102")
+                .build();
     }
-
     @Test
-    @Transactional
-//    @Commit
-    public void 로그인하기(){
+    @DisplayName("로그인")
+    public void login(){
 
-        logger.info("form = {}", form);
-//        form.builder().email("keonjuu@innotree.com").pwd("kkk").build();
+        log.info("form = {}", form);
+
         // 로그인 확인
-//        Member loginMember = loginService.login(form.getEmail(), form.getPwd());
         Member loginMember = loginService.login(form.getEmail(), form.getPwd());
-
-        logger.info("loginMember = {}" , loginMember);
-        //로그인 접속시간 저장
-//        loginMember.setLastDatetime(lastDateTime);
-   /*     log.info("loginMember = {}", loginMember);*/
+        log.info("loginMember = {}" , loginMember);
 
 //        // db 값과 객체 loginMember 값이 일치하는지 확인
-//        Assertions.assertThat(loginMember.getLastDatetime()).isEqualTo(lastDateTime);
+        Assertions.assertThat(loginMember.getEmail()).isEqualTo(form.getEmail());
+
     }
 
 

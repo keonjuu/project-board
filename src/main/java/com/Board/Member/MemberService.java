@@ -82,9 +82,9 @@ public class MemberService {
 //        Slice<Member> slice = memberRepository.findAll(pageRequest);
 /*
         List<Member> memberList = pageMember.getContent();
-        System.out.println("memberList size = " + memberList.size());
+        log.info("memberList size = {}" , memberList.size());
         for (Member member : memberList) {
-            System.out.println("member = " + member);
+            log.info("member = {}",member);
         }
         return memberList;*/
     }

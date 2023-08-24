@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 class AttachFileRepositoryTest {
     @Autowired
-    AttachFileRepository attachFileRepository;
+    private AttachFileRepository attachFileRepository;
     @Test
     @DisplayName("첨부파일 삭제 확인")
 //    @Transactional

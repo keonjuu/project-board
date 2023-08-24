@@ -47,7 +47,7 @@ public class MemberJpaRepositoryStudyTest {
         memberJpaRepository.save(m1);
         List<MemberForm> memberForms = memberJpaRepository.findMemberForm();
         for (MemberForm dto : memberForms) {
-            System.out.println("dto = " + dto);
+            log.info("dto = {}" , dto);
         }
     }*//*
 
@@ -58,7 +58,8 @@ public class MemberJpaRepositoryStudyTest {
         memberJpaRepositoryStudy.save(m1);
         List<Member> result = memberJpaRepositoryStudy.findByNames(Arrays.asList("AAA", "BBB"));
         for (Member member : result) {
-            System.out.println("member = "+ member);
+            log.info("member = {}
+            "+ member);
         }
     }
 
@@ -86,9 +87,9 @@ public class MemberJpaRepositoryStudyTest {
 //        long totalElements = page.getTotalElements();
 
         for (Member member : content) {
-            System.out.println("member = " + member);
+            log.info("member = " + member);
         }
-//        System.out.println("totalElements = " + totalElements);
+//        log.info("totalElements = " + totalElements);
 
         assertThat(content.size()).isEqualTo(3);
 //        assertThat(page.getTotalElements()).isEqualTo(4);
