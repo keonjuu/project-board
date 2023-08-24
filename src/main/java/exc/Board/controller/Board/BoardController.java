@@ -152,6 +152,14 @@ public class BoardController {
     @PostMapping("/Board/{boardNo}/delete")
     public String deleteBoard(@PathVariable("boardNo") Long boardNo){
 
+        // 해당 게시판 번호 첨부파일 디렉토리에서 삭제
+        List<AttachFile> allFiles = attachFileService.findAttachFilesByBoardNo(boardNo);
+        if(!allFiles.isEmpty()){
+            for (AttachFile file : allFiles) {
+                fileStore.deleteFile(file.getId());
+            }
+        }
+
         boardService.deleteById(boardNo);
         return "<script>alert('삭제되었습니다.');location.href='/';</script>";
 
