@@ -4,6 +4,7 @@ import exc.Board.domain.member.Member;
 import exc.Board.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,14 +15,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class LoginService {
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // 로그인
     public Member login(String email, String password){
+
         return memberRepository.findByEmail(email)
-                .filter(m -> m.getPassword().equals(password))
+                .filter(m -> passwordEncoder.matches(password,m.getPassword()))
                 .orElse(null);
 //        log.info("member = {}" , member);
-
     }
 
     @Transactional
