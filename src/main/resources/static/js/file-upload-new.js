@@ -45,6 +45,7 @@ $(document).ready(function () {
                 .addClass("delete-link")
                 .text("x")
                 .css("color", "red")
+                .css("padding", "3px")
                 .attr("data-index", i); // index 값 설정
 
             listItem.append(link.text(fileList[i].name)); // <a> 태그를 <li> 에 추가
@@ -96,6 +97,7 @@ $(document).ready(function () {
                 .addClass("delete-link")
                 .text("x")
                 .css("color", "red")
+                .css("padding", "3px")
                 .attr("data-index", i); // index 값 설정
             listItem.append(link.text(fileList[i].name)); // <a> 태그를 <li> 에 추가
             listItem.append(deleteLink);

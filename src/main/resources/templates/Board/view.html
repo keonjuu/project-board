@@ -55,10 +55,10 @@
                     <!--      <span th:text="${board.content}" class="form-control" > 내용 없음 </span>-->
                 </div>
                 <div class="form-group col-12">
-                    <label th:for="attachFiles">첨부파일</label>
+                    <label class="form-label" th:for="attachFiles">첨부파일</label>
                     <input type="file" id="attachFiles" name="attachFiles" multiple="multiple" class="form-control-file" th:style="${'display:none'}" />
                 </div>
-                <div class="form-group col-12" id="selectedFiles">
+                <div class="form-group col-12 fw-bolder" id="selectedFiles">
                     <ul>
                         <li th:each="file : ${board.files}">
                             <a th:href="@{/download/{id}(id=${file.id})}" th:text="${file.originalFileName}" th:id="file_+${file.id}"></a>
