@@ -1,6 +1,7 @@
 package com.Board.Board;
 
 import com.Board.Board.dto.BoardForm;
+import com.Board.Board.dto.BoardUpdateForm;
 import com.Board.Board.entity.Board;
 import com.Board.Member.entity.Member;
 import com.Board.Board.entity.AttachFile;
@@ -105,13 +106,33 @@ public class BoardController {
 
     // 수정
     @PostMapping("/Board/{boardNo}/view")
-    public ResponseEntity<?> boardEditView(@PathVariable("boardNo") Long boardNo, @ModelAttribute("boards") BoardForm form, Model model) throws IOException {
+    public ResponseEntity<?> boardEditView(@PathVariable("boardNo") Long boardNo
+            , @ModelAttribute("boards") BoardUpdateForm form, Model model) throws IOException {
 
         // 게시글번호로 db 조회 -> 영속상태 만들기
         Board board = boardService.findOne(form.getBoardNo());
 
+        // 기존파일 수정되면
+        if(form.getDeletionQueue() != null){
+            List<Long> deletionQueue = form.getDeletionQueue();
+
+            for (Long id : deletionQueue) {
+                // 디렉토리에 실제 파일 삭제
+                fileStore.deleteFile(id);
+                // DB 에서 파일 정보 삭제
+                board.removeAttachFile(attachFileService.findAttachFileById(id).get()); //attachFile 연관관계 제거
+                attachFileService.deleteAttachFileById(id);
+            }
+            // {title, content} 필드 값 수정
+            board = board.toBuilder()
+                    .title(form.getTitle())
+                    .content(form.getContent())
+                    .build();
+            log.info("remove file board = {}", board);
+        }
+
         // 첨부파일이 새로 들어오면
-        if(form.getAttachFiles() != null) {
+        else if(form.getAttachFiles() != null) {
 
             // 기존 저장된 첨부파일 리스트 확인해서 디렉토리에서 삭제
             List<AttachFile> allFiles = attachFileService.findAttachFilesByBoardNo(boardNo);
@@ -128,14 +149,12 @@ public class BoardController {
                     .title(form.getTitle())
                     .content(form.getContent())
                     .attachFiles(storeFiles)
-                    .modId(form.getModId())
                     .build();
         } else{
             // {title, content} 필드 값 수정
             board = board.toBuilder()
                     .title(form.getTitle())
                     .content(form.getContent())
-                    .modId(form.getModId())
                     .build();
         }
         // 객체로 받은 값을 db에 새로 저장
@@ -163,5 +182,4 @@ public class BoardController {
         return "<script>alert('삭제되었습니다.');location.href='/';</script>";
 
     }
-
 }
