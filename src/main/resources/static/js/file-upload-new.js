@@ -1,3 +1,4 @@
+const deletionQueue  = [];
 $(document).ready(function () {
     $("#attachFiles").attr("change-files", false);
 
@@ -5,9 +6,14 @@ $(document).ready(function () {
         event.preventDefault(); // 기본 클릭 동작 방지
         const fileId = parseInt($(this).attr('id'));
         const clickedLink = $(this);
-        deleteFile(fileId, clickedLink);
+
+        deletionQueue.push(fileId);
+        console.log("added fileId to deletionQueue", deletionQueue);
+
+        //deleteFile(fileId, clickedLink);
     });
 
+    // fileId 별 1 건 삭제
     function deleteFile(fileId, clickedLink) {
         $.ajax({
             type: "POST",
@@ -64,7 +70,7 @@ $(document).ready(function () {
         $(clickedLink).parent().remove();
 
         updateFileInput(deleteIndex); // 파일 input 업데이트
-        updateFileList(deleteIndex); // 변경된 input 에 맞춰서 새로 selectedFiles 뿌려주기
+        //updateFileList(deleteIndex); // 변경된 input 에 맞춰서 새로 selectedFiles 뿌려주기
 
     });
 
@@ -83,7 +89,7 @@ $(document).ready(function () {
         console.log("updateFileInput >> attachFiles ", $("#attachFiles")[0].files);
     }
 
-    // 파일 목록 업데이트
+ /*   // 파일 목록 업데이트
     function updateFileList(deleteIndex) {
 
         const selectedFilesDiv = $("#selectedFiles");
@@ -104,5 +110,5 @@ $(document).ready(function () {
             ul.append(listItem); // <ul> 안에 <li> 추가
             selectedFilesList.append(ul); // <div> 안에 추가
         }
-    }
+    }*/
 });
