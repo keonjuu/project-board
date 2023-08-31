@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.Board.Board.entity.BoardCategory.FREE;
@@ -48,6 +49,11 @@ class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL,  orphanRemoval = true)  //게시판 엔티티를 삭제하면 연관된 모든 첨부파일 엔티티도 삭제되도록
     private List<AttachFile> attachFiles;
 
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @ToString.Exclude
+    private List<Comment> comments = new ArrayList<>();
+
+
     /*연관관계 매서드*/
     public void setMember(Member member){
         // 기존 member 관계 제거
@@ -68,6 +74,15 @@ class Board {
     public void removeAttachFile(AttachFile attachFile) {
         attachFiles.remove(attachFile);
         attachFile.setBoard(null);
+    }
+    // Comment 과 연관관계 메서드
+    public void addComment(Comment comment){
+        comments.add(comment);
+        comment.setBoard(this);
+    }
+    public void removeComment(Comment comment){
+        comments.remove(comment);
+        comment.setBoard(null);
     }
 
 
