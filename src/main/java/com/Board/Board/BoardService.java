@@ -5,6 +5,7 @@ import com.Board.Board.dto.BoardForm;
 import com.Board.Board.entity.Board;
 import com.Board.Board.entity.BoardCategory;
 import com.Board.Board.entity.AttachFile;
+import com.Board.Board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -52,8 +53,8 @@ public class BoardService {
         boardRepository.save(board);
     }
 
-    //2.게시판 전체 조회
-    public Page<BoardForm> findAll(Pageable pageable) {
+        //2.게시판 전체 조회
+        public Page<BoardForm> findAll(Pageable pageable) {
         int pageNumber = pageable.getPageNumber() == 0 ? 0 : pageable.getPageNumber() - 1;
         pageable = PageRequest.of(pageNumber, 5, Sort.by(Sort.Direction.DESC, "id"));
 

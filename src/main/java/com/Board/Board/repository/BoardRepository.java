@@ -1,4 +1,4 @@
-package com.Board.Board;
+package com.Board.Board.repository;
 
 import com.Board.Board.entity.Board;
 import com.Board.Board.entity.BoardCategory;

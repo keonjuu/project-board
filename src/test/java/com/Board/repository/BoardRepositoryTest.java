@@ -1,6 +1,6 @@
 package com.Board.repository;
 
-import com.Board.Board.BoardRepository;
+import com.Board.Board.repository.BoardRepository;
 import com.Board.Board.dto.BoardForm;
 import com.Board.Board.entity.Board;
 import com.Board.Board.entity.BoardCategory;

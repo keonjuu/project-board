@@ -1,4 +1,4 @@
-package com.Board.Board;
+package com.Board.Board.repository;
 
 import com.Board.Board.entity.AttachFile;
 import org.springframework.data.jpa.repository.JpaRepository;

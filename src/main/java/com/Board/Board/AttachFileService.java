@@ -1,6 +1,7 @@
 package com.Board.Board;
 
 import com.Board.Board.entity.AttachFile;
+import com.Board.Board.repository.AttachFileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

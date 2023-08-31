@@ -7,14 +7,12 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriUtils;
 
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -24,6 +22,8 @@ public class AttachFileController {
 
     private final AttachFileService attachFileService;
     private final FileStore fileStore;
+    private Long boardNo;
+    private List<Long> deletionQueue;
 
     // 다운로드
     @GetMapping("/download/{fileId}")
@@ -70,6 +70,26 @@ public class AttachFileController {
 
         // 파일 경로의 물리적 파일 삭제
 
+    }
+
+    @ResponseBody
+    @PostMapping("/delete/{boardNo}/files")
+    public String deleteFiles(@PathVariable Long boardNo,
+                              @RequestBody List<Long> deletionQueue) {
+
+        log.info("deletionQueue = {}", deletionQueue);
+
+        try {
+            for (Long i : deletionQueue) {
+                // 디렉토리에 실제 파일 삭제
+                fileStore.deleteFile(i);
+                // DB 에서 파일 정보 삭제
+                attachFileService.deleteAttachFileById(i);
+            }
+            return "success"; // 삭제 성공 시 "success" 반환
+        } catch (Exception e) {
+            return "error"; // 삭제 오류 시 "error" 반환
+        }
     }
 
 }

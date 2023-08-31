@@ -1,6 +1,6 @@
 package com.Board.repository;
 
-import com.Board.Board.AttachFileRepository;
+import com.Board.Board.repository.AttachFileRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
