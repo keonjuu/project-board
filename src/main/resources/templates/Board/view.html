@@ -7,9 +7,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="/css/bootstrap.min.css">
         <link rel="stylesheet" href="/css/custom.css">
+        <link rel="stylesheet" href="/css/comment.css">
         <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="/js/file-upload-new.js"></script>
         <script src="/js/board-button.js"></script>
+        <script src="/js/comment-button.js"></script>
+        <script src="/js/comment-register.js"></script>
     </head>
     <body>
         <div th:replace="fragments/bodyHeader :: bodyHeader"></div>
@@ -46,7 +49,7 @@
                 </div>
                 <div class="form-group col-12">
                     <label class="form-label" th:for="title">제목</label>
-                    <input type="text" th:field="${board.title}"  class="form-control col-8" readonly>
+                    <input type="text" th:field="${board.title}"  class="form-control col-8" readonly />
                     <!--      <span th:text="${board.title}" class="form-control" >제목 없음 </span>-->
                 </div>
                 <div class="form-group col-12">
@@ -62,7 +65,7 @@
                     <ul>
                         <li th:each="file : ${board.files}">
                             <a th:href="@{/download/{id}(id=${file.id})}" th:text="${file.originalFileName}" th:id="file_+${file.id}"></a>
-                            <a th:href="@{/delete/{id}(id=${file.id})}" th:text="x" th:style="${'color:red; display:none;'}" class="delete-link" th:id="${file.id}"></a>
+                            <a th:text="x" th:style="${'color:red; display:none;'}" class="delete-link" th:id="${file.id}"></a>
                         </li>
                     </ul>
                 </div>
@@ -75,6 +78,47 @@
                 </div>
             </form>
             <br/>
+        </div>
+        <!-- 댓글 -->
+        <div class="container" th:id="CommentBox" style="padding-top: 30px; width: 70%">
+            <p class="comment_title g-3 fw-bolder">댓글</p>
+            <ul class="comment_list" th:each="comment: ${board.comments}">
+                <li th:attr="comment_level=${comment?.level}, comment_no=${comment?.id}, board_no = ${board.boardNo}" th:class="${comment?.id}" th:classappend="comment_li" th:id="comment_li_+${comment?.id}"
+                    th:style="'padding-left: ' + (${comment?.level} * 15) + 'px;'">
+                    <div th:id="comment_container ">
+                        <div th:if="${not #strings.equals(comment.level, 1)}"><strong>&rdsh;</strong></div>
+                        <div th:class="comment_box">
+                            <div class="comment_nick_box">
+                                <span class="writer" th:class="${comment?.regId}">
+                                    <span class="nickname" th:text="${comment?.regId}">작성자</span>
+                                </span>
+                            </div>
+                            <div th:class="comment_text_box">
+                                <p class="comment_text_view" th:text="${comment?.content}"> 텍스트 입력</p>
+                            </div>
+                            <div th:class="comment_info_box">
+                                <span th:class="comment_info_date" th:text="${#temporals.format(comment?.modTime, 'yyyy-MM-dd HH:mm:ss')}" th:style="'color: #ddd;'">날짜 입력</span>
+                                <a role="button" class="comment_register_btn" th:attr="reg_id=${session.loginMember?.email}" th:style="'color: #18bc9c;'">답글쓰기</a>
+                                <a role="button" class="comment_delete_btn" th:style="'color: #18bc9c;'">삭제</a>
+                                <!--                            <a role="button" id="comment_update_btn">수정</a>-->
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <!--댓글 입력창 -->
+            <div class="CommentWriter">
+                <div class="comment_inbox">
+                    <input class="comment_boardNo" type="hidden" th:field="${board.boardNo}" />
+                    <p class="comment_inbox_name" th:text = "${session.loginMember?.email}">댓글작성자</p>
+                    <textarea class="comment_inbox_text" rows="1" style="overflow: hidden; overflow-wrap: break-word; height: 18px;" placeholder="댓글을 남겨보세요">
+                    </textarea>
+                </div>
+                <div class="register_box">
+                    <a th:text="등록" id="comment_register"></a>
+                </div>
+            </div>
+
         </div>
     </body>
 </html>
