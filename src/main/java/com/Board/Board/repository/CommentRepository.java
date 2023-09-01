@@ -15,15 +15,14 @@ import java.util.Optional;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Transactional
     @Modifying
-    @Query("update Comment c set c.content = '삭제된 댓글입니다', c.isDeleted = 'Y' where c.id = :id")
-    int updateContentById(@Param("id") Long id);
+    @Query("update Comment c set c.content =  concat(c.content, '(삭제된 댓글입니다)'), c.isDeleted = 'Y' where c.id = :id")
+    int updatedeleteContentById(@Param("id") Long id);
 
     //1. find
     Optional<Comment> findById(Long id) ;
 
     @Query("select c from Comment c where c.parent.id = :id")
-    List<Comment> findAllByParentNo(@Param("id") Long id);
-
+    List<Comment> findAllCommentByParentNo(@Param("id") Long id);
 
 
 }

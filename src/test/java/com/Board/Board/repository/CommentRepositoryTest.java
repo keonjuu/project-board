@@ -20,8 +20,8 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -159,7 +159,7 @@ class CommentRepositoryTest {
     @Transactional
     @Commit
     void delete(){
-        commentRepository.updateContentById(1211L);
+        commentRepository.updatedeleteContentById(1211L);
     }
 
 
@@ -198,6 +198,66 @@ class CommentRepositoryTest {
         commentRepository.save(child);
     }
 
+    @Test
+    @DisplayName("댓글 계층구조로 정렬")
+    void sortComments(){
+        //given  (게시판의 댓글리스트를 dto 로 반환)
+        List<CommentForm> flatComments = boardRepository.findByBoardNo(1137L)
+                .getComments()
+                .stream()
+                .map(comment -> CommentForm.toDTO(comment))
+                .sorted(Comparator.comparing(CommentForm::getLevel)
+                        .thenComparing(CommentForm::getModTime))
+                .collect(Collectors.toList());
+
+        // map<id, dto>
+        Map<Long, CommentForm> formMap = new HashMap<>();
+        for (CommentForm form : flatComments) {
+            formMap.put(form.getId(), form);
+        }
+
+        // when (result 계층구조로 만들기)
+        List<CommentForm> result  = new ArrayList<>();
+        for (CommentForm commentForm : flatComments) {
+
+            CommentForm parent = formMap.get(commentForm.getParentNo());
+
+            if (parent !=null){ // 자식이면 부모에 추가
+                formMap.get(commentForm.getParentNo()).getChilds().add(commentForm);
+            }else{ // 부모면 추가
+                result.add(commentForm);
+            }
+        }
+
+/* (case1)
+        Map<Long, CommentForm> commentFormMap = new HashMap<>();
+        List<CommentForm> result  = new ArrayList<>();
+
+        boardRepository.findByBoardNo(1137L)
+                .getComments()
+                .stream()
+                .forEach(comment -> {
+                    CommentForm form = CommentForm.toDTO(comment);
+                    commentFormMap.put(form.getId(), form);
+                    if(comment.getParent() != null){
+                        commentFormMap.get(comment.getParent().getId()).getChilds().add(form);
+                    }else{
+                        result.add(form);
+                    }
+                });*/
+
+        //then
+        log.info("### 계층구조  = {} ", result.stream().map(f-> f.getId()).collect(Collectors.toList()) );
+
+    }
+
+
+
+
+
+
+
+
 
 
     @Test
@@ -205,15 +265,15 @@ class CommentRepositoryTest {
     @Transactional
     @Commit
     void replyDelete(){
-        List<Comment> childAll = commentRepository.findAllByParentNo(1224L);
+        List<Comment> childAll = commentRepository.findAllCommentByParentNo(1224L);
         log.info("childAll = {}" , childAll);
         // 자식이 존재하면 isDeleted = true
-        if(!childAll.isEmpty()){
-            commentRepository.updateContentById(1224L); // 나만 isDeleted = 'Y'
+        if(childAll.size()!=0){
+            commentRepository.updatedeleteContentById(1224L); // 나만 isDeleted = 'Y'
         }else {
-            // 자식이 존재하지 않으면 삭제
+            // 자식이 존재하지 않으면 자신을 삭제
             commentRepository.deleteById(1224L); // 나만 삭제
-            // 부모와 다른 자식들이 다 삭제 체크되어있으면
+            // 부모와 다른 자식들이 없는지 확인하고 삭제가능한 조상 찾기
 
         }
 //        commentRepository.findById(commentForm.getParentNo()).ifPresent(parentComment -> commentRepository.findById(parentComment.getpa()));

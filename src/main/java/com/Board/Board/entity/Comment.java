@@ -3,7 +3,6 @@ package com.Board.Board.entity;
 
 import com.Board.Member.entity.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.CreatedBy;
@@ -42,8 +41,6 @@ public class Comment {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "reg_id", referencedColumnName = "email")
     private Member member;
-//    @CreatedBy
-//    private String regId;
 
     @LastModifiedBy
     private LocalDateTime modId;
@@ -60,8 +57,8 @@ public class Comment {
 
 //    @JsonIgnore
     @ToString.Exclude
-    @JsonManagedReference
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+//    @JsonManagedReference
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE,  orphanRemoval = true)
     private List<Comment> childs = new ArrayList<>();
 
 //    @JsonIgnore
@@ -71,7 +68,7 @@ public class Comment {
     private Board board;
 
 
-    private String isDeleted = "N";
+    private String isDeleted;
     private Integer level;
 
 

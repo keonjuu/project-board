@@ -49,14 +49,12 @@ public class CommentController {
     public String commentDelete(@PathVariable Long commentNo){
         try{
             // 해당 comment 삭제
-            commentService.deleteById(commentNo);
+            commentService.deleteByComment(commentNo);
 
             return "success";
         } catch (Exception e) {
             return "error"; // 삭제 오류 시 "error" 반환
         }
     }
-
-
 
 }
