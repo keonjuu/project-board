@@ -30,6 +30,7 @@ public class CommentService {
         Comment comment = Comment.builder()
                 .content(form.getContent())
                 .level(form.getParentNo() == null? 1 :form.getLevel()+1)
+                .isDeleted("N")
                 .build();
 
         // 부모와 자식 댓글 연관관계 설정
@@ -65,10 +66,14 @@ public class CommentService {
         // 자식이 존재하면 isDeleted = true
         List<Comment> childAll = commentRepository.findAllCommentByParentNo(commnetNo);
 
-        if(childAll.size()!=0){
+        // 부모가 자식 없으면 바로 삭제
+        Comment comment = findById(commnetNo);
+        if(childAll.size() == 0 && comment.getParent() == null) {
+            commentRepository.deleteById(commnetNo);
+        }
+        else if(childAll.size()!=0){
             commentRepository.updatedeleteContentById(commnetNo); // 나만 isDeleted = 'Y'
         }else {
-            Comment comment = findById(commnetNo);
             // 부모와 다른 자식들이 없는지 확인하고 삭제가능한 부모 찾기
             commentRepository.delete(searchDeletableComment(comment));
         }
@@ -85,13 +90,12 @@ public class CommentService {
         log.info("탐색 start ==>");
         log.info("commentId({}), parentId({}) ,자식 수={}, 삭제여부={}",comment.getId() ,comment.getParent().getId(), parent.getChilds().size(),parent.getIsDeleted().equals("Y"));
 
-        if(parent != null && parent.getChilds().size() == 1 && parent.getIsDeleted().equals("Y")){
+        if(parent.getChilds().size() == 1 && parent.getIsDeleted().equals("Y")){
             log.info("자식이 나밖에 없네~ 삭제!!! ");
             // 부모 더 확인
             return searchDeletableComment(parent);
-
         }
-        else if (parent != null && parent.getChilds().size() > 1 ) {
+        else if (parent.getChilds().size() > 1 ) {
             log.info(" 자식이 많네~ !!! ");
 //            log.info("Before :: comment.getParent().getChilds() id = {}" , comment.getParent().getChilds().stream().map(c-> c.getId()).collect(Collectors.toList()));
             comment.getParent().getChilds().remove(comment);//부모와 연관관계 삭제

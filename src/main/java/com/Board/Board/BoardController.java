@@ -97,8 +97,8 @@ public class BoardController {
         // 게시글번호로 db 조회
         Board board = boardService.findOne(boardNo);
         BoardForm boardForm=BoardForm.toDTO(board);
+        //log.info("BoardForm = {}", boardForm);
 
-        log.info("BoardForm = {}", boardForm);
         // model 에 담아서 전달
         model.addAttribute("board", boardForm);
         return "Board/view";

@@ -11,9 +11,10 @@ $(document).ready(function () {
         event.preventDefault(); // 기본 클릭 동작 방지
 
         const commentNo = parseInt($(this).parents("ul li").attr('comment_no'));
+        const boardNo = parseInt($(this).parents("ul li").attr('board_no'));
         const clickedLink = $(this);
         console.log("commentNo = " , commentNo , "clickedLink = ", clickedLink)
-        commentDelete(commentNo,clickedLink);
+        commentDelete(commentNo,boardNo, clickedLink);
     });
 
     //답글쓰기
@@ -112,17 +113,15 @@ function register(clickedLink){
 }
 
 
-function commentDelete(commentNo, clickedLink) {
+function commentDelete(commentNo,boardNo, clickedLink) {
     $.ajax({
         type: "POST",
         url: "/comment/" + commentNo + "/delete",
         success: function (response) {
             if (response === "success") {
                 // 삭제 성공시 태그 삭제
-                $(clickedLink).parents("li").remove();  // comment_li_xx 삭제
-                // $(clickedLink).parent("comment_text_view").text("삭제된 댓글입니다")
+                //$(clickedLink).parents("li").remove();  // comment_li_xx 삭제
                 alert("댓글을 삭제하였습니다.");
-                const boardNo = $(".comment_boardNo").val();
                 window.location.href = "/Board/" + boardNo + "/view";
 
             } else {
