@@ -1,124 +1,123 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" >
 <!--<head th:replace="fragments/header :: header" />-->
-    <head>
-        <title>게시글 상세 페이지</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="/css/bootstrap.min.css">
-        <link rel="stylesheet" href="/css/custom.css">
-        <link rel="stylesheet" href="/css/comment.css">
-        <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
-        <script src="/js/file-upload-new.js"></script>
-        <script src="/js/board-button.js"></script>
-        <script src="/js/comment-button.js"></script>
-        <script src="/js/comment-register.js"></script>
-    </head>
-    <body>
-        <div th:replace="fragments/bodyHeader :: bodyHeader"></div>
-        <div class="container" style="padding-top: 30px; width: 70%">
-            <!--    <div th:replace="fragments/bodyHeader :: bodyHeader"/>-->
-            <!--    th:action="@{/Board/{boardNo}/view (boardNo=${board.boardNo}) }"-->
-            <form th:id="update-form" th:object="${boards}" method="post" class = "row g-3 fw-bolder" enctype="multipart/form-data">
-                <div class="form-group col-12">
-                    <h3>
+<head>
+    <title>게시글 상세 페이지</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="stylesheet" href="/css/comment.css">
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="/js/file-upload-new.js"></script>
+    <script src="/js/board-button.js"></script>
+    <script src="/js/comment-button.js"></script>
+</head>
+<body>
+<div th:replace="fragments/bodyHeader :: bodyHeader"></div>
+<div class="container" style="padding-top: 30px; width: 70%">
+    <!--    <div th:replace="fragments/bodyHeader :: bodyHeader"/>-->
+    <!--    th:action="@{/Board/{boardNo}/view (boardNo=${board.boardNo}) }"-->
+    <form th:id="update-form" th:object="${boards}" method="post" class = "row g-3 fw-bolder" enctype="multipart/form-data">
+        <div class="form-group col-12">
+            <h3>
                 <span th:if="${#strings.equals(board.getCategory().name(), 'FREE')}" class="form-control-plaintext" th:style="${'display:inline;'}"> 자유게시판</span>
                 <span th:if="${#strings.equals(board.getCategory().name(), 'NOTICE')}" class="form-control-plaintext" th:style="${'display:inline;'}">공지사항</span>
                 <span th:if="${#strings.equals(board.getCategory().name(), 'QNA')}" class="form-control-plaintext" th:style="${'display:inline;'}">Q&A</span>
-                    </h3>
-                </div>
-                <div class="form-group col-12">
-                    <label th:for="boardNo">게시글 번호</label>
-                    <span th:id="${board.boardNo}" th:text="${board.boardNo}" class="form-control-plaintext" th:style="${'display:inline; margin-inline-start:5px'}"> </span>   <!--th:style="${'display:inline; margin-inline-start:5px'}"-->
-                </div>
-                <div class="form-group col-6">
-                    <label th:for="regId">작성자</label>
-                    <span th:text="${board.regId}" class="form-control-plaintext"  > 비어있음 </span>
-                </div>
-                <div class="form-group col-6">
-                    <label th:for="regTime">작성일</label>
-                    <span th:text="${#temporals.format(board.regTime, 'yyyy-MM-dd HH:mm:ss')}" class="form-control-plaintext" > 비어있음 </span>
-                </div>
-                <div class="form-group col-6">
-                    <label th:for="modId">최종수정자</label>
-                    <span th:text="${board.modId}" class="form-control-plaintext" > 비어있음 </span>
-                </div>
-                <div class="form-group col-6">
-                    <label th:for="modTime">최종수정일</label>
-                    <span th:text="${#temporals.format(board.modTime, 'yyyy-MM-dd HH:mm:ss')}" class="form-control-plaintext" > 비어있음 </span>
-                </div>
-                <div class="form-group col-12">
-                    <label class="form-label" th:for="title">제목</label>
-                    <input type="text" th:field="${board.title}"  class="form-control col-8" readonly />
-                    <!--      <span th:text="${board.title}" class="form-control" >제목 없음 </span>-->
-                </div>
-                <div class="form-group col-12">
-                    <label class="form-label" th:for="content">내용</label>
-                    <textarea type="text" th:field="${board.content}"  class="form-control" readonly></textarea>
-                    <!--      <span th:text="${board.content}" class="form-control" > 내용 없음 </span>-->
-                </div>
-                <div class="form-group col-12">
-                    <label class="form-label" th:for="attachFiles">첨부파일</label>
-                    <input type="file" id="attachFiles" name="attachFiles" multiple="multiple" class="form-control-file" th:style="${'display:none'}" />
-                </div>
-                <div class="form-group col-12 fw-bolder" id="selectedFiles">
-                    <ul>
-                        <li th:each="file : ${board.files}">
-                            <a th:href="@{/download/{id}(id=${file.id})}" th:text="${file.originalFileName}" th:id="file_+${file.id}"></a>
-                            <a th:text="x" th:style="${'color:red; display:none;'}" class="delete-link" th:id="${file.id}"></a>
-                        </li>
-                    </ul>
-                </div>
-                <div th:style="${'text-align: center'}">
-                    <button type="button" class="btn btn-success col-auto" id="editButton" th:onclick="edit()"  th:style="${session.loginMember?.email == board.regId? 'display:inline-block' : 'display:none'}" >수정</button>
-                    <button type="button" class="btn btn-success col-auto" id="saveButton" th:onclick="'javascript:save('+${board.boardNo}+')'" style="display:none;">저장</button>
-                    <button type="button" class="btn btn-danger col-auto" id="deleteButton" style="display:none;" th:onclick="'javascript:deleteBoard('+${board.boardNo}+')'" >삭제</button>
-                    <!--    th:href="@{/Board/{boardNo}/edit (boardNo=${board.boardNo})}"-->
-                    <button type="button" class="btn btn-warning col-auto" id="cancelButton" th:onclick="cancel()">목록</button>
-                </div>
-            </form>
-            <br/>
+            </h3>
         </div>
-        <!-- 댓글 -->
-        <div class="container" th:id="CommentBox" style="padding-top: 30px; width: 70%">
-            <p class="comment_title g-3 fw-bolder">댓글</p>
-            <ul class="comment_list" th:each="comment: ${board.comments}">
-                <li th:attr="comment_level=${comment?.level}, comment_no=${comment?.id}, board_no = ${board.boardNo}" th:class="${comment?.id}" th:classappend="comment_li" th:id="comment_li_+${comment?.id}"
-                    th:style="'padding-left: ' + (${comment?.level} * 15) + 'px;'">
-                    <div th:id="comment_container ">
-                        <div th:if="${not #strings.equals(comment.level, 1)}"><strong>&rdsh;</strong></div>
-                        <div th:class="comment_box">
-                            <div class="comment_nick_box">
+        <div class="form-group col-12">
+            <label th:for="boardNo">게시글 번호</label>
+            <span th:field="${board.boardNo}" th:id="${board.boardNo}" th:text="${board.boardNo}" class="form-control-plaintext" th:style="${'display:inline; margin-inline-start:5px'}"> </span>   <!--th:style="${'display:inline; margin-inline-start:5px'}"-->
+        </div>
+        <div class="form-group col-6">
+            <label th:for="regId">작성자</label>
+            <span th:text="${board.regId}" class="form-control-plaintext"  > 비어있음 </span>
+        </div>
+        <div class="form-group col-6">
+            <label th:for="regTime">작성일</label>
+            <span th:text="${#temporals.format(board.regTime, 'yyyy-MM-dd HH:mm:ss')}" class="form-control-plaintext" > 비어있음 </span>
+        </div>
+        <div class="form-group col-6">
+            <label th:for="modId">최종수정자</label>
+            <span th:text="${board.modId}" class="form-control-plaintext" > 비어있음 </span>
+        </div>
+        <div class="form-group col-6">
+            <label th:for="modTime">최종수정일</label>
+            <span th:text="${#temporals.format(board.modTime, 'yyyy-MM-dd HH:mm:ss')}" class="form-control-plaintext" > 비어있음 </span>
+        </div>
+        <div class="form-group col-12">
+            <label class="form-label" th:for="title">제목</label>
+            <input type="text" th:field="${board.title}"  class="form-control col-8" readonly />
+            <!--      <span th:text="${board.title}" class="form-control" >제목 없음 </span>-->
+        </div>
+        <div class="form-group col-12">
+            <label class="form-label" th:for="content">내용</label>
+            <textarea type="text" th:field="${board.content}"  class="form-control" readonly></textarea>
+            <!--      <span th:text="${board.content}" class="form-control" > 내용 없음 </span>-->
+        </div>
+        <div class="form-group col-12">
+            <label class="form-label" th:for="attachFiles">첨부파일</label>
+            <input type="file" id="attachFiles" name="attachFiles" multiple="multiple" class="form-control-file" th:style="${'display:none'}" />
+        </div>
+        <div class="form-group col-12 fw-bolder" id="selectedFiles">
+            <ul>
+                <li th:each="file : ${board.files}">
+                    <a th:href="@{/download/{id}(id=${file.id})}" th:text="${file.originalFileName}" th:id="file_+${file.id}"></a>
+                    <a th:text="x" th:style="${'color:red; display:none;'}" class="delete-link" th:id="${file.id}"></a>
+                </li>
+            </ul>
+        </div>
+        <div th:style="${'text-align: center'}">
+            <button type="button" class="btn btn-success col-auto" id="editButton" th:onclick="edit()"  th:style="${session.loginMember?.email == board.regId? 'display:inline-block' : 'display:none'}" >수정</button>
+            <button type="button" class="btn btn-success col-auto" id="saveButton" th:onclick="'javascript:save('+${board.boardNo}+')'" style="display:none;">저장</button>
+            <button type="button" class="btn btn-danger col-auto" id="deleteButton" style="display:none;" th:onclick="'javascript:deleteBoard('+${board.boardNo}+')'" >삭제</button>
+            <!--    th:href="@{/Board/{boardNo}/edit (boardNo=${board.boardNo})}"-->
+            <button type="button" class="btn btn-warning col-auto" id="cancelButton" th:onclick="cancel()">목록</button>
+        </div>
+    </form>
+    <br/>
+</div>
+<!-- 댓글 -->
+<div class="container" th:id="CommentBox" style="padding-top: 30px; width: 70%">
+    <p class="comment_title g-3 fw-bolder">댓글</p>
+    <ul class="comment_list" th:each="comment: ${board.comments}">
+        <li th:attr="comment_level=${comment?.level}, comment_no=${comment?.id}, board_no = ${board.boardNo}" th:class="${comment?.id}" th:classappend="comment_li" th:id="comment_li_+${comment?.id}"
+            th:style="'padding-left: ' + (${comment?.level} * 15) + 'px;'">
+            <div th:id="comment_container ">
+                <div th:if="${not #strings.equals(comment.level, 1)}"><strong>&rdsh;</strong></div>
+                <div th:class="comment_box">
+                    <div class="comment_nick_box">
                                 <span class="writer" th:class="${comment?.regId}">
                                     <span class="nickname" th:text="${comment?.regId}">작성자</span>
                                 </span>
-                            </div>
-                            <div th:class="comment_text_box">
-                                <p class="comment_text_view" th:text="${comment?.content}"> 텍스트 입력</p>
-                            </div>
-                            <div th:class="comment_info_box">
-                                <span th:class="comment_info_date" th:text="${#temporals.format(comment?.modTime, 'yyyy-MM-dd HH:mm:ss')}" th:style="'color: #ddd;'">날짜 입력</span>
-                                <a role="button" class="comment_register_btn" th:attr="reg_id=${session.loginMember?.email}" th:style="'color: #18bc9c;'">답글쓰기</a>
-                                <a role="button" class="comment_delete_btn" th:style="'color: #18bc9c;'">삭제</a>
-                                <!--                            <a role="button" id="comment_update_btn">수정</a>-->
-                            </div>
-                        </div>
                     </div>
-                </li>
-            </ul>
-            <!--댓글 입력창 -->
-            <div class="CommentWriter">
-                <div class="comment_inbox">
-                    <input class="comment_boardNo" type="hidden" th:field="${board.boardNo}" />
-                    <p class="comment_inbox_name" th:text = "${session.loginMember?.email}">댓글작성자</p>
-                    <textarea class="comment_inbox_text" rows="1" style="overflow: hidden; overflow-wrap: break-word; height: 18px;" placeholder="댓글을 남겨보세요">
-                    </textarea>
-                </div>
-                <div class="register_box">
-                    <a th:text="등록" id="comment_register"></a>
+                    <div th:class="comment_text_box">
+                        <p class="comment_text_view" th:text="${comment?.content}"> 텍스트 입력</p>
+                    </div>
+                    <div th:class="comment_info_box">
+                        <span th:class="comment_info_date" th:text="${#temporals.format(comment?.modTime, 'yyyy-MM-dd HH:mm:ss')}" th:style="'color: #ddd;'">날짜 입력</span>
+                        <a role="button" class="comment_write_btn" th:attr="reg_id=${session.loginMember?.email}" th:style="'color: #18bc9c;'">답글쓰기</a>
+                        <a role="button" class="comment_delete_btn" th:style="'color: #18bc9c;'">삭제</a>
+                        <!--                            <a role="button" id="comment_update_btn">수정</a>-->
+                    </div>
                 </div>
             </div>
-
+        </li>
+    </ul>
+    <!--댓글 입력창 -->
+    <div class="CommentWriter">
+        <div class="comment_inbox">
+            <input class="comment_info" type="hidden" th:attr="board_no= ${board.boardNo}, comment_level= 1, reg_id=${session.loginMember?.email} " />
+            <p class="comment_inbox_name" th:text = "${session.loginMember?.email}">댓글작성자</p>
+            <textarea class="comment_inbox_text" rows="1" style="overflow: hidden; overflow-wrap: break-word; height: 18px;" placeholder="댓글을 남겨보세요"></textarea>
         </div>
-    </body>
+        <div class="register_box">
+            <a role='button' class='comment_register'>등록</a>
+        </div>
+    </div>
+    <div></div>
+
+</div>
+</body>
 </html>

@@ -1,12 +1,30 @@
 $(document).ready(function () {
 
-    $(document).on('click', '.comment_register_btn', function () {
-    // $(".comment_register_btn").click(function (event) {
-        //event.preventDefault(); // 기본 클릭 동작 방지
+    //등록
+    $('.register_box').click(function () {
         const clickedLink = $(this);
+        register(clickedLink);
+    });
+
+    // 삭제
+    $(".comment_delete_btn").click(function (event) {
+        event.preventDefault(); // 기본 클릭 동작 방지
+
+        const commentNo = parseInt($(this).parents("ul li").attr('comment_no'));
+        const clickedLink = $(this);
+        console.log("commentNo = " , commentNo , "clickedLink = ", clickedLink)
+        commentDelete(commentNo,clickedLink);
+    });
+
+    //답글쓰기
+    $(document).on('click', '.comment_write_btn', function () {
+    // $(".comment_write_btn").click(function (event) {
+    //     event.preventDefault(); // 기본 클릭 동작 방지
+
         const regId =$(this).attr("reg_id");
         const targetLink = $(this).parents("li");
-        console.log("targetLink =", targetLink, ", regId =", regId);
+
+        //console.log("targetLink =", targetLink, ", regId =", regId);
 
         // 답글쓰기 버튼을 누르면 새로운 댓글 입력창을 생성하여 HTML 코드를 추가
         createRegisterForm(targetLink, regId);
@@ -14,6 +32,10 @@ $(document).ready(function () {
     });
 
 });
+
+
+
+// 답글쓰기 버튼 클릭시 새로운 댓글 입력창 생성
 function createRegisterForm(targetLink, regId){
 
     const commentNo = parseInt($(targetLink).attr('comment_no'));
@@ -32,7 +54,6 @@ function createRegisterForm(targetLink, regId){
         "</div>" +
         "</div>" +
         "</li>";
-
     // console.log("newCommentHTML = ", newCommentHTML);
 
     // 다른데 생성된 댓글입력창이 있으면 초기화
@@ -40,7 +61,6 @@ function createRegisterForm(targetLink, regId){
 
     // 생성한 HTML 코드를 댓글 목록에 추가
     $('#comment_li_'+ commentNo.toString()).append(newCommentHTML);  // #comment_li_1211
-    // $("#comment_register_btn").parents("li").append(newCommentHTML);
 
     $('.register_box').click(function () {
         const clickedLink = $(this);
@@ -49,11 +69,12 @@ function createRegisterForm(targetLink, regId){
 
 }
 
-
+// 댓글등록
 function register(clickedLink){
-    debugger;
 
-    const commentBox = $(clickedLink).closest("li").find(".CommentWriter");
+    debugger;
+    const commentBox = $(clickedLink).closest(".CommentWriter");
+    // const commentBox = $(clickedLink).closest("li").find(".CommentWriter");
     console.log("commentBox =", commentBox);
 
     const content = commentBox.find(".comment_inbox_text").val(); // 댓글 내용
@@ -66,12 +87,10 @@ function register(clickedLink){
     var formData = new FormData();
     formData.append("content", content);
     formData.append("regId", regId);
-
     if(commentNo !== undefined ) {
         formData.append("parentNo", commentNo);
         formData.append("level", level)
     }
-
     $.ajax({
         processData: false,
         contentType : false,
@@ -90,5 +109,28 @@ function register(clickedLink){
             console.log(xhr, error);
         }
     });
-//        });
+}
+
+
+function commentDelete(commentNo, clickedLink) {
+    $.ajax({
+        type: "POST",
+        url: "/comment/" + commentNo + "/delete",
+        success: function (response) {
+            if (response === "success") {
+                // 삭제 성공시 태그 삭제
+                $(clickedLink).parents("li").remove();  // comment_li_xx 삭제
+                // $(clickedLink).parent("comment_text_view").text("삭제된 댓글입니다")
+                alert("댓글을 삭제하였습니다.");
+                const boardNo = $(".comment_boardNo").val();
+                window.location.href = "/Board/" + boardNo + "/view";
+
+            } else {
+                alert("error- 댓글을 삭제 중 오류가 발생했습니다.");
+            }
+        },
+        error: function (xhr, status, error) {
+            alert("댓글을 삭제 중 오류가 발생했습니다.\n" + status + ": " + error);
+        }
+    });
 }
