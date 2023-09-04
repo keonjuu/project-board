@@ -22,14 +22,14 @@ public class CommentForm {
     private String regId;
     private LocalDateTime modTime;
     private Long parentNo;
-    private List<CommentForm> childs;
+    private List<CommentForm> children;
     private String isDeleted;
     private Integer level;
 
 
     public static CommentForm toDTO(Comment commentEntity){
 
-        List<CommentForm> childsForm = commentEntity.getChilds()
+        List<CommentForm> childrenForm = commentEntity.getChildren()
                 .stream()
                 .filter(Objects::nonNull) // null 이 아닌 자식댓글만
                 .map(child -> toDTO(child))
@@ -43,7 +43,7 @@ public class CommentForm {
                     .regId(commentEntity.getMember().getEmail())
                     .modTime(commentEntity.getModTime())
                     .parentNo(commentEntity.getParent() != null? commentEntity.getParent().getId() : null) // parent null 일 수 있어
-                    .childs(commentEntity.getChilds() != null? childsForm: null) // childs null 일 수 있어
+                    .children(commentEntity.getChildren() != null? childrenForm: null) // children null 일 수 있어
                     .isDeleted(commentEntity.getIsDeleted())
                     .level(commentEntity.getLevel())
                     .build();

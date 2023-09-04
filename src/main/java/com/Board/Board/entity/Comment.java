@@ -58,8 +58,8 @@ public class Comment {
 //    @JsonIgnore
     @ToString.Exclude
 //    @JsonManagedReference
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE,  orphanRemoval = true)
-    private List<Comment> childs = new ArrayList<>();
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL,  orphanRemoval = true)
+    private List<Comment> children = new ArrayList<>();
 
 //    @JsonIgnore
 //    @JsonBackReference
@@ -75,16 +75,16 @@ public class Comment {
     // 부모-자식 관계 설정 메서드
     public void setParent(Comment comment){
         this.parent = comment;
-        parent.getChilds().add(this);
+        parent.getChildren().add(this);
     }
 
     // 자식과 연관관계 메서드
     public void addChild(Comment comment){
-        childs.add(comment);
+        children.add(comment);
         comment.setParent(this);
     }
     public void removeChild(Comment comment){
-        childs.remove(comment);
+        children.remove(comment);
         comment.setParent(null); // 자식과 부모 연결 해제
     }
     //
