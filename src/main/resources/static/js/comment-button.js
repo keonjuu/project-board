@@ -73,7 +73,6 @@ function createRegisterForm(targetLink, regId){
 // 댓글등록
 function register(clickedLink){
 
-    debugger;
     const commentBox = $(clickedLink).closest(".CommentWriter");
     // const commentBox = $(clickedLink).closest("li").find(".CommentWriter");
     console.log("commentBox =", commentBox);

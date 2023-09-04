@@ -112,7 +112,7 @@
             <p class="comment_inbox_name" th:text = "${session.loginMember?.email}">댓글작성자</p>
             <textarea class="comment_inbox_text" rows="1" style="overflow: hidden; overflow-wrap: break-word; height: 18px;" placeholder="댓글을 남겨보세요"></textarea>
         </div>
-        <div class="register_box">
+        <div class="register_box" th:style="${'margin: -20px 0 29px;'}">
             <a role='button' class='comment_register'>등록</a>
         </div>
     </div>

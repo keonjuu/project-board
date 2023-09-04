@@ -54,6 +54,7 @@ textarea.comment_inbox_text[data-v-afadf0bc] {
 
 .CommentWriter .register_box {
     float: right;
+    margin: 12px 0 29px;
 }
 /*.CommentWriter .register_box .button {*/
 .CommentWriter .register_box .button{
