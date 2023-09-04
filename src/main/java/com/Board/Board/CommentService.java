@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,23 +61,20 @@ public class CommentService {
 
     @Transactional
     public void deleteByComment(Long commnetNo){
+//        Comment comment= commentRepository.findCommentByIdWithParent(commnetNo).orElse(null);
+        //List<Comment> childAll = commentRepository.findAllCommentByParentNo(commnetNo);
 
-        // 자식이 존재하면 isDeleted = true
-        List<Comment> childAll = commentRepository.findAllCommentByParentNo(commnetNo);
-
-        // 부모가 자식 없으면 바로 삭제
         Comment comment = findById(commnetNo);
-        if(childAll.size() == 0 && comment.getParent() == null) {
-            commentRepository.deleteById(commnetNo);
-        }
-        else if(childAll.size()!=0){
+        // 부모가 자식 없으면 바로 삭제(자식이 존재하면 isDeleted = "Y")
+//        if(childAll.size()!=0){
+        if(comment.getChildren().size()!=0){
             commentRepository.updatedeleteContentById(commnetNo); // 나만 isDeleted = 'Y'
         }else {
             // 부모와 다른 자식들이 없는지 확인하고 삭제가능한 부모 찾기
             commentRepository.delete(searchDeletableComment(comment));
         }
-
-        log.info("childAll.id  = {}" , childAll.stream().map(c-> c.getId()).collect(Collectors.toList()));
+        log.info("===== comment.getId ====>  {}" , comment.getId());
+//        log.info("comment.getChildren() = {}" , comment.getChildren().stream().map(c-> c.getId()).collect(Collectors.toList()));
 
     }
 
@@ -87,21 +83,20 @@ public class CommentService {
         // 나말고 다른자식 없는 부모가 삭제되어 있으면 삭제 대상
         Comment parent = comment.getParent(); //--> 프록시 객체
 //        Comment parent = commentRepository.findById(comment.getParent().getId()).orElse(null);
-        log.info("탐색 start ==>");
-        log.info("commentId({}), parentId({}) ,자식 수={}, 삭제여부={}",comment.getId() ,comment.getParent().getId(), parent.getChilds().size(),parent.getIsDeleted().equals("Y"));
+//        log.info("탐색 start ==> comment {}" , comment.getId());
 
-        if(parent.getChilds().size() == 1 && parent.getIsDeleted().equals("Y")){
+        if(parent !=null && parent.getChildren().size() == 1 && parent.getIsDeleted().equals("Y")){
             log.info("자식이 나밖에 없네~ 삭제!!! ");
+
             // 부모 더 확인
             return searchDeletableComment(parent);
         }
-        else if (parent.getChilds().size() > 1 ) {
-            log.info(" 자식이 많네~ !!! ");
-//            log.info("Before :: comment.getParent().getChilds() id = {}" , comment.getParent().getChilds().stream().map(c-> c.getId()).collect(Collectors.toList()));
-            comment.getParent().getChilds().remove(comment);//부모와 연관관계 삭제
-//            log.info("After :: comment.getParent().getChilds() id = {}" , comment.getParent().getChilds().stream().map(c-> c.getId()).collect(Collectors.toList()));
-
+        else if (parent !=null ){
+            log.info("Before :: comment.getParent().getChildren() id = {}" , comment.getParent().getChildren().stream().map(c-> c.getId()).collect(Collectors.toList()));
+            comment.getParent().getChildren().remove(comment);//부모와 연관관계 삭제
+            log.info("After :: comment.getParent().getChildren() id = {}" , comment.getParent().getChildren().stream().map(c-> c.getId()).collect(Collectors.toList()));
         }
+
         return comment;
     }
 

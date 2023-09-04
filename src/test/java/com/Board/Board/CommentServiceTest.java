@@ -2,6 +2,7 @@ package com.Board.Board;
 
 import com.Board.Board.dto.CommentRegisterForm;
 import com.Board.Board.entity.Comment;
+import com.Board.Board.repository.CommentRepository;
 import com.Board.Member.MemberService;
 import com.Board.Member.entity.Member;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,9 @@ class CommentServiceTest {
 
     @Autowired
     CommentService commentService;
+    @Autowired
+    CommentRepository commentRepository;
+
     @Autowired
     MemberService memberService;
     CommentRegisterForm form;
@@ -74,12 +78,26 @@ class CommentServiceTest {
         log.info("comment = {}" , comment);
     }
 
-    /*
     @Test
-    @Transactional
-    void delete(){
-        commentRepository.updateContentById(commnetNo);
+    @DisplayName("대닷글 삭제2")
+    void deleteByComment(){
+        Long commnetNo = 1296L;
+//        Comment comment= commentRepository.findCommentByIdWithParent(commnetNo).orElse(null);
+//        Comment comment = findById(commnetNo);
+        //List<Comment> childAll = commentRepository.findAllCommentByParentNo(commnetNo);
+
+        Comment comment = commentService.findById(commnetNo);
+        // 부모가 자식 없으면 바로 삭제(자식이 존재하면 isDeleted = "Y")
+//        if(childAll.size()!=0){
+        if(comment.getChildren().size()!=0){
+            commentRepository.updatedeleteContentById(commnetNo); // 나만 isDeleted = 'Y'
+        }else {
+            // 부모와 다른 자식들이 없는지 확인하고 삭제가능한 부모 찾기
+            commentRepository.delete(commentService.searchDeletableComment(comment));
+        }
+        log.info("===== comment.getId ====>  {}" , comment.getId());
+//        log.info("comment.getChildren() = {}" , comment.getChildren().stream().map(c-> c.getId()).collect(Collectors.toList()));
+
     }
-*/
 
 }

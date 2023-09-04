@@ -66,10 +66,10 @@ class CommentRepositoryTest {
     }
 
     public void printChildComments (Comment comment,int depth){
-        List<Comment> childs = comment.getChilds();
+        List<Comment> children = comment.getChildren();
 
-        for (int i = 0; i < childs.size(); i++) {
-            Comment child = childs.get(i);
+        for (int i = 0; i < children.size(); i++) {
+            Comment child = children.get(i);
             log.info("{}child{} = {}", getIndentation(depth), i, child.getId());
             printChildComments(child, depth + 1);
         }
@@ -90,7 +90,7 @@ class CommentRepositoryTest {
         log.info("findComment.getParent = {}", findComment.getParent());
 
         Comment findComment2 = commentRepository.findById(1211L).orElse(null);
-        List<Comment> childs = findComment2.getChilds();
+        List<Comment> children = findComment2.getChildren();
 
         Comment rootComment = findComment2; // 최상위 댓글 객체를 설정해야 함
         printChildComments(rootComment, 0); // 0은 초기 들여쓰기 레벨
@@ -182,7 +182,7 @@ class CommentRepositoryTest {
         child.setParent(parent);
 
         log.info("replaySave child.getParent = {}", child.getParent());
-        log.info("parent.getChilds = {}", parent.getChilds());
+        log.info("parent.getChildren = {}", parent.getChildren());
 
   /*      // Board와 연관관계 설정
         Board board = boardRepository.findByBoardNo(childForm.getBoardNo());
@@ -223,11 +223,12 @@ class CommentRepositoryTest {
             CommentForm parent = formMap.get(commentForm.getParentNo());
 
             if (parent !=null){ // 자식이면 부모에 추가
-                formMap.get(commentForm.getParentNo()).getChilds().add(commentForm);
+                formMap.get(commentForm.getParentNo()).getChildren().add(commentForm);
             }else{ // 부모면 추가
                 result.add(commentForm);
             }
         }
+
 
 /* (case1)
         Map<Long, CommentForm> commentFormMap = new HashMap<>();
@@ -240,24 +241,16 @@ class CommentRepositoryTest {
                     CommentForm form = CommentForm.toDTO(comment);
                     commentFormMap.put(form.getId(), form);
                     if(comment.getParent() != null){
-                        commentFormMap.get(comment.getParent().getId()).getChilds().add(form);
+                        commentFormMap.get(comment.getParent().getId()).getChildren().add(form);
                     }else{
                         result.add(form);
                     }
                 });*/
 
         //then
+        log.info("### result = {}", result);
         log.info("### 계층구조  = {} ", result.stream().map(f-> f.getId()).collect(Collectors.toList()) );
-
     }
-
-
-
-
-
-
-
-
 
 
     @Test
@@ -265,7 +258,9 @@ class CommentRepositoryTest {
     @Transactional
     @Commit
     void replyDelete(){
-        List<Comment> childAll = commentRepository.findAllCommentByParentNo(1224L);
+//        List<Comment> childAll = commentRepository.findAllCommentByParentNo(1224L);
+        Comment comment = commentRepository.findCommentByIdWithParent(1224L).orElse(null);
+        List<Comment> childAll = comment.getChildren();
         log.info("childAll = {}" , childAll);
         // 자식이 존재하면 isDeleted = true
         if(childAll.size()!=0){
@@ -274,10 +269,9 @@ class CommentRepositoryTest {
             // 자식이 존재하지 않으면 자신을 삭제
             commentRepository.deleteById(1224L); // 나만 삭제
             // 부모와 다른 자식들이 없는지 확인하고 삭제가능한 조상 찾기
-
+            // 구현
         }
-//        commentRepository.findById(commentForm.getParentNo()).ifPresent(parentComment -> commentRepository.findById(parentComment.getpa()));
-
     }
+
 
 }

@@ -21,8 +21,10 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     //1. find
     Optional<Comment> findById(Long id) ;
 
+    @Query("select c from Comment c left join fetch c.parent where c.id = :id")
+    Optional<Comment> findCommentByIdWithParent(@Param("id") Long id);
+
     @Query("select c from Comment c where c.parent.id = :id")
     List<Comment> findAllCommentByParentNo(@Param("id") Long id);
-
 
 }
