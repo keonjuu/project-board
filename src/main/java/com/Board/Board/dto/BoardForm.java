@@ -72,7 +72,7 @@ public class BoardForm {
             CommentForm parent = formMap.get(form.getParentNo());
 
             if (parent !=null){ // 자식이면 부모에 추가
-                formMap.get(form.getParentNo()).getChilds().add(form);
+                formMap.get(form.getParentNo()).getChildren().add(form);
             }else{ // 부모면 추가
                 formResult.add(form);
             }
