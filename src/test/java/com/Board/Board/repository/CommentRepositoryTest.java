@@ -274,4 +274,14 @@ class CommentRepositoryTest {
     }
 
 
+    @Test
+    @DisplayName("게시글 해당 댓글 조회 ")
+    void hierarchy(){
+        Long boardNo = 1137L;
+        List<Comment> allByBoardNo = commentRepository.findAllByBoardNo(boardNo);
+        final List<Long> commentIDs = allByBoardNo.stream().map(comment -> comment.getId()).collect(Collectors.toList());
+
+        log.info("allByBoardNo.size = {}" , allByBoardNo.size());
+        log.info("{}", commentIDs);
+    }
 }

@@ -27,4 +27,9 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("select c from Comment c where c.parent.id = :id")
     List<Comment> findAllCommentByParentNo(@Param("id") Long id);
 
+    // boardNo의 댓글 전체 조회
+//    @Query("select c from Comment c where c.board.boardNo = :id")
+
+    @Query("select c from Comment c where c.board.boardNo = :id order by c.parent.id nulls first , c.id ASC, c.regTime ASC")
+    List<Comment> findAllByBoardNo(@Param("id") Long id);
 }

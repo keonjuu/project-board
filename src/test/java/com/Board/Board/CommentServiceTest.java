@@ -1,5 +1,6 @@
 package com.Board.Board;
 
+import com.Board.Board.dto.CommentForm;
 import com.Board.Board.dto.CommentRegisterForm;
 import com.Board.Board.entity.Comment;
 import com.Board.Board.repository.CommentRepository;
@@ -15,6 +16,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -100,4 +107,28 @@ class CommentServiceTest {
 
     }
 
+
+    @Test
+    @DisplayName("댓글 계층조회")
+    void hierarchy(){
+        List<Comment> allComments = commentService.findAll(1137L);
+        for (Comment comment : allComments) {
+            log.info("{}",comment.getId());
+        }
+
+        // Entity -> DTO
+        List<CommentForm> commentForms = allComments.stream()
+                .map(comment -> CommentForm.toDTO(comment))
+                .collect(Collectors.toList());
+
+        // 정렬 후 계층구조로 생성
+        List<CommentForm> formResult  = new ArrayList<>();  // 계층구조 formResult
+        Map<Long, CommentForm> formMap = new HashMap<>();   // map<id, dto> 임시저장소
+
+        for (CommentForm form : commentForms) {
+            formMap.put(form.getId(), form);
+        }
+        formMap.forEach((id, form) ->log.info("ID: {},  CommentForm: {}", id ,form));
+
+    }
 }
