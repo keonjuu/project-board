@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html th:lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<ul th:fragment="children">
+  <li th:each="child : ${children}">
+    <span th:text="${child?.content}"></span>
+    <!-- 재귀적으로 자식 댓글 출력 -->
+    <th:block th:replace="commentTemplate :: children" th:with="children=${child?.children}" />
+  </li>
+</ul>
+</body>
+</html>
