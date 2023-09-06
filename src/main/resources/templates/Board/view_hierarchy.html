@@ -14,6 +14,11 @@
     <script src="/js/comment-button.js"></script>
 </head>
 <body>
+<script th:inline="javascript">
+    var comments = [[${comment}]];
+    console.log("result = >> ", comments);
+
+</script>
     <div th:replace="fragments/bodyHeader :: bodyHeader"></div>
 
     <!-- 댓글 -->
@@ -42,17 +47,17 @@
                         </div>
                     </div>
                 </div>
-                <th:block th:replace="fragments/commentTemplate :: children"
-                          th:with="children=${comment?.children}" />
+<!--                <th:block th:replace="fragments/commentTemplate :: children" th:with="children=${comment?.children}" />-->
+                <th:block th:include="fragments/commentTemplate_2 :: comment_children" th:with="children=${comment?.children}" />
             </li>
         </ul>
 <!--        <ul>
             <li th:each="comment: ${comment}">
                 <span th:text="${comment?.content}"></span>
-                <th:block th:replace="fragments/commentTemplate :: children"
-                          th:with="children=${comment?.children}" />
+                <th:block th:include="fragments/commentTemplate_2 :: comment_children" th:with="children=${comment?.children}" />
             </li>
         </ul>-->
+
     <!--댓글 입력창 -->
     <div class="CommentWriter" th:style="${'margin:20px'}">
         <div class="comment_inbox">

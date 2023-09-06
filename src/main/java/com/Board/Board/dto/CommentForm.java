@@ -2,12 +2,11 @@ package com.Board.Board.dto;
 
 import com.Board.Board.entity.Comment;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-
-import static java.util.stream.Collectors.toList;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Builder(toBuilder = true)
@@ -15,6 +14,7 @@ import static java.util.stream.Collectors.toList;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Slf4j
 public class CommentForm {
     private Long id;
     private String content;
@@ -33,8 +33,7 @@ public class CommentForm {
                 .stream()
                 .filter(Objects::nonNull) // null 이 아닌 자식댓글만
                 .map(child -> toDTO(child))
-//                .sorted(Comparator.comparing(CommentForm::getModTime))  // 정렬
-                .collect(toList());
+                .collect(Collectors.toList());
 
         return CommentForm.builder()
                     .id(commentEntity.getId())
@@ -49,17 +48,5 @@ public class CommentForm {
                     .build();
     }
 
-/*    public CommentForm(Comment comment) {
-        this.id = comment.getId();
-        this.content = comment.getContent();
-        this.boardNo = comment.getBoard().getBoardNo();
-        this.regId = comment.getMember().getEmail();
-        this.modTime = comment.getModTime();
-        if (comment.getParent() != null) {
-            this.parentNo = comment.getParent().getId();
-        }
-        this.isDeleted = comment.getIsDeleted();
-
-    }*/
 
 }

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html th:lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>댓글 뷰</title>
+</head>
+<body>
+<script th:inline="javascript">
+    var children = [[${children}]];
+    console.log("result.children = >> ", children);
+
+</script>
+<!--
+<ul th:fragment="comment_children">
+  <li th:each="child : ${children}">
+    <span th:text="${child?.content}"></span>
+    &lt;!&ndash; 재귀적으로 자식 댓글 출력 &ndash;&gt;
+    <th:block th:include="fragments/commentTemplate_2 :: comment_children" th:with="children=${child?.children}" />
+  </li>
+</ul>
+-->
+
+<div class="comment_list" th:fragment="comment_children">
+  <ul th:each="child : ${children}">
+    <li th:attr="comment_level=${child?.level}, comment_no=${child?.id}, del_yn=${child?.isDeleted} , board_no = ${board.boardNo}" th:class="${child?.id}" th:classappend="comment_li" th:id="comment_li_+${child?.id}"
+        th:style="'padding-left: ' + (${child?.level} * 15) + 'px;'">
+      <div th:id="comment_container ">
+        <div th:if="${not #strings.equals(comment.level, 1)}"><strong>&rdsh;</strong></div>
+        <div th:class="comment_box">
+          <div class="comment_nick_box">
+                                  <span class="writer" th:class="${child?.regId}">
+                                      <span class="nickname" th:text="${child?.regId}">작성자</span>
+                                  </span>
+          </div>
+          <div th:class="comment_text_box">
+            <p class="comment_text_view" th:text="${child?.content}"> 텍스트 입력</p>
+          </div>
+          <div th:class="comment_info_box">
+            <span th:class="comment_info_date" th:text="${#temporals.format(child?.modTime, 'yyyy-MM-dd HH:mm:ss')}" th:style="'color: #ddd;'">날짜 입력</span>
+            <a role="button" class="comment_write_btn" th:attr="reg_id=${session.loginMember?.email}" th:style="'color: #18bc9c;'">답글쓰기</a>
+            <a role="button" class="comment_delete_btn" th:style="'color: #18bc9c;'">삭제</a>
+            <!--                            <a role="button" id="comment_update_btn">수정</a>-->
+          </div>
+        </div>
+      </div>
+      <th:block th:include="fragments/commentTemplate_2 :: comment_children" th:with="children=${child?.children}" />
+      <!--                <th:block th:replace="fragments/commentTemplate :: children" th:with="children=${child?.children}" />-->
+    </li>
+  </ul>
+</div>
+
+</body>
+</html>
