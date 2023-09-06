@@ -2,10 +2,12 @@ package com.Board.Board;
 
 import com.Board.Board.dto.BoardForm;
 import com.Board.Board.dto.BoardUpdateForm;
-import com.Board.Board.entity.Board;
-import com.Board.Member.entity.Member;
+import com.Board.Board.dto.CommentForm;
 import com.Board.Board.entity.AttachFile;
+import com.Board.Board.entity.Board;
+import com.Board.Board.entity.Comment;
 import com.Board.Member.MemberService;
+import com.Board.Member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +20,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -29,6 +35,7 @@ public class BoardController {
     private final BoardService boardService;
     private final MemberService memberService;
     private final AttachFileService attachFileService;
+    private final CommentService commentService;
     private final FileStore fileStore;
 
     @GetMapping("boards/new")
@@ -99,8 +106,37 @@ public class BoardController {
         BoardForm boardForm=BoardForm.toDTO(board);
         //log.info("BoardForm = {}", boardForm);
 
+        List<Comment> allComments = commentService.findAll(boardNo);
+
+        // 계층구조로 생성
+        List<Comment> result  = new ArrayList<>();  // 계층구조 result
+        Map<Long, Comment> formMap = new HashMap<>();   // map<id, dto> 임시저장소
+        for (Comment form : allComments) {
+            formMap.put(form.getId(), form);
+        }
+        //formMap.forEach((id, form) ->log.info("ID: {}, level: {}", id,form.getLevel()));
+
+        // when (result 계층구조로 만들기)
+        for (Comment form : allComments) {
+            Comment parent = formMap.get(form.getId()).getParent();
+
+            if (parent != null) { // 자식이면 부모에 추가
+                if (!parent.getChildren().contains(form)) { // 중복 체크
+                    parent.getChildren().add(form); // 자식 댓글을 부모 댓글의 children 리스트에 추가
+                }
+            }else { // 부모면 추가
+                result.add(form);
+            }
+        }
+
+        List<CommentForm> commentForms = result
+                .stream()
+                .map(comment -> CommentForm.toDTO(comment))
+                .collect(Collectors.toList());
+
         // model 에 담아서 전달
         model.addAttribute("board", boardForm);
+        model.addAttribute("comment", commentForms);
         return "Board/view";
     }
 
