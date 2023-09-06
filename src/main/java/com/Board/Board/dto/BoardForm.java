@@ -53,31 +53,13 @@ public class BoardForm {
                 .map(AttachFileForm::new)
                 .collect(toList());
 
-        List<CommentForm> commentForm = boardEntity.getComments()
+        /*List<CommentForm> commentForm = boardEntity.getComments()
                 .stream()
                 .map(comment -> CommentForm.toDTO(comment)) //.map(CommentForm::new) // comment -> new CommentForm(comment)
                 .sorted(Comparator.comparing(CommentForm::getLevel)
                         .thenComparing(CommentForm::getModTime))// modTime을 기준으로 정렬
                 .collect(toList());
-        /*
-        // 정렬 후 계층구조로 생성
-        List<CommentForm> formResult  = new ArrayList<>();  // 계층구조 formResult
-        Map<Long, CommentForm> formMap = new HashMap<>();   // map<id, dto> 임시저장소
-
-        for (CommentForm form : commentForm) {
-            formMap.put(form.getId(), form);
-        }
-        // when (result 계층구조로 만들기)
-        for (CommentForm form : commentForm) {
-            CommentForm parent = formMap.get(form.getParentNo());
-
-            if (parent !=null){ // 자식이면 부모에 추가
-                formMap.get(form.getParentNo()).getChildren().add(form);
-            }else{ // 부모면 추가
-                formResult.add(form);
-            }
-        }
-*/
+        */
         return BoardForm.builder()
                 .boardNo(boardEntity.getBoardNo())
                 .title(boardEntity.getTitle())
@@ -87,7 +69,7 @@ public class BoardForm {
                 .regTime(boardEntity.getRegTime())
                 .regId(boardEntity.getMember().getEmail()) // Lazy 초기화 ??? -> N + 1 문제
                 .files(fileForm)
-                .comments(commentForm)
+//                .comments(commentForm)
                 .category(boardEntity.getBoardCategory())
                 .build();
     }
