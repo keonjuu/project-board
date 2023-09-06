@@ -14,20 +14,19 @@
     <script src="/js/comment-button.js"></script>
 </head>
 <body>
-<script th:inline="javascript">
+<!--<script th:inline="javascript">
     var comments = [[${comment}]];
     console.log("result = >> ", comments);
-
-</script>
-    <div th:replace="fragments/bodyHeader :: bodyHeader"></div>
+</script>-->
 
     <!-- 댓글 -->
-    <div class="container" th:id="CommentBox" style="padding-top: 30px; width: 70%">
+    <div th:fragment="hierarchy">
+<!--<div class="container" th:id="CommentBox" style="padding-top: 30px; width: 70%">
         <p class="comment_title g-3 fw-bolder">댓글</p>
-<!--        <ul class="comment_list" th:each="comment: ${board.comments}">-->
+        <ul class="comment_list" th:each="comment: ${board.comments}"> -->
         <ul class="comment_list" th:each="comment: ${comment}">
             <li th:attr="comment_level=${comment?.level}, comment_no=${comment?.id}, del_yn=${comment?.isDeleted} , board_no = ${board.boardNo}" th:class="${comment?.id}" th:classappend="comment_li" th:id="comment_li_+${comment?.id}"
-                th:style="'padding-left: ' + (${comment?.level} * 15) + 'px;'">
+                th:style="'padding-left: ' + (${comment?.level} * 2) + 'px;'">
                 <div th:id="comment_container ">
                     <div th:if="${not #strings.equals(comment.level, 1)}"><strong>&rdsh;</strong></div>
                     <div th:class="comment_box">
@@ -47,29 +46,10 @@
                         </div>
                     </div>
                 </div>
-<!--                <th:block th:replace="fragments/commentTemplate :: children" th:with="children=${comment?.children}" />-->
-                <th:block th:include="fragments/commentTemplate_2 :: comment_children" th:with="children=${comment?.children}" />
             </li>
+            <th:block th:include="fragments/commentTemplate_2 :: comment_children" th:with="children=${comment?.children}" />
         </ul>
-<!--        <ul>
-            <li th:each="comment: ${comment}">
-                <span th:text="${comment?.content}"></span>
-                <th:block th:include="fragments/commentTemplate_2 :: comment_children" th:with="children=${comment?.children}" />
-            </li>
-        </ul>-->
 
-    <!--댓글 입력창 -->
-    <div class="CommentWriter" th:style="${'margin:20px'}">
-        <div class="comment_inbox">
-            <input class="comment_info" type="hidden" th:attr="board_no= ${board.boardNo}, comment_level= 1, reg_id=${session.loginMember?.email} " />
-            <p class="comment_inbox_name" th:text = "${session.loginMember?.email}">댓글작성자</p>
-            <textarea class="comment_inbox_text" rows="1" style="overflow: hidden; overflow-wrap: break-word; height: 18px;" placeholder="댓글을 남겨보세요"></textarea>
-        </div>
-        <div class="register_box" th:style="${'margin: -20px 0 29px;'}">
-            <a role='button' class='comment_register'>등록</a>
-        </div>
-    </div>
-    <div th:style="${'padding-bottom:20px'}"></div>
 </div>
 </body>
 </html>

@@ -78,13 +78,33 @@
     </form>
     <br/>
 </div>
-    <!-- 댓글 -->
+<!-- 댓글 -->
 <div class="container" th:id="CommentBox" style="padding-top: 30px; width: 70%">
-
-    <!-- 댓글 계층 조회-->
     <p class="comment_title g-3 fw-bolder">댓글</p>
-    <div th:replace="fragments/commentHierarchy :: hierarchy"></div>
-
+    <ul class="comment_list" th:each="comment: ${board.comments}">
+        <li th:attr="comment_level=${comment?.level}, comment_no=${comment?.id}, del_yn=${comment?.isDeleted} , board_no = ${board.boardNo}" th:class="${comment?.id}" th:classappend="comment_li" th:id="comment_li_+${comment?.id}"
+            th:style="'padding-left: ' + (${comment?.level} * 15) + 'px;'">
+            <div th:id="comment_container ">
+                <div th:if="${not #strings.equals(comment.level, 1)}"><strong>&rdsh;</strong></div>
+                <div th:class="comment_box">
+                    <div class="comment_nick_box">
+                                <span class="writer" th:class="${comment?.regId}">
+                                    <span class="nickname" th:text="${comment?.regId}">작성자</span>
+                                </span>
+                    </div>
+                    <div th:class="comment_text_box">
+                        <p class="comment_text_view" th:text="${comment?.content}"> 텍스트 입력</p>
+                    </div>
+                    <div th:class="comment_info_box">
+                        <span th:class="comment_info_date" th:text="${#temporals.format(comment?.modTime, 'yyyy-MM-dd HH:mm:ss')}" th:style="'color: #ddd;'">날짜 입력</span>
+                        <a role="button" class="comment_write_btn" th:attr="reg_id=${session.loginMember?.email}" th:style="'color: #18bc9c;'">답글쓰기</a>
+                        <a role="button" class="comment_delete_btn" th:style="'color: #18bc9c;'">삭제</a>
+                        <!--                            <a role="button" id="comment_update_btn">수정</a>-->
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
     <!--댓글 입력창 -->
     <div class="CommentWriter">
         <div class="comment_inbox">
@@ -96,7 +116,7 @@
             <a role='button' class='comment_register'>등록</a>
         </div>
     </div>
-    <div th:style="${'padding-bottom:20px'}"></div>
+    <div></div>
 
 </div>
 </body>
