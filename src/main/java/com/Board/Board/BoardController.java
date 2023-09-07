@@ -20,10 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -106,29 +103,10 @@ public class BoardController {
         BoardForm boardForm=BoardForm.toDTO(board);
         //log.info("BoardForm = {}", boardForm);
 
-        List<Comment> allComments = commentService.findAll(boardNo);
+        // 댓글목록 조회, 계층 구조로 변경
+        List<Comment> result = commentService.createHierarchy(commentService.findAll(boardNo));
 
-        // 계층구조로 생성
-        List<Comment> result  = new ArrayList<>();  // 계층구조 result
-        Map<Long, Comment> formMap = new HashMap<>();   // map<id, dto> 임시저장소
-        for (Comment form : allComments) {
-            formMap.put(form.getId(), form);
-        }
-        //formMap.forEach((id, form) ->log.info("ID: {}, level: {}", id,form.getLevel()));
-
-        // when (result 계층구조로 만들기)
-        for (Comment form : allComments) {
-            Comment parent = formMap.get(form.getId()).getParent();
-
-            if (parent != null) { // 자식이면 부모에 추가
-                if (!parent.getChildren().contains(form)) { // 중복 체크
-                    parent.getChildren().add(form); // 자식 댓글을 부모 댓글의 children 리스트에 추가
-                }
-            }else { // 부모면 추가
-                result.add(form);
-            }
-        }
-
+        //  dto 변환
         List<CommentForm> commentForms = result
                 .stream()
                 .map(comment -> CommentForm.toDTO(comment))

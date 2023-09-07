@@ -12,7 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -104,12 +107,35 @@ public class CommentService {
     public List<Comment> findAll(Long boardNo) {
 
         // 댓글 호출
-//        return commentRepository.findAllByBoardNo(boardNo);
         List<Comment> allComments = commentRepository.findAllByBoardNo(boardNo);
         return allComments;
+    }
 
+    public List<Comment> createHierarchy(List<Comment> allComments){
+        List<Comment> result  = new ArrayList<>();  // 계층구조 result
+        Map<Long, Comment> formMap = new HashMap<>();   // map<id, comment> 임시저장소
+        for (Comment form : allComments) {
+            formMap.put(form.getId(), form);
+        }
+        //formMap.forEach((id, form) ->log.info("ID: {}, level: {}", id,form.getLevel()));
 
-        /*
+        // when (result 계층구조로 만들기)
+        for (Comment form : allComments) {
+            Comment parent = formMap.get(form.getId()).getParent();
+
+            if (parent != null) { // 자식이면 부모에 추가
+                if (!parent.getChildren().contains(form)) { // 중복 체크
+                    parent.getChildren().add(form); // 자식 댓글을 부모 댓글의 children 리스트에 추가
+                }
+            }else { // 부모면 추가
+                result.add(form);
+            }
+        }
+        return result;
+    }
+}
+
+ /*
         // 정렬 후 계층구조로 생성
         List<Comment> hierarchicalComments = new ArrayList<>();
         Set<Long> processedCommentIds = new HashSet<>(); // 처리한 댓글 추적
@@ -134,8 +160,5 @@ public class CommentService {
             }
         }
     }*/
-
-    }
-}
 
 
