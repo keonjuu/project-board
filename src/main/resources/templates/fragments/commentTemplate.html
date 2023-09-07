@@ -1,12 +1,47 @@
-<!DOCTYPE html>
-<html th:lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" lang="en" >
+<!--<head th:replace="fragments/header :: header" />-->
+<head>
+    <title>게시글 상세 페이지</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="stylesheet" href="/css/comment.css">
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="/js/file-upload-new.js"></script>
+    <script src="/js/board-button.js"></script>
+    <script src="/js/comment-button.js"></script>
+</head>
 <body>
-<ul th:fragment="children">
-  <li th:each="child : ${children}">
-    <span th:text="${child?.content}"></span>
-    <!-- 재귀적으로 자식 댓글 출력 -->
-    <th:block th:replace="commentTemplate :: children" th:with="children=${child?.children}" />
-  </li>
-</ul>
+    <!-- 댓글 -->
+    <div th:fragment="hierarchy">
+        <ul class="comment_list" th:each="comment: ${comment}">
+            <li th:attr="comment_level=${comment?.level}, comment_no=${comment?.id}, del_yn=${comment?.isDeleted} , board_no = ${board.boardNo}" th:class="${comment?.id}" th:classappend="comment_li" th:id="comment_li_+${comment?.id}"
+                th:style="'padding-left: ' + (${comment?.level} * 1) + 'px;'">
+                <div th:id="comment_container ">
+                    <div th:if="${not #strings.equals(comment.level, 1)}"><strong>&rdsh;</strong></div>
+                    <div th:class="comment_box">
+                        <div class="comment_nick_box">
+                                <span class="writer" th:class="${comment?.regId}">
+                                    <span class="nickname" th:text="${comment?.regId}">작성자</span>
+                                </span>
+                        </div>
+                        <div th:class="comment_text_box">
+                            <p class="comment_text_view" th:text="${comment?.content}"> 텍스트 입력</p>
+                        </div>
+                        <div th:class="comment_info_box">
+                            <span th:class="comment_info_date" th:text="${#temporals.format(comment?.modTime, 'yyyy-MM-dd HH:mm:ss')}" th:style="'color: #ddd;'">날짜 입력</span>
+                            <a role="button" class="comment_write_btn" th:attr="reg_id=${session.loginMember?.email}" th:style="'color: #18bc9c;'">답글쓰기</a>
+                            <a role="button" class="comment_delete_btn" th:style="'color: #18bc9c;'">삭제</a>
+                            <!--                            <a role="button" id="comment_update_btn">수정</a>-->
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <th:block th:include="fragments/replyTemplate :: comment_children" th:with="children=${comment?.children}" />
+        </ul>
+
+</div>
 </body>
 </html>
