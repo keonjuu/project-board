@@ -26,6 +26,11 @@ public class MemberForm {
           this.pwd = pwd;
      }
 
+     public MemberForm(String name, String email) {
+          this.name = name;
+          this.email = email;
+     }
+
      public static Member toEntity(MemberForm form) {
           return Member.builder()
                   .email(form.getEmail())

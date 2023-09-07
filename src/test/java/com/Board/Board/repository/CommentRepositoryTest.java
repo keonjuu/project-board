@@ -7,6 +7,7 @@ import com.Board.Board.entity.Board;
 import com.Board.Board.entity.Comment;
 import com.Board.Member.MemberRepository;
 import com.Board.Member.entity.Member;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +21,7 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,17 +32,24 @@ import java.util.stream.Collectors;
 class CommentRepositoryTest {
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
     @Autowired
-    BoardRepository boardRepository;
+    private BoardRepository boardRepository;
     @Autowired
-    CommentRepository commentRepository;
+    private CommentRepository commentRepository;
 
-    Board board;
-    CommentForm commentForm;
-    CommentRegisterForm childForm;
+    private Board board;
+    private CommentForm commentForm;
+    private CommentRegisterForm childForm;
 
-    Member member;
+    private Member member;
+
+    @Autowired
+    private JPAQueryFactory queryFactory;
+
+    @Autowired
+    private EntityManager em;
+
     @BeforeEach
     @DisplayName("게시글 초기화")
     void init(){
@@ -63,37 +72,6 @@ class CommentRepositoryTest {
                 .build();
 
 
-    }
-
-    public void printChildComments (Comment comment,int depth){
-        List<Comment> children = comment.getChildren();
-
-        for (int i = 0; i < children.size(); i++) {
-            Comment child = children.get(i);
-            log.info("{}child{} = {}", getIndentation(depth), i, child.getId());
-            printChildComments(child, depth + 1);
-        }
-    }
-
-    public String getIndentation ( int depth){
-        StringBuilder indentation = new StringBuilder();
-        for (int i = 0; i < depth; i++) {
-            indentation.append("\t");
-        }
-        return indentation.toString();
-    }
-    @Test
-    @DisplayName("계층확인")
-    void findlevel() {
-
-        Comment findComment = commentRepository.findById(1226L).orElse(null);
-        log.info("findComment.getParent = {}", findComment.getParent());
-
-        Comment findComment2 = commentRepository.findById(1211L).orElse(null);
-        List<Comment> children = findComment2.getChildren();
-
-        Comment rootComment = findComment2; // 최상위 댓글 객체를 설정해야 함
-        printChildComments(rootComment, 0); // 0은 초기 들여쓰기 레벨
     }
 
 

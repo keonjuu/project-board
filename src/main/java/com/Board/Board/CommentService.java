@@ -43,17 +43,13 @@ public class CommentService {
             comment.setParent(parent);
         }
         // Board와 연관관계 설정
-//        if(form.getBoardNo() == null) {
         Board board = boardRepository.findByBoardNo(form.getBoardNo());
         comment.setBoard(board);
-//        }
-//        if(form.getRegId() == null) {
+
         //Member 연관관계 설정
         Member member = memberRepository.findByEmail(form.getRegId()).orElse(null);
         comment.setMember(member);
-//        }
-
-        log.info("comment.getMember = {}", comment.getMember());
+        //log.info("comment.getMember = {}", comment.getMember());
 
         commentRepository.save(comment);
     }
@@ -65,21 +61,16 @@ public class CommentService {
 
     @Transactional
     public void deleteByComment(Long commnetNo) {
-//        Comment comment= commentRepository.findCommentByIdWithParent(commnetNo).orElse(null);
-        //List<Comment> childAll = commentRepository.findAllCommentByParentNo(commnetNo);
 
         Comment comment = findById(commnetNo);
         // 부모가 자식 없으면 바로 삭제(자식이 존재하면 isDeleted = "Y")
-//        if(childAll.size()!=0){
-        if (comment.getChildren().size() != 0) {
+        if (!comment.getChildren().isEmpty()) {
             commentRepository.updatedeleteContentById(commnetNo); // 나만 isDeleted = 'Y'
         } else {
             // 부모와 다른 자식들이 없는지 확인하고 삭제가능한 부모 찾기
             commentRepository.delete(searchDeletableComment(comment));
         }
         log.info("===== comment.getId ====>  {}", comment.getId());
-//        log.info("comment.getChildren() = {}" , comment.getChildren().stream().map(c-> c.getId()).collect(Collectors.toList()));
-
     }
 
     public Comment searchDeletableComment(Comment comment) {
@@ -90,7 +81,7 @@ public class CommentService {
 //        log.info("탐색 start ==> comment {}" , comment.getId());
 
         if (parent != null && parent.getChildren().size() == 1 && parent.getIsDeleted().equals("Y")) {
-            log.info("자식이 나밖에 없네~ 삭제!!! ");
+            //log.info("자식이 나밖에 없네~ 삭제!!! ");
 
             // 부모 더 확인
             return searchDeletableComment(parent);
@@ -104,13 +95,13 @@ public class CommentService {
     }
 
 
+    // 게시글 번호의 모든 댓글 조회
     public List<Comment> findAll(Long boardNo) {
-
         // 댓글 호출
-        List<Comment> allComments = commentRepository.findAllByBoardNo(boardNo);
-        return allComments;
+        return commentRepository.findAllByBoardNo(boardNo);
     }
 
+    // 계층구조 생성
     public List<Comment> createHierarchy(List<Comment> allComments){
         List<Comment> result  = new ArrayList<>();  // 계층구조 result
         Map<Long, Comment> formMap = new HashMap<>();   // map<id, comment> 임시저장소
@@ -119,7 +110,7 @@ public class CommentService {
         }
         //formMap.forEach((id, form) ->log.info("ID: {}, level: {}", id,form.getLevel()));
 
-        // when (result 계층구조로 만들기)
+        // (result 계층구조로 만들기)
         for (Comment form : allComments) {
             Comment parent = formMap.get(form.getId()).getParent();
 
@@ -134,31 +125,5 @@ public class CommentService {
         return result;
     }
 }
-
- /*
-        // 정렬 후 계층구조로 생성
-        List<Comment> hierarchicalComments = new ArrayList<>();
-        Set<Long> processedCommentIds = new HashSet<>(); // 처리한 댓글 추적
-
-
-        // 루트 댓글을 찾아서 계층 구조 시작
-        for (Comment comment : allComments) {
-            if (comment.getParent() == null && !processedCommentIds.contains(comment.getId())) {
-                buildCommentHierarchy(comment, allComments, processedCommentIds);
-                hierarchicalComments.add(comment);
-            }
-        }
-
-        return hierarchicalComments;
-    }
-    private void buildCommentHierarchy(Comment parent, List<Comment> allComments, Set<Long> processedCommentIds) {
-        for (Comment comment : allComments) {
-            if (comment.getParent() != null && comment.getParent().getId().equals(parent.getId()) && !processedCommentIds.contains(comment.getId()) ) {
-                processedCommentIds.add(comment.getId());
-                buildCommentHierarchy(comment, allComments, processedCommentIds);
-                parent.addChild(comment);
-            }
-        }
-    }*/
 
 
