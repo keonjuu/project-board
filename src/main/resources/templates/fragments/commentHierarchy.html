@@ -26,7 +26,7 @@
         <ul class="comment_list" th:each="comment: ${board.comments}"> -->
         <ul class="comment_list" th:each="comment: ${comment}">
             <li th:attr="comment_level=${comment?.level}, comment_no=${comment?.id}, del_yn=${comment?.isDeleted} , board_no = ${board.boardNo}" th:class="${comment?.id}" th:classappend="comment_li" th:id="comment_li_+${comment?.id}"
-                th:style="'padding-left: ' + (${comment?.level} * 2) + 'px;'">
+                th:style="'padding-left: ' + (${comment?.level} * 1) + 'px;'">
                 <div th:id="comment_container ">
                     <div th:if="${not #strings.equals(comment.level, 1)}"><strong>&rdsh;</strong></div>
                     <div th:class="comment_box">

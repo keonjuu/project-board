@@ -30,9 +30,10 @@ textarea.comment_inbox_text[data-v-afadf0bc] {
 }
 
 #CommentBox .comment_li{
-    margin-top: -17px;
-    border-top: 2px solid #ddd;
+    /*margin-top: -17px;*/
+    /*border-top: 2px solid #ddd;*/
 }
+
 
 .CommentWriter .comment_inbox_name {
     display: block;
@@ -43,8 +44,17 @@ textarea.comment_inbox_text[data-v-afadf0bc] {
 .CommentBox .comment_list+.CommentWriter {
     margin-top: 10px;
 }
+
+.comment_list{
+    border-top: 2px solid #ddd;
+    background-color: ghostwhite;
+}
+.comment_list ul{
+    /*background-color: #aed6f1;*/
+}
+
 .CommentWriter {
-    margin: 12px 0 29px;
+    margin: 12px 12px 29px;
     padding: 16px 10px 10px 18px;
     border: 2px solid #ddd; /*rgba(0, 0, 0, 0.1);*/
     border-radius: 6px;
