@@ -43,9 +43,9 @@
           </div>
         </div>
       </div>
-      <th:block th:include="fragments/commentTemplate_2 :: comment_children" th:with="children=${child?.children}" />
       <!--                <th:block th:replace="fragments/commentTemplate :: children" th:with="children=${child?.children}" />-->
     </li>
+    <th:block th:include="fragments/commentTemplate_2 :: comment_children" th:with="children=${child?.children}" />
   </ul>
 </div>
 
