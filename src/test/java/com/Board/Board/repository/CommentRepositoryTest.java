@@ -5,8 +5,13 @@ import com.Board.Board.dto.CommentForm;
 import com.Board.Board.dto.CommentRegisterForm;
 import com.Board.Board.entity.Board;
 import com.Board.Board.entity.Comment;
+import com.Board.Board.entity.QComment;
 import com.Board.Member.MemberRepository;
 import com.Board.Member.entity.Member;
+import com.Board.Member.entity.QMember;
+import com.Board.Member.entity.Role;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -49,10 +54,12 @@ class CommentRepositoryTest {
 
     @Autowired
     private EntityManager em;
+    private QComment comment = QComment.comment;
 
     @BeforeEach
     @DisplayName("게시글 초기화")
     void init(){
+
         commentForm = CommentForm.builder()
                 .content("첫번째댓글")
                 .isDeleted("N")
@@ -262,4 +269,82 @@ class CommentRepositoryTest {
         log.info("allByBoardNo.size = {}" , allByBoardNo.size());
         log.info("{}", commentIDs);
     }
+
+
+
+    @Test
+    public void searchId(){
+        Comment comment = queryFactory
+                .selectFrom(this.comment)
+                .where(this.comment.id.eq(1304L))
+                .fetchOne();
+
+        log.info("comment = {}" , comment);
+    }
+
+    @Test
+    @DisplayName("fetchJoin 미사용")
+    public void findAllByBoardNoFetchNoUse() {
+
+        Long boardNo = 1137L;
+        List<Comment> result =
+                queryFactory.selectFrom(comment)
+                        .leftJoin(comment.parent)
+                        .where(comment.board.boardNo.eq(boardNo))
+                        .orderBy(comment.parent.id.asc().nullsFirst(),
+                                comment.regTime.asc()
+                        ).fetch();
+        log.info("result = {}" , result);
+
+    }
+
+    @Test
+    @DisplayName("fetchJoin 사용")
+    public void findAllByBoardNoFetchUse(){
+
+        Long boardNo = 1137L;
+        // Projections.fields(Comment.class, comment) comment 엔티티만 가져오고 싶어서!
+        List<Comment> result =
+                queryFactory.select(Projections.fields(Comment.class, comment.id))
+                        .from(comment)
+//                        .leftJoin(comment.parent).fetchJoin()
+                        .where(comment.board.boardNo.eq(boardNo))
+                        .orderBy(comment.parent.id.asc().nullsFirst(),
+                                comment.regTime.asc()
+                        ).fetch();
+        log.info("result = {}" , result);
+
+    }
+
+
+    @Test
+    @DisplayName("querydsl- where 다중파라미터 ")
+    private List<Member> searchWhere(){
+
+        QMember member = QMember.member;
+        Predicate predicate = member.userName.eq("keonjuu101@inno")
+                .and(member.role.eq(Role.USER));
+
+
+        return queryFactory
+                .selectFrom(member)
+//                .where(userNameEq("keonjuu101@inno"), roleEq(Role.USER))
+//                .where(predicate)
+                .fetch();
+    }
+/*
+    private BooleanExpression userNameEq(String userNameCond){
+        QMember member = QMember.member;
+        return userNameCond != null? member.userName.eq(userNameCond) : null;
+    };
+
+
+    private BooleanExpression roleEq(Role roleCond){
+        QMember member = QMember.member;
+        return roleCond != null? member.role.eq(roleCond) : null;
+    };
+*/
+
+
+
 }
