@@ -55,10 +55,12 @@ class CommentRepositoryTest {
     @Autowired
     private EntityManager em;
     private QComment comment = QComment.comment;
+    QMember member2 = QMember.member;
 
     @BeforeEach
     @DisplayName("게시글 초기화")
     void init(){
+
 
         commentForm = CommentForm.builder()
                 .content("첫번째댓글")
@@ -321,30 +323,24 @@ class CommentRepositoryTest {
     @DisplayName("querydsl- where 다중파라미터 ")
     private List<Member> searchWhere(){
 
-        QMember member = QMember.member;
-        Predicate predicate = member.userName.eq("keonjuu101@inno")
-                .and(member.role.eq(Role.USER));
-
+        Predicate predicate = member2.userName.eq("keonjuu101@inno")
+                .and(member2.role.eq(Role.USER));
 
         return queryFactory
-                .selectFrom(member)
+                .selectFrom(member2)
 //                .where(userNameEq("keonjuu101@inno"), roleEq(Role.USER))
 //                .where(predicate)
                 .fetch();
     }
-/*
-    private BooleanExpression userNameEq(String userNameCond){
-        QMember member = QMember.member;
-        return userNameCond != null? member.userName.eq(userNameCond) : null;
+
+/*    private BooleanExpression userNameEq(String userNameCond){
+        return userNameCond != null? member2.userName.eq(userNameCond) : null;
     };
 
 
     private BooleanExpression roleEq(Role roleCond){
-        QMember member = QMember.member;
-        return roleCond != null? member.role.eq(roleCond) : null;
-    };
-*/
 
-
+        return roleCond != null? member2.role.eq(roleCond) : null;
+    };*/
 
 }

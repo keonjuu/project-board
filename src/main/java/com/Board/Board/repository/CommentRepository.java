@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, Long> {
+public interface CommentRepository extends JpaRepository<Comment, Long> , CommentRepositoryCustom {
     @Transactional
     @Modifying
     @Query("update Comment c set c.content =  concat(c.content, '(삭제된 댓글입니다)'), c.isDeleted = 'Y' where c.id = :id")
