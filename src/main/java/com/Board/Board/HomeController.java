@@ -1,6 +1,7 @@
 package com.Board.Board;
 
 import com.Board.Board.dto.BoardForm;
+import com.Board.Board.dto.SearchForm;
 import com.Board.Board.entity.BoardCategory;
 import com.Board.Login.LoginForm;
 import com.Board.Member.entity.Member;
@@ -67,14 +68,38 @@ public class HomeController {
 
 //    @PageableDefault(page = 0, size = 10, sort = "boardNo", direction = Sort.Direction.DESC) Pageable pageable
     @GetMapping("/Board/search")
-    public String searchKeyword(@RequestParam("searchType") String searchType
-                                ,  @RequestParam("searchKeyword") String keyword
+        public String searchKeyword(@RequestParam("searchType") String[] searchTypes
+                                ,  @RequestParam("searchKeyword") String[] searchKeywords
                                 , Model model, Pageable pageable){
 
-        Page<BoardForm> boards = boardService.searchBoardQuerydsl(searchType, keyword, pageable);
+        SearchForm searchForm = createSearchForm(searchTypes, searchKeywords);
+
+        Page<BoardForm> boards = boardService.searchBoardQuerydsl(searchForm, pageable);
         model.addAttribute("boards", boards);
 
         return "/Home/loginHome";
+    }
+
+    //검색 조건으로 SearchForm 객체 생성
+    private SearchForm createSearchForm(String[] searchTypes, String[] searchKeywords) {
+        SearchForm searchForm = new SearchForm();
+        for (int i = 0; i < searchTypes.length; i++) {
+            String type = searchTypes[i];
+            String keyword = searchKeywords[i];
+
+            switch (type) {
+                case "regId":
+                    searchForm.setRegId(keyword);
+                    break;
+                case "title":
+                    searchForm.setTitle(keyword);
+                    break;
+                case "content":
+                    searchForm.setContent(keyword);
+                    break;
+            }
+        }
+        return searchForm;
     }
 
 }

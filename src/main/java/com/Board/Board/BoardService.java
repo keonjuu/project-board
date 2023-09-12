@@ -114,24 +114,9 @@ public class BoardService {
 
 
     //5. 게시판 조회 - querydsl
-    public Page<BoardForm> searchBoardQuerydsl(String searchType, String keyword, Pageable pageable) {
-
-//        Page<Board> regIdPage = null;
+    public Page<BoardForm> searchBoardQuerydsl(SearchForm searchForm, Pageable pageable) {
         int pageNumber = pageable.getPageNumber() == 0 ? 0 : pageable.getPageNumber() - 1;
         pageable = PageRequest.of(pageNumber, 5, Sort.by(Sort.Direction.DESC, "boardNo"));
-
-        SearchForm searchForm = new SearchForm();
-        switch (searchType) {
-            case "regId":
-                searchForm.setRegId(keyword);
-                break;
-            case "title":
-                searchForm.setTitle(keyword);
-                break;
-            case "content":
-                searchForm.setContent(keyword);
-                break;
-        }
 
         return boardRepository.search(searchForm, pageable)
                 .map(searchform -> searchFormtoBoardForm(searchform));

@@ -8,6 +8,75 @@
         <link rel="stylesheet" href="/css/bootstrap.min.css">
         <link rel="stylesheet" href="/css/custom.css">
     </head>
+    <script>
+        // 추가할 조건 필드 생성
+        function addFields() {
+
+            // select 선택된 option 값 체크
+            var selectedValues = [];
+
+            // 새로운 select 태그 생성
+            var selectClone = document.createElement('select');
+            selectClone.className = 'form-select';
+            selectClone.name = 'searchType';
+            selectClone.style.width = '15%';
+            selectClone.style.marginRight = '5px';
+            selectClone.style.display = 'inline-block';
+
+            // 모든 select box에서 선택된 값 리스트
+            var selects = document.getElementsByClassName('form-select');
+            for (var i = 0; i < selects.length; i++) {
+                var select = selects[i];
+                if (select.value !== "") {
+                    selectedValues.push(select.value);
+                }
+            }
+
+            // allOptions - 선택할 수 있는 모든 옵션
+            var allOptions = [
+                { value: 'title', text: '제목' },
+                { value: 'content', text: '내용' },
+                { value: 'regId', text: '글쓴이' }
+            ];
+
+            if(selects.length < allOptions.length){ // 태그 생성 횟수 제한
+                for (var i = 0; i < allOptions.length; i++) {
+                    var optionData = allOptions[i];
+                    var optionValue = optionData.value;
+                    var optionText = optionData.text;
+
+                    // 선택된 값 체크 후 옵션 추가
+                    if (selectedValues.indexOf(optionValue) === -1) { // not found
+                        var option = document.createElement('option');
+                        option.value = optionValue;
+                        option.text = optionText;
+                        selectClone.appendChild(option);
+                    }
+                }
+
+                // 새로운 input 태그 생성
+                var inputElement = document.createElement('input');
+                inputElement.type = 'text';
+                inputElement.className = 'form-control';
+                inputElement.name = 'searchKeyword';
+                inputElement.placeholder = '검색어를 입력해주세요';
+                inputElement.style.width = '40%';
+                inputElement.style.display = 'inline-block';
+
+                // 새로운 div 태그 생성
+                var divElement = document.createElement('div');
+                divElement.className = 'additionalFieldsDiv';
+                divElement.appendChild(selectClone);
+                divElement.appendChild(inputElement);
+
+                // 추가할 필드를 담을 컨테이너에 추가합니다
+                var additionalFields = document.getElementById('additionalFields');
+                additionalFields.appendChild(divElement);
+                // additionalFields.appendChild(inputElement);
+
+            }
+        }
+    </script>
     <body>
         <div class = "wrap">
             <div class="container"></div>
@@ -18,24 +87,24 @@
                 <a th:href="@{/FREE}" class="btn btn-default fw-bolder">자유게시판</a> <!--fs-2-->
                 <a th:href="@{/QNA}" class="btn btn-default fw-bolder">Q&A</a>
             </div>
-            <div class="container" style="padding-top: 30px; width: 70%">
-                <div class="group">
-                    <a class="btn btn-success"  th:href="@{/boards/new}" role="button">새글 작성</a>
-                </div>
-            </div>
             <div  class="container mainTableDiv"  style="padding-top: 30px; width: 70%; bottom: auto; position: initial;">
-                <form th:action="@{/Board/search}" th:class="searchForm" method="get" class="form-inline">
-                    <select th:id="searchType" class="form-select" name="searchType" style="width:20%; display:inline-block;" >
+                <form th:action="@{/Board/search}" th:class="searchForm" method="get" class="form-inline"
+                      style="border-top: 2px solid #ddd; background-color: ghostwhite;border-bottom: 2px solid #ddd;">
+                    <select th:id="searchType" class="form-select" name="searchType" style="width:15%; margin-right: 5px; display:inline-block;" >
                         <option th:value="title">제목</option>
                         <option th:value="content">내용</option>
                         <option th:value="regId">글쓴이</option>
                     </select>
                     <input type="text" class="form-control" name="searchKeyword" placeholder="검색어를 입력해주세요" style="width:40%; display:inline-block;">
-                    <button style="width:10%;" type="submit" class="btn btn-primary" >검색</button>
+                    <button style="width:10%;float: right" type="submit" class="btn btn-primary" >검색</button>
+                    <button style="width:10%;float: right" type="button" class="btn btn-success" onclick="addFields()">추가</button>
+                    <!-- 동적 검색 필드 form 태그 안에 추가 -->
+                    <div id="additionalFields" style="display:block;"></div>
                 </form>
             </div>
 
             <div class="container mainTableDiv"  style="padding-top: 30px; width: 70%; bottom: auto; padding-bottom: 7em; position: initial;">
+                <a class="btn btn-success"  th:href="@{/boards/new}" role="button" style="float: right;">새글 작성</a>
                 <table class="table table-striped">
                     <colgroup>
                         <col style="width: 20%">
