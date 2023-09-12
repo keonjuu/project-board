@@ -2,6 +2,7 @@ package com.Board.Board;
 
 
 import com.Board.Board.dto.BoardForm;
+import com.Board.Board.dto.SearchForm;
 import com.Board.Board.entity.Board;
 import com.Board.Board.entity.BoardCategory;
 import com.Board.Board.entity.AttachFile;
@@ -56,7 +57,7 @@ public class BoardService {
         //2.게시판 전체 조회
         public Page<BoardForm> findAll(Pageable pageable) {
         int pageNumber = pageable.getPageNumber() == 0 ? 0 : pageable.getPageNumber() - 1;
-        pageable = PageRequest.of(pageNumber, 5, Sort.by(Sort.Direction.DESC, "id"));
+        pageable = PageRequest.of(pageNumber, 5, Sort.by(Sort.Direction.DESC, "boardNo"));
 
         return boardRepository.findAll(pageable)
                 .map(board -> BoardForm.builder()
@@ -107,8 +108,42 @@ public class BoardService {
         if(searchType.equals("content")){
             return boardRepository.findByContentContaining(keyword, pageable).map(board -> BoardForm.toDTO(board));
         }
-//        log.info("pageable = {}" ,pageable.toString());
         return null;
+    }
+
+
+
+    //5. 게시판 조회 - querydsl
+    public Page<BoardForm> searchBoardQuerydsl(String searchType, String keyword, Pageable pageable) {
+
+//        Page<Board> regIdPage = null;
+        int pageNumber = pageable.getPageNumber() == 0 ? 0 : pageable.getPageNumber() - 1;
+        pageable = PageRequest.of(pageNumber, 5, Sort.by(Sort.Direction.DESC, "boardNo"));
+
+        SearchForm searchForm = new SearchForm();
+        switch (searchType) {
+            case "regId":
+                searchForm.setRegId(keyword);
+                break;
+            case "title":
+                searchForm.setTitle(keyword);
+                break;
+            case "content":
+                searchForm.setContent(keyword);
+                break;
+        }
+
+        return boardRepository.search(searchForm, pageable)
+                .map(searchform -> searchFormtoBoardForm(searchform));
+    }
+
+    private BoardForm searchFormtoBoardForm(SearchForm searchform){
+        return BoardForm.builder()
+                .boardNo(searchform.getBoardNo())
+                .title(searchform.getTitle())
+                .content(searchform.getContent())
+                .regId(searchform.getRegId())
+                .build();
     }
 
 }

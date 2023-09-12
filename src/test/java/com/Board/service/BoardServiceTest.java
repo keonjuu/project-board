@@ -3,6 +3,7 @@ package com.Board.service;
 import com.Board.Board.BoardService;
 import com.Board.Board.dto.BoardForm;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
@@ -23,18 +24,6 @@ public class BoardServiceTest {
     @Autowired
     private BoardService boardService;
 
-/*
-    @Test
-    @Transactional
-    @Commit
-    public void 저장(){
-        Board board = new Board();
-        board.setTitle("테스트");
-        board.setContent("tttttttt");
-        boardService.save(board);
-    }
-*/
-
     @Test
     @DisplayName("검색조회")
     public void search(){
@@ -46,5 +35,30 @@ public class BoardServiceTest {
         log.info("size = {}" , searchList.getContent().size());
         log.info("getContent = {}" , searchList.getContent());
     }
+
+
+    @Test
+    @DisplayName("검색조회-Querydsl")
+    public void search_querydsl(){
+
+        // given
+        PageRequest pageRequest = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "boardNo"));
+
+        String searchType = "content";
+        String keyword = "재택";
+
+        // when
+        Page<BoardForm> searchList = boardService.searchBoardQuerydsl(searchType, keyword, pageRequest);
+
+        // then
+        log.info("size = {}" , searchList.getContent().size());
+        log.info("getContent = {}" , searchList.getContent());
+
+        Assertions.assertThat(searchList.getContent().size()).isEqualTo(2);
+
+
+
+    }
+
 
 }
