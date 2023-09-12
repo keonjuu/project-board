@@ -10,22 +10,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BoardRepository extends JpaRepository<Board,Long> {
-
-//    private final EntityManager em;
-
-    //1. save
-/*
-    public void save(Board board){
-        em.persist(board);
-    }
-*/
+public interface BoardRepository extends JpaRepository<Board,Long>, BoardRepositoryCustom {
 
     //2. findAll - paging처리 필요
-    @Query("select b from Board b where b.delYn='N'")
     Page<Board> findAll(Pageable pageable);
 //    List<Board> findAll();
-
 
 
     //3. find 게시글 번호 상세조회
