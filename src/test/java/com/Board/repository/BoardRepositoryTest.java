@@ -1,14 +1,19 @@
 package com.Board.repository;
 
-import com.Board.Board.repository.BoardRepository;
 import com.Board.Board.dto.BoardForm;
+import com.Board.Board.dto.SearchForm;
 import com.Board.Board.entity.Board;
 import com.Board.Board.entity.BoardCategory;
+import com.Board.Board.repository.BoardRepository;
 import com.Board.Member.MemberRepository;
 import com.Board.Member.entity.Member;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +27,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.Board.Board.entity.QBoard.board;
+import static org.springframework.util.StringUtils.hasText;
+
 @Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -32,6 +40,10 @@ public class BoardRepositoryTest {
     private BoardRepository boardRepository;
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private JPAQueryFactory queryFactory;
+
 
 /*    @Test
     @Transactional
@@ -262,5 +274,56 @@ public class BoardRepositoryTest {
     }
 
 
+    @Test
+    @DisplayName("검색 DTO - querydsl")
+    public void SearchForm_qeurydsl() {
+        //given
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "boardNo"));
+
+        SearchForm search = new SearchForm();
+        search.setTitle("베이글");
+//        search.setTitle("공지사항");
+
+        BooleanBuilder whereClause = new BooleanBuilder();
+        if (hasText(search.getTitle())) {
+            whereClause.and(titleContain(search.getTitle()));
+        }
+        if (hasText(search.getContent())) {
+            whereClause.and(contentContain(search.getContent()));
+        }
+        if (hasText(search.getRegId())) {
+            whereClause.and(regIdContain(search.getRegId()));
+        }
+        // when
+        Page<BoardForm> searchBoard = boardRepository.search(search, pageRequest)
+                .map(searchform -> BoardForm.builder()
+                        .boardNo(searchform.getBoardNo())
+                        .title(searchform.getTitle())
+                        .content(searchform.getContent())
+                        .regId(searchform.getRegId())
+                        .build()
+                );
+
+        //then
+        List<BoardForm> boards = searchBoard.getContent();
+
+        for (BoardForm board : boards) {
+            log.info("title = {} ", board.getTitle());
+        }
+        Assertions.assertThat(boards.get(0).getTitle()).contains(search.getTitle());
+
+
+    }
+
+    // BooleanExpression  - where
+    private BooleanExpression titleContain(String titleCond){
+        return titleCond != null? board.title.contains(titleCond) : null;
+    };
+    private BooleanExpression contentContain(String contentCond){
+        return contentCond != null? board.content.contains(contentCond) : null;
+    };
+    private BooleanExpression regIdContain(String regIdCond){
+        return regIdCond != null? board.member.email.contains(regIdCond) : null;
+    };
 
 }
