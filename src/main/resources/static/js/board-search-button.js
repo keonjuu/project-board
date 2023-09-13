@@ -13,6 +13,7 @@ function createSelectElement() {
     selectElement.name = 'searchType';
     selectElement.style.width = '15%';
     selectElement.style.marginRight = '5px';
+    selectElement.style.marginLeft = '10px';
     selectElement.style.display = 'inline-block';
     return selectElement;
 }
@@ -29,14 +30,15 @@ function createInputElement() {
 }
 
 function createCloseElement() {
-    var closeElement = document.createElement('a');
-    closeElement.type = 'text';
-    closeElement.text = 'x';
-    closeElement.textContent = 'x'; // 닫기 아이콘의 텍스트 설정
-    closeElement.href = '#'; // 클릭 가능한 링크로 만들기 위해 href 속성 설정
-    closeElement.className = 'delete-link';
-    closeElement.style.width = '40%';
-    closeElement.style.color = '#0f7864';
+    var closeElement = document.createElement('button');
+    closeElement.type = 'button';
+    closeElement.value = '-';
+    closeElement.textContent = '-'; // 닫기 아이콘의 텍스트 설정
+    // closeElement.href = '#'; // 클릭 가능한 링크로 만들기 위해 href 속성 설정
+    closeElement.className = 'delete-link btn btn-group-sm ';
+    // closeElement.style.width = '10%';
+    closeElement.style.color = 'red';
+    closeElement.style.fontSize = 'xx-large';
     return closeElement;
 }
 
