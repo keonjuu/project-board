@@ -8,8 +8,10 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 
@@ -48,6 +50,8 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.member.email.as("regId"))
                 ).from(board)
                 .where(board.delYn.eq("N").and(whereClause))
+                .offset(pageable.getOffset())   // (1) 페이지 번호
+                .limit(pageable.getPageSize())  // (2) 페이지 사이즈
                 .fetch();
 
         long total = queryFactory
@@ -55,8 +59,9 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .where(board.delYn.eq("N").and(whereClause))
                 .fetchCount();
 
-        return new PageImpl<>(boards, pageable, total);
-//        return PageableExecutionUtils.getPage(boards, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("boardNo")), () -> total);
+//        return new PageImpl<>(boards, pageable, total);
+        // Count 쿼리 최적화 - 내부적으로 Count 쿼리가 필요없으면 조회 X
+        return PageableExecutionUtils.getPage(boards, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("boardNo")), () -> total);
 
     }
 

@@ -84,7 +84,7 @@ public class HomeController {
     //검색 조건으로 SearchForm 객체 생성
     private SearchForm createSearchForm(String[] searchTypes, String[] searchKeywords) {
         SearchForm searchForm = new SearchForm();
-        for (int i = 0; i < searchTypes.length; i++) {
+        for (int i = 0; i < searchKeywords.length; i++) {
             String type = searchTypes[i];
             String keyword = searchKeywords[i];
 
