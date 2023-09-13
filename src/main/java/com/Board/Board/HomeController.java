@@ -76,6 +76,7 @@ public class HomeController {
 
         Page<BoardForm> boards = boardService.searchBoardQuerydsl(searchForm, pageable);
         model.addAttribute("boards", boards);
+        model.addAttribute("search", searchForm);
 
         return "/Home/loginHome";
     }
