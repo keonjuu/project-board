@@ -24,8 +24,6 @@ import javax.validation.Valid;
 public class MemberController {
     private final MemberService memberService;
 
-
-
     // user 사용자정보 조회
     @GetMapping("/member/{userNo}")
     public String memberInfo(@PathVariable("userNo") Long id, Model model){
@@ -86,13 +84,6 @@ public class MemberController {
             // bindingResult 를 다시 model 에 안담아도 돼! 자동으로 view 에 넘겨줘
             return "Member/createMemberForm";
         }
-            // form 정보 Member 객체 생성해서 service 에 전달
-/*            Member member = new Member();
-            member.setEmail(form.getEmail());
-            member.setPassword(form.getPwd());
-            member.setUserName(form.getName());
-            member.setRole(Role.USER);
-            */
 
         Long joinId = memberService.join(form);
         if (joinId !=null) {
