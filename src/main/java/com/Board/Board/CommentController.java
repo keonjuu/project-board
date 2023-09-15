@@ -23,27 +23,7 @@ public class CommentController {
         log.info("form = {}",  form);
 
         commentService.save(form);
-/*        //대댓글 여부 체크
-        if(form.getParentNo()!=null){
-            commentService.replaySave(form);
-        }
-        else{
-            commentService.save(form);
-        }*/
     }
-/*    @PostMapping("/comment/{commentNo}/update")
-    public void commentUpdate(@PathVariable("boardNo") Long commentNo, @ModelAttribute("comments") CommentRegisterForm form){
-        log.info("update form = {}",  form);
-
-        //헤딩 comment 불러오기
-        Comment comment = commentService.findById(commentNo);
-        comment = comment.toBuilder()
-                .content(form.getContent())
-                .build();
-        form = new CommentRegisterForm(comment);
-        // 저장
-        commentService.save(form);
-    }*/
 
     @PostMapping("/comment/{commentNo}/delete")
     public String commentDelete(@PathVariable Long commentNo){

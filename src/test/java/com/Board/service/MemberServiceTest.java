@@ -59,7 +59,7 @@ public class MemberServiceTest {
     public void checkEmail(){
         String email = "kkk@naver.com";
         boolean result = memberService.validDuplicatedEmail(email);
-        System.out.println("중복? = " + result);
+        log.info("중복? = {}" , result);
     }
 
 
